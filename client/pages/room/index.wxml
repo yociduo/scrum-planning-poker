@@ -1,0 +1,22 @@
+<import src="../common/card.wxml" />
+
+<view class="container">
+  <view class="page-head">
+    <view class="page-head-title">{{name}}</view>
+    <view class="page-head-line"></view>
+  </view>
+  <view class="page-body">
+    <view class="page-section">
+      <view class="page-section-spacing">
+        <view class="card-grids">
+          <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
+            <template is="card" data="{{corner: card.corner, center: card.center}}" />
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="btn-area">
+    <button type="primary" open-type="share">Invite</button>
+  </view>
+</view>

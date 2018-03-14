@@ -1,0 +1,49 @@
+.card-grids {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-grid {
+  position: relative;
+  float: left;
+  width: 25%;
+  box-sizing: border-box;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 4px;
+  margin: 5px;
+  padding: 5px;
+  height: 72px;
+  position: relative;
+}
+
+.card-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 20px;
+  bottom: 20px;
+  right: 16px;
+  left: 16px;
+  border-radius: 4px;
+  border: 1px solid #d5d9de;
+}
+
+.card:hover {
+  box-shadow: 0 0 4.95px 0.05px rgba(1,1,1,.05);
+}
+
+.card-left-corner,
+.card-right-corner {
+  font-size: 10px;
+  position: absolute;
+}
+
+.card-right-corner {
+  right: 5px;
+  bottom: 0;
+  transform: rotate(-180deg);
+}

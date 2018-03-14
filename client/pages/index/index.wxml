@@ -1,4 +1,3 @@
-<!--index.wxml-->
 <view class="container">
   <view class="page-head">
     <view class="page-head-title">Create New Room</view>
@@ -9,7 +8,7 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
-            <view class="weui-label">Room 1</view>
+            <view class="weui-label">Room</view>
           </view>
           <view class="weui-cell__bd">
             <input class="weui-input" type="text" placeholder="(optional)" name="room"></input>
@@ -17,7 +16,7 @@
         </view>
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
-            <view class="weui-label">Story 1</view>
+            <view class="weui-label">Story</view>
           </view>
           <view class="weui-cell__bd">
             <input class="weui-input" type="text" placeholder="(optional)" name="story"></input>

@@ -1,0 +1,13 @@
+<template name="card">
+  <view class="card">
+    <view class="card-left-corner">
+      {{corner}}
+    </view>
+    <view class="card-right-corner">
+      {{corner}}
+    </view>
+    <view class="card-center">
+      {{center}}
+    </view>
+  </view>
+</template>
