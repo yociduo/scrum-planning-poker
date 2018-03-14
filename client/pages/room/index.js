@@ -3,7 +3,14 @@ const cards = require('../../utils/cards.js');
 
 Page({
   data: {
-    players: []
+    players: [],
+    selectedCalcMethod: 0,
+    selectedResultType: 0,
+    calcMethods: [
+      'Arithmetic mean',
+      'Truncated mean',
+      'Geometric mean',
+    ]
   },
   onLoad: function (options) {
     const { needScore = false, isHost = false } = app.globalData;
@@ -32,5 +39,14 @@ Page({
       const { value: selectedValue } = e.target.dataset;
       this.setData({ selectedValue });
     }
+  },
+
+  onCalcMethodChange: function (e) {
+    this.setData({ selectedCalcMethod: e.detail.value });
+  },
+
+  onResultTypeChange: function (e) {
+    this.setData({ selectedResultType: e.detail.value });
   }
+  
 });

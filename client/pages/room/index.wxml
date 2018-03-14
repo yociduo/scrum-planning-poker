@@ -10,7 +10,8 @@
       <view class="page-section-spacing">
         <view class="card-grids">
           <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
-            <template bindtap="clickCard" is="card" data="{{ corner: card.corner, key: card.key, value: card.value, selectedValue: selectedValue }}" />
+            <template bindtap="clickCard" is="card" data="{{ corner: card.corner, key: card.key, value: card.value, selectedValue: selectedValue }}"
+            />
           </view>
         </view>
       </view>
@@ -34,7 +35,7 @@
                 </view>
                 <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
                   <view class="player-hd">
-                    <image class="player-avatar" src="{{player.avatarUrl}}"></image>  
+                    <image class="player-avatar" src="{{player.avatarUrl}}"></image>
                   </view>
                   <view class="player-bd">
                     <view class="player-text">
@@ -46,7 +47,7 @@
                 </view>
                 <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
                   <view class="player-hd">
-                    <image class="player-avatar" src="{{player.avatarUrl}}"></image>  
+                    <image class="player-avatar" src="{{player.avatarUrl}}"></image>
                   </view>
                   <view class="player-bd">
                     <view class="player-text">
@@ -62,6 +63,36 @@
             </view>
           </view>
         </view>
+      </view>
+    </view>
+    <view class="page-section">
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">Calc.</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker bindchange="onCalcMethodChange" value="{{selectedCalcMethod}}" range="{{calcMethods}}">
+              <view class="weui-input">{{calcMethods[selectedCalcMethod]}}</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells">
+        <radio-group bindchange="onResultTypeChange">
+          <label class="weui-cell weui-check__label">
+            <view class="weui-cell__hd">
+              <radio value="0" checked="true" />
+            </view>
+            <view class="weui-cell__bd">Average 10</view>
+          </label>
+          <label class="weui-cell weui-check__label">
+            <view class="weui-cell__hd">
+              <radio value="1" />
+            </view>
+            <view class="weui-cell__bd">Median 10</view>
+          </label>
+        </radio-group>
       </view>
     </view>
   </view>
