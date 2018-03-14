@@ -10,23 +10,15 @@
   position: relative;
   display: flex;
   align-items: center;
-}
-.player:before {
-  content: " ";
-  position: absolute;
-  left: 30rpx;
-  top: 0;
-  right: 30rpx;
-  height: 1px;
   border-top: 1rpx solid #D8D8D8;
-  color: #D8D8D8;
 }
-.player:first-child:before {
-  display: none;
+.player:first-child {
+  border-top: none;
 }
 .player-hd {
   position: relative;
   margin-right: 20rpx;
+  height: 100rpx;
 }
 .player-bd {
   flex: 1;

@@ -24,6 +24,14 @@
             </view>
             <view class="kind-list-item-bd">
               <view class="player-box">
+                <view class="player">
+                  <view class="player-hd"></view>
+                  <view class="player-bd">
+                    <view class="player-text">
+                      Players:
+                    </view>
+                  </view>
+                </view>
                 <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
                   <view class="player-hd">
                     <image class="player-avatar" src="{{player.avatarUrl}}"></image>  
