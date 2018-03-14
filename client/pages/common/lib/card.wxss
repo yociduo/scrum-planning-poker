@@ -12,10 +12,10 @@
 
 .card {
   background-color: #fff;
-  border-radius: 4px;
-  margin: 5px;
-  padding: 5px;
-  height: 72px;
+  border-radius: 8rpx;
+  margin: 10rpx;
+  padding: 10rpx;
+  height: 168rpx;
   position: relative;
 }
 
@@ -24,26 +24,32 @@
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 20px;
-  bottom: 20px;
-  right: 16px;
-  left: 16px;
-  border-radius: 4px;
+  top: 40rpx;
+  bottom: 40rpx;
+  right: 32rpx;
+  left: 32rpx;
+  border-radius: 8rpx;
   border: 1px solid #d5d9de;
 }
 
-.card:hover {
+.card:hover,
+.card.selected {
   box-shadow: 0 0 4.95px 0.05px rgba(1,1,1,.05);
+}
+
+.card.selected {
+  background-color: #4b9ae8;
+  color: #ffffff;
 }
 
 .card-left-corner,
 .card-right-corner {
-  font-size: 10px;
+  font-size: 20rpx;
   position: absolute;
 }
 
 .card-right-corner {
-  right: 5px;
+  right: 10rpx;
   bottom: 0;
   transform: rotate(-180deg);
 }

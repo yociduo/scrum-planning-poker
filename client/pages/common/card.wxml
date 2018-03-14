@@ -1,13 +1,13 @@
 <template name="card">
-  <view class="card">
-    <view class="card-left-corner">
+  <view class="card {{selectedValue === value ? 'selected' : ''}}" data-value="{{value}}" bindtap="onCardClick">
+    <view class="card-left-corner" data-value="{{value}}">
       {{corner}}
     </view>
-    <view class="card-right-corner">
+    <view class="card-right-corner" data-value="{{value}}">
       {{corner}}
     </view>
-    <view class="card-center">
-      {{center}}
+    <view class="card-center" data-value="{{value}}">
+      {{key}}
     </view>
   </view>
 </template>

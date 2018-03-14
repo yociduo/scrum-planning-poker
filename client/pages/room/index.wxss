@@ -1,2 +1,65 @@
 @import "../common/lib/weui.wxss";
 @import "../common/lib/card.wxss";
+
+.player-box {
+  position: relative;
+  font-size: 34rpx;
+}
+.player {
+  padding: 10rpx 30rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.player:before {
+  content: " ";
+  position: absolute;
+  left: 30rpx;
+  top: 0;
+  right: 30rpx;
+  height: 1px;
+  border-top: 1rpx solid #D8D8D8;
+  color: #D8D8D8;
+}
+.player:first-child:before {
+  display: none;
+}
+.player-hd {
+  position: relative;
+  margin-right: 20rpx;
+}
+.player-bd {
+  flex: 1;
+}
+.player-ft {
+  position: relative;
+}
+.player-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50rpx;
+}
+
+.kind-list-item {
+  margin: 20rpx 0;
+  background-color: #FFFFFF;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+.kind-list-item:first-child {
+  margin-top: 0;
+}
+.kind-list-text{
+  flex: 1;
+}
+.kind-list-item-hd {
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #ffffff;
+  background-color: #4b9ae8;
+}
+.kind-list-item-bd {
+  height: auto;
+}

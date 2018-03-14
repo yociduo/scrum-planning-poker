@@ -10,7 +10,48 @@
       <view class="page-section-spacing">
         <view class="card-grids">
           <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
-            <template is="card" data="{{corner: card.corner, center: card.center}}" />
+            <template bindtap="clickCard" is="card" data="{{ corner: card.corner, key: card.key, value: card.value, selectedValue: selectedValue }}" />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="page-section">
+      <view class="page-section-spacing">
+        <view class="kind-list">
+          <view class="kind-list-item">
+            <view class="kind-list-item-hd">
+              <view class="kind-list-text">Waiting for host to start</view>
+            </view>
+            <view class="kind-list-item-bd">
+              <view class="player-box">
+                <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
+                  <view class="player-hd">
+                    <image class="player-avatar" src="{{player.avatarUrl}}"></image>  
+                  </view>
+                  <view class="player-bd">
+                    <view class="player-text">
+                      {{player.nickName}}
+                    </view>
+                  </view>
+                  <view class="player-ft">
+                  </view>
+                </view>
+                <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
+                  <view class="player-hd">
+                    <image class="player-avatar" src="{{player.avatarUrl}}"></image>  
+                  </view>
+                  <view class="player-bd">
+                    <view class="player-text">
+                      {{player.nickName}}
+                      <icon class="icon-small" type="success" size="23"></icon>
+                    </view>
+                  </view>
+                  <view class="player-ft">
+                    <view class="player-value">10</view>
+                  </view>
+                </view>
+              </view>
+            </view>
           </view>
         </view>
       </view>
