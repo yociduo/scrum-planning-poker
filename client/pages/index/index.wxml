@@ -5,7 +5,7 @@
   </view>
   <view class="page-body">
     <form catchsubmit="formSubmit">
-      <view class="weui-cells weui-cells_after-title">
+      <!-- <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">Room</view>
@@ -22,17 +22,29 @@
             <input class="weui-input" type="text" placeholder="(optional)" name="story"></input>
           </view>
         </view>
+      </view> -->
+      <view class="page-section">
+        <view class="page-section-title">Enter room name</view>
+        <view class="input-wrp">
+          <input name="room" bindinput="onRoomChange" value="{{room}}" />
+        </view>
+      </view>
+      <view class="page-section">
+        <view class="page-section-title">Put your stories text here. Each line contains new story.</view>
+        <view class="textarea-wrp">
+          <textarea name="stories" auto-height />
+        </view>
       </view>
       <view class="weui-cells">
         <view class="weui-cell weui-cell_switch">
           <view class="weui-cell__bd">Do you want to score as well?</view>
           <view class="weui-cell__ft">
-            <switch name="needScore" />
+            <switch name="needScore" checked />
           </view>
         </view>
       </view>
       <view class="btn-area">
-        <button type="primary" formType="submit">Create</button>
+        <button type="primary" disabled="{{!room}}" formType="submit">Create</button>
       </view>
     </form>
   </view>
