@@ -9,24 +9,44 @@ Page({
     calcMethods: [
       'Arithmetic mean',
       'Truncated mean',
-      'Geometric mean',
     ]
   },
   onLoad: function (options) {
-    const { needScore = false, isHost = false } = app.globalData;
+    const { keys } = wx.getStorageInfoSync();
     const { id, name: _name, story: _story } = options;
-    const name = _name ? decodeURIComponent(_name) : 'Room';
-    const story = _story ? decodeURIComponent(_story) : 'Story';
+    const isHost = keys.includes('hosted') && wx.getStorageSync('hosted').includes(id);
+    console.log(isHost);
+  
 
-    this.setData({ isHost, needScore, id, name, story, cards });
+    // const { needScore = false, isHost = false } = app.globalData;
+    // const { id, name: _name, story: _story } = options;
+    // const name = _name ? decodeURIComponent(_name) : 'Room';
+    // const story = _story ? decodeURIComponent(_story) : 'Story';
 
-    // mock players
-    wx.getUserInfo({
-      success: ({userInfo}) => {
-        console.log(userInfo)
-        this.setData({ players: [userInfo] });
-      }
-    });
+    // wx.getStorage({
+    //   key: id,
+    //   success: function(res) {
+    //     console.log(res)
+    //   },
+    //   fail: function(res) {},
+    //   complete: function(res) {},
+    // })
+
+    // wx.getStorageInfo({
+    //   success: function(res) {},
+    //   fail: function(res) {},
+    //   complete: function(res) {},
+    // })
+
+    // this.setData({ isHost, needScore, id, name, story, cards });
+
+    // // mock players
+    // wx.getUserInfo({
+    //   success: ({userInfo}) => {
+    //     console.log(userInfo)
+    //     this.setData({ players: [userInfo] });
+    //   }
+    // });
   },
 
   onShareAppMessage: function () {
