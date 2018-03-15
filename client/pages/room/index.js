@@ -13,9 +13,21 @@ Page({
   },
   onLoad: function (options) {
     const { keys } = wx.getStorageInfoSync();
-    const { id, name: _name, story: _story } = options;
+    const { id } = options;
     const isHost = keys.includes('hosted') && wx.getStorageSync('hosted').includes(id);
-    console.log(isHost);
+
+    if (!keys.includes(id)) {
+      const { name, stories } = options;
+      wx.setStorageSync(id, {
+        name: name ? decodeURIComponent(name) : 'Room',
+        storyList: stories ? decodeURIComponent(stories).split('\n').filter(i => i) : [],
+        players: []
+      });
+    }
+
+    console.log(wx.getStorageSync(id));
+
+    
   
 
     // const { needScore = false, isHost = false } = app.globalData;

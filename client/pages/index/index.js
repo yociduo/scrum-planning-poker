@@ -25,7 +25,7 @@ Page({
       }
       wx.setStorageSync('hosted', hosted);
       wx.navigateTo({
-        url: `../room/index?id=${id}&name=${room}&stories=${stories}&needScore=${needScore}`,
+        url: `../room/index?id=${id}&name=${encodeURIComponent(room)}&stories=${encodeURIComponent(stories)}&needScore=${needScore}`,
       });
     }   
   }
