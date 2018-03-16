@@ -1,11 +1,13 @@
 @import "../common/lib/weui.wxss";
 @import "../common/lib/card.wxss";
 
-.player-box {
+.player-box,
+.story-box {
   position: relative;
   font-size: 34rpx;
 }
-.player {
+.player,
+.story {
   padding: 10rpx 30rpx;
   position: relative;
   display: flex;
@@ -31,6 +33,20 @@
   height: 100rpx;
   border-radius: 50rpx;
 }
+.story {
+  justify-content: space-between;
+}
+.story-hd {
+  flex: 1;
+}
+.story-bd {
+  text-align: center;
+  width: 80rpx;
+}
+.story-ft {
+  text-align: right;
+  width: 160rpx;
+}
 
 .kind-list-item {
   margin: 20rpx 0;
@@ -50,8 +66,25 @@
   align-items: center;
   text-align: center;
   color: #ffffff;
-  background-color: #4b9ae8;
+  background-color: #179B16;
 }
 .kind-list-item-bd {
   height: auto;
+}
+.kind-list-item-ft .weui-cell_input {
+  border-bottom: 1rpx solid #D8D8D8;
+}
+.kind-list-item-ft .weui-check__label:before {
+  left: 0;
+}
+.kind-list-item-ft .btn-area {
+  margin-top: 0;
+}
+textarea {
+  width: 100%;
+  padding: 25rpx 0;
+}
+.textarea-wrp {
+  padding: 0 25rpx;
+  background-color: #fff;
 }

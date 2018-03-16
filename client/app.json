@@ -6,7 +6,7 @@
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Scrum Poker",
-    "navigationBarTextStyle":"black"
+    "navigationBarTitleText": "iScrum Poker",
+    "navigationBarTextStyle": "black"
   }
 }

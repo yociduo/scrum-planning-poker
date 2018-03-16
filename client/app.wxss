@@ -54,7 +54,26 @@ form{
   color: #9B9B9B;
   font-size: 32rpx;
 }
-
+.page-head-action {
+  position: absolute;
+  top: 56rpx;
+  right: 30rpx;
+  width: 84rpx;
+  height: 68rpx;
+}
+.page-head-action button {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  background-color: transparent;
+}
+.page-head-action button:after {
+  border: 0;
+}
+.page-head-action image {
+  width: 84rpx;
+  height: 68rpx;
+}
 .page-body {
   width: 100%;
   flex-grow: 1;

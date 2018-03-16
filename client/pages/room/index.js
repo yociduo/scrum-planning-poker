@@ -1,64 +1,62 @@
 const app = getApp();
 const cards = require('../../utils/cards.js');
+const util = require('../../utils/util.js');
+
+let interval;
 
 Page({
   data: {
+    timer: 0,
+    displayTime: '00:00:00',
+    stories: [],
     players: [],
+    storyList: [],
+    currentStory: '',
+    currentStoryIndex: -1,
+    selectedValue: null,
+    selectedDisplay: '',
     selectedCalcMethod: 0,
     selectedResultType: 0,
     calcMethods: [
-      'Arithmetic mean',
-      'Truncated mean',
-    ]
+      'Arithmetic Mean',
+      'Truncated Mean',
+    ],
+    newStories: '',
+    hasNewStories: false,
   },
+
   onLoad: function (options) {
     const { keys } = wx.getStorageInfoSync();
-    const { id } = options;
+    const { id, needScore, name, stories: _stories } = options;
     const isHost = keys.includes('hosted') && wx.getStorageSync('hosted').includes(id);
+    const title = name ? decodeURIComponent(name) : 'Room';
+    const storyList = [];
+    const stories = decodeURIComponent(_stories).split('\n').filter(i => i);
+    this.setData({ isHost, id, cards, stories, storyList });
 
-    if (!keys.includes(id)) {
-      const { name, stories } = options;
-      wx.setStorageSync(id, {
-        name: name ? decodeURIComponent(name) : 'Room',
-        storyList: stories ? decodeURIComponent(stories).split('\n').filter(i => i) : [],
-        players: []
-      });
+    wx.setNavigationBarTitle({ title });
+
+    interval = setInterval(() => {
+      const timer = this.data.timer + 1;
+      const displayTime = util.formatTimer(timer);
+      this.setData({ timer, displayTime });
+    }, 1000); 
+
+    if (isHost) {
     }
 
-    console.log(wx.getStorageSync(id));
+    this.onSaveAndNext();
 
-    
-  
+    // mock players
+    wx.getUserInfo({
+      success: ({userInfo}) => {
+        this.setData({ players: [userInfo] });
+      }
+    });
+  },
 
-    // const { needScore = false, isHost = false } = app.globalData;
-    // const { id, name: _name, story: _story } = options;
-    // const name = _name ? decodeURIComponent(_name) : 'Room';
-    // const story = _story ? decodeURIComponent(_story) : 'Story';
-
-    // wx.getStorage({
-    //   key: id,
-    //   success: function(res) {
-    //     console.log(res)
-    //   },
-    //   fail: function(res) {},
-    //   complete: function(res) {},
-    // })
-
-    // wx.getStorageInfo({
-    //   success: function(res) {},
-    //   fail: function(res) {},
-    //   complete: function(res) {},
-    // })
-
-    // this.setData({ isHost, needScore, id, name, story, cards });
-
-    // // mock players
-    // wx.getUserInfo({
-    //   success: ({userInfo}) => {
-    //     console.log(userInfo)
-    //     this.setData({ players: [userInfo] });
-    //   }
-    // });
+  onUnload: function () {
+    clearInterval(interval);
   },
 
   onShareAppMessage: function () {
@@ -69,7 +67,46 @@ Page({
   onCardClick: function (e) {
     if (true) {
       const { value: selectedValue } = e.target.dataset;
-      this.setData({ selectedValue });
+      if (selectedValue === this.data.selectedValue) {
+        this.setData({ selectedValue: null, selectedDisplay: '' });
+      } else {
+        this.setData({ 
+          selectedValue, 
+          selectedDisplay: cards.find(({ value }) => value === selectedValue).key 
+        });
+      }
+    }
+  },
+
+  onSaveAndNext: function () {
+    const { stories, currentStoryIndex } = this.data;
+    if (currentStoryIndex < stories.length - 1) {
+      // Mock
+      if (this.data.currentStory) {
+        const { currentStory: name, displayTime: time, selectedDisplay: score } = this.data;
+        this.addStoryResult({ name, time, score });
+      }
+
+      const currentStoryIndex = this.data.currentStoryIndex + 1;
+      this.setData({ currentStoryIndex });
+      this.setCurrentStory(stories[currentStoryIndex]);
+    }
+  },
+
+  onSaveAndFinish: function () {
+    const { hasNewStories } = this.data;
+
+    // Mock
+    if (this.data.currentStory) {
+      const { currentStory: name, displayTime: time, selectedDisplay: score } = this.data;
+      this.addStoryResult({ name, time, score });
+    }
+
+    if (hasNewStories) {
+      this.onAddNewStories();
+      const currentStoryIndex = this.data.currentStoryIndex + 1;
+      this.setData({ currentStoryIndex });
+      this.setCurrentStory(stories[currentStoryIndex]);
     }
   },
 
@@ -79,6 +116,38 @@ Page({
 
   onResultTypeChange: function (e) {
     this.setData({ selectedResultType: e.detail.value });
+  },
+
+  setCurrentStory: function (currentStory) {
+    this.setData({ currentStory });
+  },
+
+  addStoryResult: function (result) {
+    const { storyList } = this.data;
+    storyList.push(result);
+    this.setData({
+      storyList,
+      selectedValue: null,
+      selectedDisplay: '',
+      timer: -1,
+    });
+  },
+
+  onNewStoriesChange: function (e) {
+    const newStories = e.detail.value;
+    this.setData({ 
+      newStories, 
+      hasNewStories: newStories && newStories.trim().split('\n').filter(i => i).length > 0
+    });
+  },
+
+  onAddNewStories: function () {
+    const { newStories, stories } = this.data;
+    if (newStories) {
+      this.setData({
+        newStories: '',
+        stories: stories.concat(newStories.trim().split('\n').filter(i => i))
+      });
+    }
   }
-  
 });
