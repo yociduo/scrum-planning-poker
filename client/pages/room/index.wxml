@@ -2,8 +2,13 @@
 
 <view class="container">
   <view class="page-head">
-    <view class="page-head-title">{{name}}</view>
+    <view class="page-head-title">{{currentStory}}</view>
     <view class="page-head-line"></view>
+    <view class="page-head-action">
+      <button open-type="share">
+        <image src="../../image/invite-black.png"></image>
+      </button>
+    </view>
   </view>
   <view class="page-body">
     <view class="page-section">
@@ -32,17 +37,8 @@
                       Players:
                     </view>
                   </view>
-                </view>
-                <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
-                  <view class="player-hd">
-                    <image class="player-avatar" src="{{player.avatarUrl}}"></image>
-                  </view>
-                  <view class="player-bd">
-                    <view class="player-text">
-                      {{player.nickName}}
-                    </view>
-                  </view>
-                  <view class="player-ft">
+                  <view class="play-ft">
+                    {{displayTime}}
                   </view>
                 </view>
                 <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
@@ -52,11 +48,74 @@
                   <view class="player-bd">
                     <view class="player-text">
                       {{player.nickName}}
-                      <icon class="icon-small" type="success" size="23"></icon>
+                      <icon class="icon-small" wx:if="{{selectedValue !== null}}" type="success" size="23"></icon>
                     </view>
                   </view>
                   <view class="player-ft">
-                    <view class="player-value">10</view>
+                    <view class="player-value">{{selectedDisplay}}</view>
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class="kind-list-item-ft">
+              <view class="weui-cells weui-cells_after-title">
+                <view class="weui-cell weui-cell_input">
+                  <view class="weui-cell__hd">
+                    <view class="weui-label">Calc.</view>
+                  </view>
+                  <view class="weui-cell__bd">
+                    <picker bindchange="onCalcMethodChange" value="{{selectedCalcMethod}}" range="{{calcMethods}}">
+                      <view class="weui-input">{{calcMethods[selectedCalcMethod]}}</view>
+                    </picker>
+                  </view>
+                </view>
+                <radio-group bindchange="onResultTypeChange">
+                  <label class="weui-cell weui-check__label">
+                    <view class="weui-cell__hd">
+                      <radio value="0" checked="true" />
+                    </view>
+                    <view class="weui-cell__bd">Average</view>
+                    <view class="weui-cell__ft">{{selectedDisplay}}</view>
+                  </label>
+                  <label class="weui-cell weui-check__label">
+                    <view class="weui-cell__hd">
+                      <radio value="1" />
+                    </view>
+                    <view class="weui-cell__bd">Median</view>
+                    <view class="weui-cell__ft">{{selectedDisplay}}</view>
+                  </label>
+                </radio-group>
+              </view>
+              <view wx:if="{{currentStoryIndex === (stories.length - 1)}}" class="textarea-wrp">
+                <textarea name="stories" auto-height value="{{newStories}}" bindinput="onNewStoriesChange" placeholder="Put more stories text here." />
+              </view>
+              <view class="btn-area">
+                <button wx:if="{{currentStoryIndex < (stories.length - 1)}}" type="primary" bindtap="onSaveAndNext">Save & Next</button>
+                <button wx:if="{{currentStoryIndex === (stories.length - 1)}}" type="primary" bindtap="onSaveAndFinish">{{ hasNewStories ? 'Add New Store' : 'Save & Finish' }}</button>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="page-section">
+      <view class="page-section-spacing">
+        <view class="kind-list">
+          <view class="kind-list-item">
+            <view class="kind-list-item-hd">
+              <view class="kind-list-text">All Stories</view>
+            </view>
+            <view class="kind-list-item-bd">
+              <view class="story-box">
+                <view class="story" wx:for="{{storyList}}" wx:for-item="story" wx:key="story.index">
+                  <view class="story-hd">
+                    {{story.name}}
+                  </view>
+                  <view class="story-bd">
+                    {{story.score}}
+                  </view>
+                  <view class="story-ft">
+                    {{story.time}}
                   </view>
                 </view>
               </view>
@@ -65,38 +124,5 @@
         </view>
       </view>
     </view>
-    <view class="page-section">
-      <view class="weui-cells weui-cells_after-title">
-        <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
-            <view class="weui-label">Calc.</view>
-          </view>
-          <view class="weui-cell__bd">
-            <picker bindchange="onCalcMethodChange" value="{{selectedCalcMethod}}" range="{{calcMethods}}">
-              <view class="weui-input">{{calcMethods[selectedCalcMethod]}}</view>
-            </picker>
-          </view>
-        </view>
-      </view>
-      <view class="weui-cells">
-        <radio-group bindchange="onResultTypeChange">
-          <label class="weui-cell weui-check__label">
-            <view class="weui-cell__hd">
-              <radio value="0" checked="true" />
-            </view>
-            <view class="weui-cell__bd">Average 10</view>
-          </label>
-          <label class="weui-cell weui-check__label">
-            <view class="weui-cell__hd">
-              <radio value="1" />
-            </view>
-            <view class="weui-cell__bd">Median 10</view>
-          </label>
-        </radio-group>
-      </view>
-    </view>
-  </view>
-  <view class="btn-area">
-    <button type="primary" open-type="share">Invite</button>
   </view>
 </view>

@@ -29,7 +29,7 @@
   right: 32rpx;
   left: 32rpx;
   border-radius: 8rpx;
-  border: 1rpx solid #d5d9de;
+  border: 1px solid #d5d9de;
 }
 
 .card:hover,
@@ -38,7 +38,7 @@
 }
 
 .card.selected {
-  background-color: #4b9ae8;
+  background-color: #179B16;
   color: #ffffff;
 }
 

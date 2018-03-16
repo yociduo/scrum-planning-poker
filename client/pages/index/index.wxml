@@ -26,18 +26,18 @@
       <view class="page-section">
         <view class="page-section-title">Enter room name</view>
         <view class="input-wrp">
-          <input name="room" bindinput="onRoomChange" value="{{room}}" />
+          <input name="room" bindinput="onRoomChange" bindblur="onRoomBlur" bindfocus="onRoomFocus" value="{{room}}" />
         </view>
       </view>
       <view class="page-section">
         <view class="page-section-title">Put your stories text here. Each line contains new story.</view>
         <view class="textarea-wrp">
-          <textarea name="stories" auto-height />
+          <textarea name="stories" auto-height value="{{stories}}" bindinput="onStoryChange" bindblur="onStoriesBlur" />
         </view>
       </view>
       <view class="weui-cells">
         <view class="weui-cell weui-cell_switch">
-          <view class="weui-cell__bd">Do you want to score as well?</view>
+          <view class="weui-cell__bd">Do you want to enter stories in this room?</view>
           <view class="weui-cell__ft">
             <switch name="needScore" checked />
           </view>
