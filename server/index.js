@@ -111,7 +111,7 @@ const calculator = (room) => {
 
   room.averageScore = Math.round(sum / length);
   if (length % 2 === 0) {
-    room.medianScore = Math.round((scores[length / 2] + scores[length / 2 + 1]));
+    room.medianScore = Math.round((scores[length / 2] + scores[length / 2 - 1]) / 2);
   } else {
     room.medianScore = scores[(length - 1) / 2];
   }
@@ -216,8 +216,14 @@ io.on('connection', (socket) => {
 
     room.loading = false;
     keys.add('loading');
-    room.players.forEach(p => p.score === null);
+    room.players.forEach(p => p.score = null);
     keys.add('players');
+    room.selectedCard = null;
+    keys.add('selectedCard');
+    room.averageScore = '';
+    keys.add('averageScore');
+    room.medianScore = '';
+    keys.add('medianScore');
 
     emitAll(room, keys);
   });
