@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      #actions { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      #actions button { cursor: pointer; width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <div id="actions">
+      <button id="createRoom">Create Room</button>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(function () {
+        var socket = io();
+
+        $('#createRoom').click(function () {
+          socket.emit('init room', {
+          id: '3068902',
+          needScore: true,
+          isNoymous: false,
+          name: 'Room',
+          stories: 'Story%201%0AStory%202%0AStory%203'
+          });
+        });
+
+        socket.on('chat message', function(msg){
+          $('#messages').append($('<li>').text(msg));
+        });
+      });
+    </script>
+  </body>
+</html>
