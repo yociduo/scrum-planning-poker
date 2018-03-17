@@ -93,8 +93,8 @@ const calculator = (room) => {
     .sort();
 
   if (scores.length === 0) {
-    scores.averageScore = '';
-    scores.medianScore = '';
+    room.averageScore = '';
+    room.medianScore = '';
     return;
   }
 
@@ -267,6 +267,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
+    log('disconnect');
     for (const key in rooms) {
       if (rooms.hasOwnProperty(key)) {
         const room = rooms[key];
