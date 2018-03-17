@@ -16,7 +16,7 @@ const emit = (socket, room, keys = null) => {
     const score = player.score === null ? '' : cards.find(c => c.value === player.score).key;
     const needAnnoymous = !room.isNoymous && !socket.isHost && socket.nickName !== player.nickName;
     const nickName = needAnnoymous ? `Player ${index + 1}` : player.nickName;
-    const avatarUrl = needAnnoymous ? '' : player.avatarUrl;
+    const avatarUrl = (needAnnoymous ? '' : player.avatarUrl) || '../../image/user.png';
     return { score, nickName, avatarUrl };
   })
 
@@ -25,7 +25,7 @@ const emit = (socket, room, keys = null) => {
     const score = player.score === null ? '' : cards.find(c => c.value === player.score).key;
     const needAnnoymous = !room.isNoymous && !socket.isHost && socket.nickName !== player.nickName;
     const nickName = needAnnoymous ? `Player ${index + 1}` : player.nickName;
-    const avatarUrl = needAnnoymous ? '' : player.avatarUrl;
+    const avatarUrl = (needAnnoymous ? '' : player.avatarUrl) || '../../image/user.png';
     return { score, nickName, avatarUrl };
   });
 
