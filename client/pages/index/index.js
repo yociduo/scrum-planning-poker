@@ -25,26 +25,32 @@ Page({
     this.setData({ stories: e.detail.value });
   },
   onStoriesBlur: function () {
-    if (!this.data.stories) {
+    if (!this.data.stories || !/\w+/.test(this.data.stories)) {
       this.setData({ stories: initStories });
     }
   },
   formSubmit: function (e) {
-    const { room, stories, needScore } = e.detail.value;
+    const { room, stories, needScore, isNoymous } = e.detail.value;
     if (room) {
+      // generate id
       const id = Math.ceil(Math.random() * 10000000).toString();
-      const { keys } = wx.getStorageInfoSync();
-      let hosted;
-      if (keys.includes('hosted')) {
-        hosted = wx.getStorageSync('hosted');
-        hosted.push(id);
-      } else {
-        hosted = [id];
-      }
+
+      // store hosted room id
+      const hosted = wx.getStorageSync('hosted') || [];
+      hosted.push(id);
       wx.setStorageSync('hosted', hosted);
-      wx.navigateTo({
-        url: `../room/index?id=${id}&name=${encodeURIComponent(room)}&stories=${encodeURIComponent(stories)}&needScore=${needScore}`,
+
+      app.globalData.socket.emit('init room', {
+        id,
+        needScore,
+        isNoymous,
+        name: encodeURIComponent(room),
+        stories: encodeURIComponent(stories),
       });
-    }   
+
+      wx.navigateTo({
+        url: `../room/index?id=${id}&name=${encodeURIComponent(room)}&stories=${encodeURIComponent(stories)}&needScore=${needScore}&isNoymous=${isNoymous}`,
+      });
+    }
   }
 })
