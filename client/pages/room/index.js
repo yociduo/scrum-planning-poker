@@ -45,14 +45,31 @@ Page({
     if (isHost) {
     }
 
-    this.onSaveAndNext();
-
     // mock players
     wx.getUserInfo({
       success: ({userInfo}) => {
-        this.setData({ players: [userInfo] });
+        console.log(userInfo);
+        // app.globalData.socket.emit('message', 1);
       }
     });
+
+    // wx.connectSocket({
+    //   url: `${socketUrl}&`,
+    //   header: {},
+    //   method: '',
+    //   protocols: [],
+    //   success: function(res) {
+    //   },
+    //   fail: function(res) {},
+    //   complete: function(res) {},
+    // })
+
+    // io.
+
+    // wx.onSocketMessage(function(res){
+    //   console.log(res);
+    // })
+
   },
 
   onUnload: function () {

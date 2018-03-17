@@ -16,7 +16,6 @@
   <body>
     <ul id="messages"></ul>
     <div id="actions">
-      <button id="createRoom">Create Room</button>
       <button id="joinRoom">Join Room</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
@@ -25,21 +24,11 @@
       $(function () {
         var socket = io();
 
-        $('#createRoom').click(function () {
-          socket.emit('create room', {
-            id: '3068902',
-            needScore: true,
-            isNoymous: false,
-            name: 'Room',
-            stories: 'Story%201%0AStory%202%0AStory%203'
-          });
-        });
-
         $('#joinRoom').click(function () {
           socket.emit('join room', {
             roomId: '3068902',
             userInfo: {
-              nickName: '″ `мч\'|哆'
+              nickName: 'Eden'
             }
           });
         });
