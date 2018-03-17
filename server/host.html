@@ -18,6 +18,7 @@
     <div id="actions">
       <button id="createRoom">Create Room</button>
       <button id="joinRoom">Join Room</button>
+      <button id="nextStory">Next Story</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -41,6 +42,12 @@
             userInfo: {
               nickName: '″ `мч\'|哆'
             }
+          });
+        });
+
+        $('#nextStory').click(function () {
+          socket.emit('next story', {
+            roomId: '3068902'
           });
         });
 
