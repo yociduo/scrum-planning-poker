@@ -53,17 +53,22 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('next story', ({ roomId }) => {
+  socket.on('next story', ({ roomId, stories }) => {
     log('[next story]', { roomId });
     if (rooms.hasOwnProperty(roomId)) {
       const room = rooms[roomId];
+
+      // push new stories
+      if (stories) {
+        decodeURIComponent(stories).split('\n').forEach(i => i && room.stories.push(i));
+      }
+
       room.currentStoryIndex++;
       if (room.currentStoryIndex > 0) {
-        console.log('save result');
+        console.log('Todo: save result');
       }
 
       const { length } = room.stories;
-
       if (length > room.currentStoryIndex) {
         const hasNext = (length - 1) > room.currentStoryIndex;
         const currentStory = room.stories[room.currentStoryIndex];
