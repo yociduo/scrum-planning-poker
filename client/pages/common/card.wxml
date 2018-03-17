@@ -1,5 +1,5 @@
 <template name="card">
-  <view class="card {{selectedCard === card.value ? 'selected' : ''}}" data-card="{{selectedCard === card.value ? null : card}}" bindtap="onCardClick">
+  <view class="card {{selectedCard === card.value ? 'selected' : ''}}" data-card="{{card}}" bindtap="onCardClick">
     <view class="card-left-corner" data-card="{{card}}">
       {{card.corner}}
     </view>

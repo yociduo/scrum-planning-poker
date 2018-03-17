@@ -10,6 +10,13 @@ Page({
     const { id } = options;
     const isHost = (wx.getStorageSync('hosted') || []).includes(id);
     this.setData({ id, isHost });
+  },
+  onShow: function () {
+    const { id, isHost } = this.data;
+
+    if (!app.globalData.socket.io.connected) {
+      app.globalData.socket.io.connect();
+    }
 
     wx.getUserInfo({
       success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost })
@@ -28,8 +35,9 @@ Page({
             title: 'Error',
             content: 'Room has been deleted!',
             showCancel: false,
-            confirmText: 'OK'
-          })
+            confirmText: 'OK',
+            success: () => this.onClose(),
+          });
         }
       } else {
         const title = payload.name;
@@ -56,7 +64,8 @@ Page({
       title: 'Error',
       content,
       showCancel: false,
-      confirmText: 'OK'
+      confirmText: 'OK',
+      success: () => this.onClose(),
     }));
   },
   onShareAppMessage: function () {
@@ -66,8 +75,9 @@ Page({
     const { id, start, selectedCard } = this.data;
     if (this.data.start) {
       const { card } = e.target.dataset;
-      this.setData({ selectedCard: card && card.value });
-      app.globalData.socket.emit('select card', { id, card });
+      const isSelected = card.value === selectedCard;
+      this.setData({ selectedCard: isSelected ? null : card.value });
+      app.globalData.socket.emit('select card', { id, card: isSelected ? null : card });
     }
   },
   onSaveAndNext: function () {
@@ -97,5 +107,12 @@ Page({
       newStories,
       hasNewStories: newStories && newStories.trim().split('\n').filter(i => i).length > 0
     });
+  },
+  onClose: function () {
+    if (getCurrentPages().length > 1) {
+      wx.navigateBack({ delta: 1 });
+    } else {
+      wx.redirectTo({ url: `../index/index` });
+    }
   }
 });

@@ -31,7 +31,6 @@
             <view class="kind-list-item-bd">
               <view class="player-box">
                 <view class="player">
-                  <view class="player-hd"></view>
                   <view class="player-bd">
                     <view class="player-text">
                       Players:
@@ -91,7 +90,7 @@
               </view>
               <view class="btn-area">
                 <button wx:if="{{hasNext}}" type="primary" loading="{{loading}}" bindtap="onSaveAndNext">Save & Next</button>
-                <button wx:if="{{!hasNext}}" type="primary" loading="{{loading}}" bindtap="onSaveAndFinish">{{ hasNewStories ? 'Add New Store' : 'Save & Finish' }}</button>
+                <button wx:if="{{!hasNext}}" type="primary" loading="{{loading}}" bindtap="onSaveAndFinish">{{ hasNewStories ? 'Add New Stories' : 'Save & Finish' }}</button>
               </view>
             </view>
           </view>
@@ -118,6 +117,11 @@
                     {{story.time}}
                   </view>
                 </view>
+              </view>
+            </view>
+            <view wx:if="{{finished}}" class="kind-list-item-ft">
+              <view class="btn-area">
+                <button bindtap="onClose">Close</button>
               </view>
             </view>
           </view>

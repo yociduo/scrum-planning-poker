@@ -4,10 +4,10 @@
 .player-box,
 .story-box {
   position: relative;
-  font-size: 34rpx;
 }
 .player,
 .story {
+  min-height: 78rpx;
   padding: 10rpx 30rpx;
   position: relative;
   display: flex;
