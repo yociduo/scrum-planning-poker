@@ -52,7 +52,7 @@
                     </view>
                   </view>
                   <view class="player-ft">
-                    <view class="player-value">{{player.display}}</view>
+                    <view class="player-value">{{player.score}}</view>
                   </view>
                 </view>
               </view>

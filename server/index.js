@@ -11,8 +11,18 @@ const log = debug ? (...args) => console.log(...args) : () => { };
 const emit = (socket, room, keys = null) => {
   let payload = { id: room.id };
   const { players, ...rest } = room;
+
+  const toPlayers = () => players.map((player, index) => {
+    const score = player.score === null ? '' : cards.find(c => c.value === player.score).key;
+    const needAnnoymous = !room.isNoymous && !socket.isHost && socket.nickName !== player.nickName;
+    const nickName = needAnnoymous ? `Player ${index + 1}` : player.nickName;
+    const avatarUrl = needAnnoymous ? '' : player.avatarUrl;
+    return { score, nickName, avatarUrl };
+  })
+
+
   rest.players = players.map((player, index) => {
-    const score = player.score === null ? '' : cards.find(c => c.key === player.score).key;
+    const score = player.score === null ? '' : cards.find(c => c.value === player.score).key;
     const needAnnoymous = !room.isNoymous && !socket.isHost && socket.nickName !== player.nickName;
     const nickName = needAnnoymous ? `Player ${index + 1}` : player.nickName;
     const avatarUrl = needAnnoymous ? '' : player.avatarUrl;
@@ -25,22 +35,35 @@ const emit = (socket, room, keys = null) => {
     }
 
     if (keys.length) {
-      keys.forEach(key => payload[key] = rest[key]);
+      keys.forEach(key => {
+        switch (key) {
+          case 'players': payload[key] = toPlayers(); break;
+          default: payload[key] = rest[key]; break;
+        }
+      });
       log('[emit]', payload);
       socket.emit('action', payload);
     }
   } else {
     for (const key in room) {
       if (room.hasOwnProperty(key) && !key.startsWith('_')) {
-        payload[key] = rest[key];
+        switch (key) {
+          case 'players': payload[key] = toPlayers(); break;
+          default: payload[key] = rest[key]; break;
+        }
       }
     }
 
+    payload.init = true;
     payload.cards = cards;
     payload.calcMethods = [
       'Arithmetic Mean',
       'Truncated Mean',
     ];
+    payload.info1 = 'Voting...';
+    payload.info2 = 'All Stories';
+    payload.inviteIconUrl = '../../image/invite-black.png';
+    payload.shareImageUrl = '../../image/invite-photo.png';
 
     const player = players.find(i => i.nickName === socket.nickName);
     payload.selectedCard = player ? player.score : null;
@@ -57,6 +80,10 @@ const emitAll = (room, keys) => {
 const error = (socket, msg) => {
   log('[error]', msg);
   socket.error(msg);
+};
+
+const calculator = (room) => {
+  console.log(room);
 };
 
 if (debug) {
@@ -91,6 +118,7 @@ io.on('connection', (socket) => {
     room.players = [];
     room.scores = [];
     room.currentStory = '';
+    room.loading = false;
     room.start = false;
     room.finished = room._stories.length === 0;
     room.hasNext = room._stories.length > 1;
@@ -101,8 +129,8 @@ io.on('connection', (socket) => {
     rooms[room.id] = room;
   });
 
-  socket.on('next story', ({ id, stories }) => {
-    log('[next story]', { id, stories });
+  socket.on('next story', ({ id, resultType, stories }) => {
+    log('[next story]', { id, resultType, stories });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     const room = rooms[id];
     const keys = new Set();;
@@ -110,12 +138,12 @@ io.on('connection', (socket) => {
     // push new stories
     if (stories) decodeURIComponent(stories).split('\n').forEach(i => i && room._stories.push(i));
 
-    // save scores
     if (room._storyIndex !== -1) {
+      // save scores
       room.scores.push({
         name: room.currentStory,
         time: room.displayTime,
-        score: 'Todo'
+        score: resultType === 0 ? room.averageScore : room.medianScore
       });
       keys.add('scores');
     } else {
@@ -141,14 +169,22 @@ io.on('connection', (socket) => {
       room.currentStory = room._stories[room._storyIndex];
       keys.add('currentStory');
     } else {
+      if (room._interval) {
+        clearInterval(room._interval);
+      }
+
       room.start = false;
       keys.add('start');
       room.finished = true;
       keys.add('finished');
-      if (room._interval) {
-        clearInterval(room._interval);
-      }
+      room.displayTime = '00:00:00';
+      keys.add('displayTime');
+      room.currentStory = 'Congratulations!';
+      keys.add('currentStory');
     }
+
+    room.loading = false;
+    keys.add('loading');
 
     emitAll(room, keys);
   });
@@ -161,7 +197,7 @@ io.on('connection', (socket) => {
     socket.nickName = userInfo.nickName;
     socket.isHost = isHost;
     emit(socket, room);
-    if (room.needScore && isHost) return;
+    if (!room.needScore && isHost) return;
     if (room.players.findIndex(({ nickName }) => userInfo.nickName === nickName) === -1) {
       const player = { ...userInfo };
       player.score = null;
@@ -174,13 +210,21 @@ io.on('connection', (socket) => {
     log('[select card]', { id, card });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     if (!socket.nickName) return error(socket, 'Did join the room');
+    const room = rooms[id];
+    const player = room.players.find(p => p.nickName === socket.nickName);
+    if (player) {
+      player.score = card ? card.value : null;
+      calculator(room);
+      emitAll(room, ['players', 'averageScore', 'medianScore']);
+    }
   });
 
   socket.on('calc method', ({ id, calcMethod }) => {
     log('[calc method]', { id, calcMethod });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     const room = rooms[id];
-
+    calculator(room);
+    emitAll(room, ['averageScore', 'medianScore']);
   });
 
   socket.on('disconnect', () => {

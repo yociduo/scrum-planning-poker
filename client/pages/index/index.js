@@ -49,7 +49,7 @@ Page({
       });
 
       wx.navigateTo({
-        url: `../room/index?id=${id}&name=${encodeURIComponent(room)}&stories=${encodeURIComponent(stories)}&needScore=${needScore}&isNoymous=${isNoymous}`,
+        url: `../room/index?id=${id}`,
       });
     }
   }
