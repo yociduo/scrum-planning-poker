@@ -5,14 +5,45 @@ const io = require('socket.io')(http);
 const port = process.env.PORT || 9001;
 const debug = !(process.env.PROD || false);
 const log = debug ? (...args) => console.log(...args) : () => { };
-const emit = (socket, type, payload) => {
-  const action = { type, payload };
-  log('[emit]', action);
-  socket.emit('action', action);
+
+const formatNumber = n => {
+  n = n.toString()
+  return n[1] ? n : '0' + n
 };
 
-const emitAll = (room, type, payload) => {
-  room.sockets.forEach(socket => emit(socket, type, payload));
+const formatTimer = timer => {
+  const hour = Math.floor(timer / 3600);
+  const minute = Math.floor((timer % 3600) / 60);
+  const second = timer % 60;
+  return `${formatNumber(hour)}:${formatNumber(minute)}:${formatNumber(second)}`
+};
+
+const emit = (socket, room, keys = null) => {
+  let payload = { id: room.id };
+  if (keys) {
+    if (keys.toString() === '[object Set]') {
+      keys = Array.from(keys);
+    }
+
+    if (keys.length) {
+      keys.forEach(key => payload[key] = room[key]);
+    } else {
+      return;
+    }
+  } else {
+    for (const key in room) {
+      if (room.hasOwnProperty(key) && !key.startsWith('_')) {
+        payload[key] = room[key];
+      }
+    }
+  }
+
+  log('[emit]', payload);
+  socket.emit('action', payload);
+};
+
+const emitAll = (room, keys) => {
+  room._sockets.forEach(socket => emit(socket, room, keys));
 };
 
 const error = (socket, msg) => {
@@ -43,58 +74,91 @@ io.on('connection', (socket) => {
   socket.on('create room', ({ stories, ...room }) => {
     log('[create room]', { stories, ...room });
     if (!rooms.hasOwnProperty(room.id)) {
-      room.stories = decodeURIComponent(stories).split('\n').filter(i => i);
-      room.players = [],
-        room.scores = [],
-        room.sockets = new Set(),
-        room.currentStoryIndex = -1;
-      room.finished = false;
+      room._stories = decodeURIComponent(stories).split('\n').filter(i => i);
+      room._sockets = new Set();
+      room._interval = null;
+      room._storyIndex = -1;
+      room.players = [];
+      room.scores = [];
+      room.currentStory = '';
+      room.start = false;
+      room.finished = room._stories.length > 0;
+      room.hasNext = room._stories.length > 1;
+      room.timer = 0;
+      room.calcMethod = 0;
+      room.averageScore = '';
+      room.medianScore = '';
       rooms[room.id] = room;
     }
   });
 
-  socket.on('next story', ({ roomId, stories }) => {
-    log('[next story]', { roomId });
-    if (rooms.hasOwnProperty(roomId)) {
-      const room = rooms[roomId];
+  socket.on('next story', ({ id, stories }) => {
+    log('[next story]', { id, stories });
+    if (rooms.hasOwnProperty(id)) {
+      const room = rooms[id];
+      const keys = new Set();;
 
       // push new stories
       if (stories) {
-        decodeURIComponent(stories).split('\n').forEach(i => i && room.stories.push(i));
+        decodeURIComponent(stories).split('\n').forEach(i => i && room._stories.push(i));
       }
 
-      room.currentStoryIndex++;
-      if (room.currentStoryIndex > 0) {
-        console.log('Todo: save result');
-      }
-
-      const { length } = room.stories;
-      if (length > room.currentStoryIndex) {
-        const hasNext = (length - 1) > room.currentStoryIndex;
-        const currentStory = room.stories[room.currentStoryIndex];
-        emitAll(room, 3, { hasNext, currentStory });
+      // save scores
+      if (room._storyIndex !== -1) {
+        room.scores.push({
+          name: room.currentStory,
+          time: formatTimer(room.timer),
+          score: 'Todo'
+        });
+        keys.add('scroes');
       } else {
-        room.finished = true;
-        emitAll(room, 1, room);
+        room.start = true;
+        keys.add('start');
+        room._interval = setInterval(() => room.timer++, 1000);
       }
+
+      room._storyIndex++;
+      room.timer = 0;
+      keys.add('timer');
+
+      const { length } = room._stories;
+      if (length > room._storyIndex) {
+        if (room.hasNext !== ((length - 1) > room._storyIndex)) {
+          room.hasNext = !room.hasNext;
+          keys.add('hasNext');
+        }
+
+        room.currentStory = room._stories[room._storyIndex];
+        keys.add('currentStory');
+      } else {
+        room.start = false;
+        keys.add('start');
+        room.finished = true;
+        keys.add('finished');
+        if (room._interval) {
+          clearInterval(room._interval);
+        }
+      }
+
+      emitAll(room, keys);
     } else {
       error(socket, 'Room has been deleted');
     }
   });
 
-  socket.on('join room', ({ roomId, userInfo }) => {
-    log('[join room]', { roomId, userInfo });
+  socket.on('join room', ({ id, userInfo }) => {
+    log('[join room]', { id, userInfo });
     socket.nickName = userInfo.nickName;
 
-    if (rooms.hasOwnProperty(roomId)) {
-      const room = rooms[roomId];
-      room.sockets.add(socket);
-      emit(socket, 1, room);
+    if (rooms.hasOwnProperty(id)) {
+      const room = rooms[id];
+      room._sockets.add(socket);
+      emit(socket, room);
       if (room.players.findIndex(({ nickName }) => userInfo.nickName === nickName) === -1) {
         const player = { ...userInfo };
         player.score = null;
         room.players.push(player);
-        emitAll(room, 2, room.players);
+        emitAll(room, ['players']);
       }
     } else {
       error(socket, 'Room has been deleted');
@@ -105,13 +169,12 @@ io.on('connection', (socket) => {
     for (const key in rooms) {
       if (rooms.hasOwnProperty(key)) {
         const room = rooms[key];
-        if (room.sockets.has(socket)) {
-          room.sockets.delete(socket);
+        if (room._sockets.has(socket)) {
+          room._sockets.delete(socket);
           const findIndex = room.players.findIndex(p => p.nickName === socket.nickName);
           if (findIndex !== -1 && room.players[findIndex].score === null) {
             room.players.splice(findIndex, 1);
-            console.log('1');
-            emitAll(room, 2, room.players);
+            emitAll(room, ['players']);
           }
         }
       }

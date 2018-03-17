@@ -39,7 +39,7 @@
 
         $('#joinRoom').click(function () {
           socket.emit('join room', {
-            roomId: '3068902',
+            id: '3068902',
             userInfo: {
               nickName: '″ `мч\'|哆'
             }
@@ -48,13 +48,13 @@
 
         $('#nextStory').click(function () {
           socket.emit('next story', {
-            roomId: '3068902'
+            id: '3068902'
           });
         });
 
         $('#addStories').click(function () {
           socket.emit('next story', {
-            roomId: '3068902',
+            id: '3068902',
             stories: 'Story%204%0AStory%205%0AStory%206'
           });
         });
@@ -63,8 +63,8 @@
           $('#messages').append($('<li class="error">').text(msg));
         });
 
-        socket.on('action', function(msg) {
-          $('#messages').append($('<li>').text(msg.type + ' ' + JSON.stringify(msg.payload)));
+        socket.on('action', function(payload) {
+          $('#messages').append($('<li>').text(JSON.stringify(payload)));
         });
       });
     </script>
