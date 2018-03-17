@@ -17,17 +17,39 @@ Page({
 
     app.globalData.socket.on('init', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
-      const title = payload.name;
-      wx.setNavigationBarTitle({ title });
-      this.setData(payload);
-      if (isHost && !payload.start) {
-        app.globalData.socket.emit('next story', { id });
+      if (payload.finished) {
+        const cache = wx.getStorageSync(id);
+        if (cache) {
+          const title = cache.name;
+          wx.setNavigationBarTitle({ title });
+          this.setData({ ...payload, ...cache });
+        } else {
+          wx.showModal({
+            title: 'Error',
+            content: 'Room has been deleted!',
+            showCancel: false,
+            confirmText: 'OK'
+          })
+        }
+      } else {
+        const title = payload.name;
+        wx.setNavigationBarTitle({ title });
+        this.setData(payload);
+        if (isHost && !payload.start) {
+          app.globalData.socket.emit('next story', { id });
+        }
+        wx.setStorageSync(id, { name: payload.name, scores: payload.scores });
       }
     });
 
     app.globalData.socket.on('action', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
       this.setData(payload);
+      if (payload.scores) {
+        const cache = wx.getStorageSync(id) || {};
+        cache.scores = payload.scores;
+        wx.setStorageSync(id, cache);
+      }
     });
 
     app.globalData.socket.on('error', (content) => wx.showModal({

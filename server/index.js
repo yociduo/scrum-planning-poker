@@ -8,6 +8,19 @@ const port = process.env.PORT || 9001;
 const debug = !(process.env.PROD || false);
 const log = debug ? (...args) => console.log(...args) : () => { };
 
+const initPayload = {
+  init: true,
+  cards,
+  calcMethods: [
+    'Arithmetic Mean',
+    'Truncated Mean',
+  ],
+  info1: 'Voting...',
+  info2: 'All Stories',
+  inviteIconUrl: '../../image/invite-black.png',
+  shareImageUrl: '../../image/invite-photo.png',
+};
+
 const emit = (socket, room, keys = null) => {
   let payload = { id: room.id };
   const { players, ...rest } = room;
@@ -54,19 +67,9 @@ const emit = (socket, room, keys = null) => {
       }
     }
 
-    payload.init = true;
-    payload.cards = cards;
-    payload.calcMethods = [
-      'Arithmetic Mean',
-      'Truncated Mean',
-    ];
-    payload.info1 = 'Voting...';
-    payload.info2 = 'All Stories';
-    payload.inviteIconUrl = '../../image/invite-black.png';
-    payload.shareImageUrl = '../../image/invite-photo.png';
-
     const player = players.find(i => i.nickName === socket.nickName);
     payload.selectedCard = player ? player.score : null;
+    payload = { ...initPayload, ...payload };
 
     log('[init]', payload);
     socket.emit('init', payload);
@@ -110,7 +113,7 @@ const calculator = (room) => {
   if (length % 2 === 0) {
     room.medianScore = Math.round((scores[length / 2] + scores[length / 2 + 1]));
   } else {
-    room.medianScore = scores[length / 2 + 0.5];
+    room.medianScore = scores[(length - 1) / 2];
   }
 };
 
@@ -221,7 +224,7 @@ io.on('connection', (socket) => {
 
   socket.on('join room', ({ id, userInfo, isHost }) => {
     log('[join room]', { id, userInfo, isHost });
-    if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
+    if (!rooms.hasOwnProperty(id)) return socket.emit('init', { ...initPayload, finished: true, currentStory: 'Congratulations!', id });
     const room = rooms[id];
     room._sockets.add(socket);
     socket.nickName = userInfo.nickName;
