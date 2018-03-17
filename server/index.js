@@ -83,7 +83,35 @@ const error = (socket, msg) => {
 };
 
 const calculator = (room) => {
-  console.log(room);
+  const { calcMethod, players } = room;
+  const scores = players
+    .map(p => p.score)
+    .filter(s => s !== null && s >= 0)
+    .sort();
+
+  if (scores.length === 0) {
+    scores.averageScore = '';
+    scores.medianScore = '';
+    return;
+  }
+
+  if (scores.length > 2 && room.calcMethod === 1) {
+    scores.pop();
+    scores.unshift();
+  }
+
+  const { length } = scores;
+  let sum = 0;
+  for (let i = 0; i < length; i++) {
+    sum += scores[i];
+  }
+
+  room.averageScore = Math.round(sum / length);
+  if (length % 2 === 0) {
+    room.medianScore = Math.round((scores[length / 2] + scores[length / 2 + 1]));
+  } else {
+    room.medianScore = scores[length / 2 + 0.5];
+  }
 };
 
 if (debug) {
@@ -185,6 +213,8 @@ io.on('connection', (socket) => {
 
     room.loading = false;
     keys.add('loading');
+    room.players.forEach(p => p.score === null);
+    keys.add('players');
 
     emitAll(room, keys);
   });
