@@ -40,7 +40,7 @@ Page({
       hosted.push(id);
       wx.setStorageSync('hosted', hosted);
 
-      app.globalData.socket.emit('init room', {
+      app.globalData.socket.emit('create room', {
         id,
         needScore,
         isNoymous,
