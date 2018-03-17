@@ -2,11 +2,10 @@ const app = getApp();
 
 Page({
   data: {
-    selectedResultType: 0,
+    resultType: 0,
     newStories: '',
     hasNewStories: false,
   },
-
   onLoad: function (options) {
     const { id } = options;
     const isHost = (wx.getStorageSync('hosted') || []).includes(id);
@@ -38,11 +37,9 @@ Page({
       confirmText: 'OK'
     }));
   },
-
   onShareAppMessage: function () {
-    return { title: this.data.name };
+    return { title: this.data.name, imageUrl: this.data.shareImageUrl };
   },
-
   onCardClick: function (e) {
     const { id, start, selectedCard } = this.data;
     if (this.data.start) {
@@ -51,79 +48,32 @@ Page({
       app.globalData.socket.emit('select card', { id, card });
     }
   },
-
   onSaveAndNext: function () {
-    const { stories, currentStoryIndex } = this.data;
-    if (currentStoryIndex < stories.length - 1) {
-      // Mock
-      if (this.data.currentStory) {
-        const { currentStory: name, displayTime: time, selectedDisplay: score } = this.data;
-        this.addStoryResult({ name, time, score });
-      }
-
-      const currentStoryIndex = this.data.currentStoryIndex + 1;
-      this.setData({ currentStoryIndex });
-      this.setCurrentStory(stories[currentStoryIndex]);
-    }
+    const { id, loading, resultType } = this.data;
+    if (loading) return;
+    app.globalData.socket.emit('next story', { id, resultType });
+    this.setData({ loading: true });
   },
-
   onSaveAndFinish: function () {
-    const { hasNewStories } = this.data;
-
-    // Mock
-    if (this.data.currentStory) {
-      const { currentStory: name, displayTime: time, selectedDisplay: score } = this.data;
-      this.addStoryResult({ name, time, score });
-    }
-
-    if (hasNewStories) {
-      this.onAddNewStories();
-      const currentStoryIndex = this.data.currentStoryIndex + 1;
-      this.setData({ currentStoryIndex });
-      this.setCurrentStory(stories[currentStoryIndex]);
-    }
+    const { id, loading, resultType, newStories } = this.data;
+    if (loading) return;
+    const stories = encodeURIComponent(newStories);
+    app.globalData.socket.emit('next story', { id, resultType, stories });
+    this.setData({ loading: true, newStories: '', hasNewStories: false });
   },
-
   onCalcMethodChange: function (e) {
     const calcMethod = e.detail.value;
     this.setData({ calcMethod });
     app.globalData.socket.emit('calc method', { id: this.data.id, calcMethod });
   },
-
   onResultTypeChange: function (e) {
-    this.setData({ selectedResultType: e.detail.value });
+    this.setData({ resultType: e.detail.value });
   },
-
-  setCurrentStory: function (currentStory) {
-    this.setData({ currentStory });
-  },
-
-  addStoryResult: function (result) {
-    const { storyList } = this.data;
-    storyList.push(result);
-    this.setData({
-      storyList,
-      selectedValue: null,
-      selectedDisplay: '',
-      timer: -1,
-    });
-  },
-
   onNewStoriesChange: function (e) {
     const newStories = e.detail.value;
     this.setData({
       newStories,
       hasNewStories: newStories && newStories.trim().split('\n').filter(i => i).length > 0
     });
-  },
-
-  onAddNewStories: function () {
-    const { newStories, stories } = this.data;
-    if (newStories) {
-      this.setData({
-        newStories: '',
-        stories: stories.concat(newStories.trim().split('\n').filter(i => i))
-      });
-    }
   }
 });

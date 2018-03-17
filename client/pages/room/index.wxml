@@ -1,12 +1,12 @@
 <import src="../common/card.wxml" />
 
-<view class="container">
+<view wx:if="{{init}}" class="container">
   <view class="page-head">
     <view class="page-head-title">{{currentStory}}</view>
     <view class="page-head-line"></view>
     <view wx:if="{{!finished}}" class="page-head-action">
       <button open-type="share">
-        <image src="../../image/invite-black.png"></image>
+        <image src="{{inviteIconUrl}}"></image>
       </button>
     </view>
   </view>
@@ -26,7 +26,7 @@
         <view class="kind-list">
           <view class="kind-list-item">
             <view class="kind-list-item-hd">
-              <view class="kind-list-text">Voting</view>
+              <view class="kind-list-text">{{info1}}</view>
             </view>
             <view class="kind-list-item-bd">
               <view class="player-box">
@@ -48,7 +48,7 @@
                   <view class="player-bd">
                     <view class="player-text">
                       {{player.nickName}}
-                      <icon class="icon-small" wx:if="{{player.score !== null}}" type="success" size="23"></icon>
+                      <icon class="icon-small" wx:if="{{player.score}}" type="success" size="23"></icon>
                     </view>
                   </view>
                   <view class="player-ft">
@@ -75,23 +75,23 @@
                       <radio value="0" checked="true" />
                     </view>
                     <view class="weui-cell__bd">Average</view>
-                    <view class="weui-cell__ft">{{selectedDisplay}}</view>
+                    <view class="weui-cell__ft">{{averageScore}}</view>
                   </label>
                   <label class="weui-cell weui-check__label">
                     <view class="weui-cell__hd">
                       <radio value="1" />
                     </view>
                     <view class="weui-cell__bd">Median</view>
-                    <view class="weui-cell__ft">{{selectedDisplay}}</view>
+                    <view class="weui-cell__ft">{{medianScore}}</view>
                   </label>
                 </radio-group>
               </view>
-              <view wx:if="{{currentStoryIndex === (stories.length - 1)}}" class="textarea-wrp">
+              <view wx:if="{{!hasNext}}" class="textarea-wrp">
                 <textarea name="stories" auto-height value="{{newStories}}" bindinput="onNewStoriesChange" placeholder="Put more stories text here." />
               </view>
               <view class="btn-area">
-                <button wx:if="{{currentStoryIndex < (stories.length - 1)}}" type="primary" bindtap="onSaveAndNext">Save & Next</button>
-                <button wx:if="{{currentStoryIndex === (stories.length - 1)}}" type="primary" bindtap="onSaveAndFinish">{{ hasNewStories ? 'Add New Store' : 'Save & Finish' }}</button>
+                <button wx:if="{{hasNext}}" type="primary" loading="{{loading}}" bindtap="onSaveAndNext">Save & Next</button>
+                <button wx:if="{{!hasNext}}" type="primary" loading="{{loading}}" bindtap="onSaveAndFinish">{{ hasNewStories ? 'Add New Store' : 'Save & Finish' }}</button>
               </view>
             </view>
           </view>
@@ -103,7 +103,7 @@
         <view class="kind-list">
           <view class="kind-list-item">
             <view class="kind-list-item-hd">
-              <view class="kind-list-text">All Stories</view>
+              <view class="kind-list-text">{{info2}}</view>
             </view>
             <view class="kind-list-item-bd">
               <view class="story-box">
