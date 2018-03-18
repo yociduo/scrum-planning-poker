@@ -86,7 +86,7 @@
                 </radio-group>
               </view>
               <view wx:if="{{!hasNext}}" class="textarea-wrp">
-                <textarea name="stories" auto-height value="{{newStories}}" bindinput="onNewStoriesChange" placeholder="Put more stories text here." />
+                <textarea name="stories" auto-height value="{{newStories}}" bindinput="onNewStoriesChange" placeholder="This is the last story. Text here to add more." />
               </view>
               <view class="btn-area">
                 <button wx:if="{{hasNext}}" type="primary" loading="{{loading}}" bindtap="onSaveAndNext">Save & Next</button>

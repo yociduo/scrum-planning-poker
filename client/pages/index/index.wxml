@@ -43,7 +43,7 @@
           </view>
         </view>
         <view class="weui-cell weui-cell_switch">
-          <view class="weui-cell__bd">Can players see other players's name?</view>
+          <view class="weui-cell__bd">Can players see other players' name?</view>
           <view class="weui-cell__ft">
             <switch name="isNoymous" />
           </view>
