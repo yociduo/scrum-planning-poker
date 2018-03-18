@@ -10,20 +10,21 @@ Page({
     const { id } = options;
     const isHost = (wx.getStorageSync('hosted') || []).includes(id);
     this.setData({ id, isHost });
-  },
-  onShow: function () {
-    const { id, isHost } = this.data;
-
-    if (!app.globalData.socket.io.connected) {
-      app.globalData.socket.io.connect();
-    }
 
     wx.getUserInfo({
       success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost })
     });
 
+    app.globalData.socket.on('connect', () => {
+      console.log('system', 'onconnect');
+      wx.getUserInfo({
+        success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost })
+      });
+    });
+
     app.globalData.socket.on('init', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
+      console.log('system', 'oninit');
       if (payload.finished) {
         const cache = wx.getStorageSync(id);
         if (cache) {
@@ -67,6 +68,8 @@ Page({
       confirmText: 'OK',
       success: () => this.onClose(),
     }));
+
+
   },
   onShareAppMessage: function () {
     return { title: this.data.name, imageUrl: this.data.shareImageUrl };

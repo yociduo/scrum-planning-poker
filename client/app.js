@@ -11,6 +11,9 @@ App({
     const socket = io(socketUrl);
     this.globalData.socket = socket;
   },
+  onShow() {
+    this.globalData.socket.connect();
+  },
   globalData: {
     userInfo: null,
   }
