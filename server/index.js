@@ -18,7 +18,7 @@ const initPayload = {
   info1: 'Voting...',
   info2: 'All Stories',
   inviteIconUrl: '../../image/invite-black.png',
-  shareImageUrl: '../../image/invite-photo.png',
+  shareImageUrl: '',
 };
 
 const emit = (socket, room, keys = null) => {
