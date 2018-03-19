@@ -140,7 +140,7 @@ io.on('connection', (socket) => {
   log('a user connected');
 
   socket.on('create room', ({ stories, ...room }) => {
-    log('[create room]', { stories, ...room });
+    log('[create room]', { stories, name, ...room });
     if (rooms.hasOwnProperty(room.id)) return error(socket, 'Room is duplicated!');
 
     room._stories = decodeURIComponent(stories).split('\n').filter(i => i);
@@ -148,6 +148,7 @@ io.on('connection', (socket) => {
     room._interval = null;
     room._storyIndex = -1;
     room._timer = 0;
+    room.name = decodeURIComponent(name);
     room.players = [];
     room.scores = [];
     room.currentStory = '';
