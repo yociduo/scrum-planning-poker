@@ -103,6 +103,8 @@ const calculator = (room) => {
     scores.unshift();
   }
 
+  console.log('calc scores', scores);
+
   const { length } = scores;
   let sum = 0;
   for (let i = 0; i < length; i++) {
@@ -262,6 +264,7 @@ io.on('connection', (socket) => {
     log('[calc method]', { id, calcMethod });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     const room = rooms[id];
+    room.calcMethod = calcMethod;
     calculator(room);
     emitAll(room, ['averageScore', 'medianScore']);
   });
