@@ -100,7 +100,7 @@ const calculator = (room) => {
 
   if (scores.length > 2 && room.calcMethod === 1) {
     scores.pop();
-    scores.unshift();
+    scores.splice(0, 1);
   }
 
   console.log('calc scores', scores);
