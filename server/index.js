@@ -176,7 +176,7 @@ io.on('connection', (socket) => {
       room.scores.push({
         name: room.currentStory,
         time: room.displayTime,
-        score: resultType === 0 ? room.averageScore : room.medianScore
+        score: parseInt(resultType) === 0 ? room.averageScore : room.medianScore
       });
       keys.add('scores');
     } else {
