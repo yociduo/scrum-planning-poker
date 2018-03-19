@@ -264,7 +264,7 @@ io.on('connection', (socket) => {
     log('[calc method]', { id, calcMethod });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     const room = rooms[id];
-    room.calcMethod = parsetInt(calcMethod);
+    room.calcMethod = parseInt(calcMethod);
     calculator(room);
     emitAll(room, ['averageScore', 'medianScore']);
   });
