@@ -90,7 +90,7 @@ const calculator = (room) => {
   const scores = players
     .map(p => p.score)
     .filter(s => s !== null && s >= 0)
-    .sort();
+    .sort((a, b) => a - b);
 
   if (scores.length === 0) {
     room.averageScore = '';
