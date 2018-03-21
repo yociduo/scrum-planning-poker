@@ -139,7 +139,7 @@ const rooms = {};
 io.on('connection', (socket) => {
   log('a user connected');
 
-  socket.on('create room', ({ stories, ...room }) => {
+  socket.on('create room', ({ stories, name, ...room }) => {
     log('[create room]', { stories, name, ...room });
     if (rooms.hasOwnProperty(room.id)) return error(socket, 'Room is duplicated!');
 
