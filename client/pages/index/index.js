@@ -1,56 +1,66 @@
-const app = getApp();
-const initStories = new Array(3).fill(null).map((n, i) => 'Story ' + (i + 1)).join('\n');
-const initRoom = 'Room';
-
+// pages/index/index.js
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    room: initRoom,
-    stories: initStories
+  
   },
-  onLoad: function () {
 
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+  
   },
-  onRoomChange: function (e) {
-    this.setData({ room: e.detail.value });
-  },
-  onRoomFocus: function () {
-    this.setData({ room: '' });
-  },
-  onRoomBlur: function () {
-    if (!this.data.room) {
-      this.setData({ room: initRoom })
-    }
-  },
-  onStoryChange: function (e) {
-    this.setData({ stories: e.detail.value });
-  },
-  onStoriesBlur: function () {
-    if (!this.data.stories || !/\w+/.test(this.data.stories)) {
-      this.setData({ stories: initStories });
-    }
-  },
-  formSubmit: function (e) {
-    const { room, stories, needScore, isNoymous } = e.detail.value;
-    if (room) {
-      // generate id
-      const id = Math.ceil(Math.random() * 10000000).toString();
 
-      // store hosted room id
-      const hosted = wx.getStorageSync('hosted') || [];
-      hosted.push(id);
-      wx.setStorageSync('hosted', hosted);
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+  
+  },
 
-      app.globalData.socket.emit('create room', {
-        id,
-        needScore,
-        isNoymous,
-        name: encodeURIComponent(room),
-        stories: encodeURIComponent(stories),
-      });
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+  
+  },
 
-      wx.navigateTo({
-        url: `../room/index?id=${id}`,
-      });
-    }
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+  
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+  
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+  
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+  
   }
 })

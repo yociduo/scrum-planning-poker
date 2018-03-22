@@ -1,13 +1,17 @@
 {
   "pages":[
     "pages/index/index",
+    "pages/create-room/index",
     "pages/room/index"
   ],
   "window":{
-    "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#f8f8fa",
+    "backgroundColorTop": "#f8f8fa",
+    "backgroundColorBottom": "#f8f8fa",
+    "navigationBarBackgroundColor": "#0678C1",
     "navigationBarTitleText": "iScrum Poker",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white"
   },
   "networkTimeout": {
     "request": 10000,
