@@ -7,29 +7,26 @@ Page({
     room: initRoom,
     stories: initStories
   },
-  onLoad: function () {
-
-  },
-  onRoomChange: function (e) {
+  onRoomChange(e) {
     this.setData({ room: e.detail.value });
   },
-  onRoomFocus: function () {
+  onRoomFocus() {
     this.setData({ room: '' });
   },
-  onRoomBlur: function () {
+  onRoomBlur() {
     if (!this.data.room) {
       this.setData({ room: initRoom })
     }
   },
-  onStoryChange: function (e) {
+  onStoryChange(e) {
     this.setData({ stories: e.detail.value });
   },
-  onStoriesBlur: function () {
+  onStoriesBlur() {
     if (!this.data.stories || !/\w+/.test(this.data.stories)) {
       this.setData({ stories: initStories });
     }
   },
-  formSubmit: function (e) {
+  formSubmit(e) {
     const { room, stories, needScore, isNoymous } = e.detail.value;
     if (room) {
       // generate id

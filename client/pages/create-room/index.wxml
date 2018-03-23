@@ -1,8 +1,4 @@
 <view class="container">
-  <view class="page-head">
-    <view class="page-head-title">Create New Room</view>
-    <view class="page-head-line"></view>
-  </view>
   <view class="page-body">
     <form catchsubmit="formSubmit">
       <!-- <view class="weui-cells weui-cells_after-title">
@@ -22,18 +18,6 @@
             <input class="weui-input" type="text" placeholder="(optional)" name="story"></input>
           </view>
         </view>
-      </view> -->
-      <view class="page-section">
-        <view class="page-section-title">Enter room name</view>
-        <view class="input-wrp">
-          <input name="room" bindinput="onRoomChange" bindblur="onRoomBlur" bindfocus="onRoomFocus" value="{{room}}" />
-        </view>
-      </view>
-      <view class="page-section">
-        <view class="page-section-title">Put your stories text here. Each line contains new story.</view>
-        <view class="textarea-wrp">
-          <textarea name="stories" auto-height value="{{stories}}" bindinput="onStoryChange" bindblur="onStoriesBlur" />
-        </view>
       </view>
       <view class="weui-cells">
         <view class="weui-cell weui-cell_switch">
@@ -46,6 +30,39 @@
           <view class="weui-cell__bd">Can players see other players' name?</view>
           <view class="weui-cell__ft">
             <switch name="isNoymous" />
+          </view>
+        </view>
+      </view> -->
+      <view class="page-section-title">Room Name</view>
+      <view class="page-section">
+        <view class="page-section-spacing">
+          <view class="input-wrp">
+            <input name="room" bindinput="onRoomChange" bindblur="onRoomBlur" bindfocus="onRoomFocus" value="{{room}}" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">Story</view>
+      <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
+      <view class="page-section">
+        <view class="page-section-spacing">
+          <view class="textarea-wrp">
+            <textarea name="stories" auto-height value="{{stories}}" bindinput="onStoryChange" bindblur="onStoriesBlur" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section">
+        <view class="page-section-spacing">
+          <view class="switch-wrp">
+            <view class="switch-wrp__bd">Do you want to enter stories in this room?</view>
+            <view class="switch-wrp__ft">
+              <switch name="needScore" color="#0678C1" checked />
+            </view>
+          </view>
+          <view class="switch-wrp">
+            <view class="switch-wrp__bd">Can players see other players' name?</view>
+            <view class="switch-wrp__ft">
+              <switch name="isNoymous" color="#0678C1" />
+            </view>
           </view>
         </view>
       </view>
