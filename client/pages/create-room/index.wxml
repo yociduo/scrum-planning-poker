@@ -59,7 +59,7 @@
             </view>
           </view>
           <view class="switch-wrp">
-            <view class="switch-wrp__bd">Can players see other players' name?</view>
+            <view class="switch-wrp__bd">Can players see other‘s voting?</view>
             <view class="switch-wrp__ft">
               <switch name="isNoymous" color="#0678C1" />
             </view>

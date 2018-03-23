@@ -1,23 +1,34 @@
 @import "../common/lib/weui.wxss";
 
-input,
-textarea {
-  width: 100%;
-  padding: 11rpx 0;
+.page-section {
+  margin-bottom: 40rpx;
 }
-.textarea-wrp,
+
+input, textarea {
+  width: 100%;
+  padding: 16rpx 0;
+  font-size: 34rpx;
+}
+
+.textarea-wrp, .input-wrp {
+  background-color: #fff;
+  border: 2rpx solid #979797;
+}
+
 .input-wrp {
-    padding: 0 25rpx;
-    background-color: #fff;
-    border: 1px solid #979797;
+  padding: 0 25rpx;
+}
+
+.textarea-wrp {
+  padding: 0 15rpx;
 }
 
 .switch-wrp {
   display: flex;
-  margin-bottom: 60rpx;
+  margin-bottom: 40rpx;
+  color: #4A4A4A;
   font-size: 34rpx;
   line-height: 40rpx;
-  color: #888888;
 }
 
 .switch-wrp__bd {
