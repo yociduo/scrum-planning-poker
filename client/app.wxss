@@ -197,3 +197,29 @@ form{
   height: 4rpx;
   transform: translate(-50%, -50%);
 }
+
+/* iScrum Poker */
+.page-section-title {
+  font-size: 34rpx;
+  line-height: 80rpx;
+  color: #888888;
+  margin: 10rpx;
+}
+
+.page-section-spacing {
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+}
+
+button[type=primary] {
+  background-color: #0678C1;
+}
+
+button[type="primary"].button-hover,
+button[type="primary"]:not([disabled]):active {
+  background-color: #075E96;
+}
+
+button[type=primary][disabled] {
+  background-color: #5195C0;
+}

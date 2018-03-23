@@ -23,18 +23,6 @@
   margin-top: 100rpx;
 }
 
-.page-section-title {
-  font-size: 34rpx;
-  line-height: 80rpx;
-  color: #888888;
-  margin: 10rpx;
-}
-
-.page-section-spacing {
-  margin-left: 20rpx;
-  margin-right: 20rpx;
-}
-
 .room-list {
   background-color: #ffffff;
   border: 1px solid #979797;
