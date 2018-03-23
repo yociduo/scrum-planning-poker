@@ -1,4 +1,4 @@
-<view class="top-button">
+<view class="top-stick">
   <button bindtap="onCreateTap">Create a New Room</button>
 </view> 
 <view class="container">

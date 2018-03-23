@@ -1,15 +1,10 @@
 @import "../common/lib/weui.wxss";
 
-.top-button {
-  top: 0;
-  width: 100%;
-  height: 100rpx;
+.top-stick {
   background-color: #0678C1;
-  position: fixed;
-  z-index: 999;
 }
 
-.top-button button {
+.top-stick button {
   margin-top: 10rpx;
   margin-bottom: 10rpx;
   width: 540rpx;
