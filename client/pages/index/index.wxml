@@ -1,2 +1,27 @@
-<!--pages/index/index.wxml-->
-<text>pages/index/index.wxml</text>
+<view class="top-button">
+  <button bindtap="onCreateTap">Create a New Room</button>
+</view> 
+<view class="container">
+  <view class="page-body">
+    <view class="page-section-title">History Rooms</view>
+    <view class="page-section">
+      <view class="page-section-spacing">
+        <view class="room-list" wx:if="{{rooms && rooms.length}}">
+          <view class="room-item" wx:for="{{rooms}}" wx:for-item="room" wx:key="room.id">
+            <view class="room-item-hd">
+              {{room.name}}
+            </view>
+            <view class="room-item-bd">
+              {{room.count}} {{room.count > 1 ? 'stories' : 'story'}}
+            </view>
+            <view class="room-item-ft">
+              {{room.score}}
+            </view>
+            <view class="room-item-action">
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

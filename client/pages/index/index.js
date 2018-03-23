@@ -1,66 +1,26 @@
-// pages/index/index.js
+const app = getApp();
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    rooms: []
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-  
+  onShow() {
+    if (!app.globalData.roomListLoaded) {
+      console.log('Todo: get room list');
+      const { keys } = wx.getStorageInfoSync();
+      const rooms = keys
+        .filter(i => /\d/.test(i))
+        .map(id => {
+          const { name, scores } = wx.getStorageSync(id);
+          const count = scores ? scores.length : 0;
+          const score = 24
+          return { id, name, count, score };
+        });
+      this.setData({ rooms });
+      app.globalData.roomListLoaded = true;
+    }
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
+  onCreateTap() {
+    wx.navigateTo({ url: '../create-room/index' });
   }
 })

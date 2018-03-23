@@ -50,5 +50,6 @@ App({
   },
   globalData: {
     userInfo: null,
+    roomListLoaded: false
   }
 })
