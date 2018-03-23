@@ -17,8 +17,6 @@
             <view class="room-item-ft">
               {{room.score}}
             </view>
-            <view class="room-item-action">
-            </view>
           </view>
         </view>
       </view>

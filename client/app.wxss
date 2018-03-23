@@ -201,8 +201,9 @@ form{
 /* iScrum Poker */
 .page-section-title {
   font-size: 34rpx;
-  line-height: 80rpx;
-  color: #888888;
+  font-weight: 500;
+  line-height: 65rpx;
+  color: #0678C1;
   margin: 10rpx;
 }
 
@@ -230,5 +231,5 @@ button[type="primary"]:not([disabled]):active {
 }
 
 button[type=primary][disabled] {
-  background-color: #5195C0;
+  background-color: #7cb5da;
 }
