@@ -68,9 +68,8 @@ Page({
       confirmText: 'OK',
       success: () => this.onClose(),
     }));
-
-
   },
+  
   onShareAppMessage: function () {
     return { title: this.data.name, imageUrl: this.data.shareImageUrl };
   },

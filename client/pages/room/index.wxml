@@ -1,23 +1,25 @@
 <import src="../common/card.wxml" />
 
-<view wx:if="{{init}}" class="container">
-  <view class="page-head">
-    <view class="page-head-title">{{currentStory}}</view>
-    <view class="page-head-line"></view>
-    <view wx:if="{{!finished}}" class="page-head-action">
-      <button open-type="share">
-        <image src="{{inviteIconUrl}}"></image>
-      </button>
-    </view>
+<view class="top-stick">
+  <view class="top-stick-hd">
+    {{currentStory}}
   </view>
+  <view class="top-stick-bd">
+    {{displayTime}}
+  </view>
+  <view class="top-stick-ft">
+    <button open-type="share">
+      <image src="{{inviteIconUrl}}"></image>
+    </button>
+  </view>
+</view>
+
+<view wx:if="{{init}}" class="container">
   <view class="page-body">
     <view wx:if="{{(!isHost || needScore) && !finished}}" class="page-section">
-      <view class="page-section-spacing">
-        <view class="card-grids">
-          <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
-            <template bindtap="clickCard" is="card" data="{{ card: card, selectedCard: selectedCard }}"
-            />
-          </view>
+      <view class="card-grids">
+        <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
+          <template bindtap="clickCard" is="card" data="{{ card: card, selectedCard: selectedCard }}" />
         </view>
       </view>
     </view>

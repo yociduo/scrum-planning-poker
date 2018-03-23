@@ -1,6 +1,53 @@
 @import "../common/lib/weui.wxss";
 @import "../common/lib/card.wxss";
 
+.top-stick {
+  display: flex;
+  align-items: center;
+  font-size: 34rpx;
+  color: #888888;
+}
+
+.top-stick-hd {
+  flex: 1;
+  margin-left: 40rpx;
+  margin-right: 40rpx;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+
+.top-stick-bd {
+  margin-right: 40rpx;
+}
+
+.top-stick-ft {
+  width: 50rpx;
+  margin-right: 40rpx;
+}
+
+.top-stick-ft button {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  width: 50rpx;
+  height: 38rpx;
+}
+
+.top-stick-ft button:after {
+  border: 0;
+}
+
+.top-stick-ft image {
+  width: 50rpx;
+  height: 38rpx;
+  display: block;
+}
+
+.container {
+  margin-top: 100rpx;
+}
+
 .player-box,
 .story-box {
   position: relative;
