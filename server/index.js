@@ -11,36 +11,23 @@ const log = debug ? (...args) => console.log(...args) : () => { };
 const initPayload = {
   init: true,
   cards,
-  calcMethods: [
-    'Arithmetic Mean',
-    'Truncated Mean',
-  ],
-  info1: 'Voting...',
-  info2: 'All Stories',
-  inviteIconUrl: '../../image/invite-black.png',
+  inviteIconUrl: '../../image/user-plus.png',
+  addStoryIconUrl: '../../image/plus.png',
   shareImageUrl: '',
 };
 
+const toPlayers = (players, isNoymous, socket) => players.map((player, index) => {
+  const { nickName, avatarUrl = '../../image/user.png' } = player;
+  const needAnnoymous = !isNoymous && !socket.isHost && socket.nickName !== player.nickName;
+  const hasScore = player.score !== null;
+  const showCheck = needAnnoymous && hasScore;
+  const score = !needAnnoymous && hasScore ? cards.find(c => c.value === player.score).key : '';
+  return { nickName, avatarUrl, score, showCheck };
+});
+
 const emit = (socket, room, keys = null) => {
   let payload = { id: room.id };
-  const { players, ...rest } = room;
-
-  const toPlayers = () => players.map((player, index) => {
-    const score = player.score === null ? '' : cards.find(c => c.value === player.score).key;
-    const needAnnoymous = !room.isNoymous && !socket.isHost && socket.nickName !== player.nickName;
-    const nickName = needAnnoymous ? `Player ${index + 1}` : player.nickName;
-    const avatarUrl = (needAnnoymous ? '' : player.avatarUrl) || '../../image/user.png';
-    return { score, nickName, avatarUrl };
-  })
-
-
-  rest.players = players.map((player, index) => {
-    const score = player.score === null ? '' : cards.find(c => c.value === player.score).key;
-    const needAnnoymous = !room.isNoymous && !socket.isHost && socket.nickName !== player.nickName;
-    const nickName = needAnnoymous ? `Player ${index + 1}` : player.nickName;
-    const avatarUrl = (needAnnoymous ? '' : player.avatarUrl) || '../../image/user.png';
-    return { score, nickName, avatarUrl };
-  });
+  const { players, isNoymous, ...rest } = room;
 
   if (keys) {
     if (keys.toString() === '[object Set]') {
@@ -50,7 +37,7 @@ const emit = (socket, room, keys = null) => {
     if (keys.length) {
       keys.forEach(key => {
         switch (key) {
-          case 'players': payload[key] = toPlayers(); break;
+          case 'players': payload[key] = toPlayers(players, isNoymous, socket); break;
           default: payload[key] = rest[key]; break;
         }
       });
@@ -61,7 +48,7 @@ const emit = (socket, room, keys = null) => {
     for (const key in room) {
       if (room.hasOwnProperty(key) && !key.startsWith('_')) {
         switch (key) {
-          case 'players': payload[key] = toPlayers(); break;
+          case 'players': payload[key] = toPlayers(players, isNoymous, socket); break;
           default: payload[key] = rest[key]; break;
         }
       }
@@ -163,14 +150,11 @@ io.on('connection', (socket) => {
     rooms[room.id] = room;
   });
 
-  socket.on('next story', ({ id, resultType, stories }) => {
-    log('[next story]', { id, resultType, stories });
+  socket.on('next story', ({ id, resultType }) => {
+    log('[next story]', { id, resultType });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     const room = rooms[id];
     const keys = new Set();;
-
-    // push new stories
-    if (stories) decodeURIComponent(stories).split('\n').forEach(i => i && room._stories.push(i));
 
     if (room._storyIndex !== -1) {
       // save scores
@@ -229,6 +213,21 @@ io.on('connection', (socket) => {
     keys.add('medianScore');
 
     emitAll(room, keys);
+  });
+
+  socket.on('add story', ({ id, stories }) => {
+    log('[add story]', { id, stories });
+    if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
+
+    if (stories) {
+      const room = rooms[id];
+      decodeURIComponent(stories).split('\n').forEach(i => i && room._stories.push(i));
+
+      if (room.finished) {
+        room.finished = false;
+        emitAll(room, ['finished']);
+      }
+    }
   });
 
   socket.on('join room', ({ id, userInfo, isHost }) => {
