@@ -1,6 +1,6 @@
 <import src="../common/card.wxml" />
 
-<view class="top-stick" wx:if="{{init && !finished}}">
+<view class="top-stick" wx:if="{{init && finished && !closed}}">
   <view class="top-stick-hd">
     {{currentStory}}
   </view>
@@ -10,7 +10,7 @@
     </button>
   </view>
 </view>
-<view class="top-stick top-stick-story" wx:if="{{init && finished && !closed}}">
+<view class="top-stick top-stick-story" wx:if="{{init && !finished}}">
   <view class="top-stick-hd">
     {{currentStory}}
   </view>
@@ -69,12 +69,12 @@
               <view class="result-ft"></view>
             </view>
           </picker>
-          <!-- <picker bindchange="onCalcMethodChange" value="{{calcMethod}}" range="{{calcMethods}}" range-key="key"> -->
-          <view class="result result-box-ft">
-            <view class="result-bd">Result</view>
-            <view class="result-ft">100</view>
-          </view>
-          <!-- </picker> -->
+          <picker bindchange="onResultChange" value="{{result}}" range="{{results}}">
+            <view class="result result-box-ft">
+              <view class="result-bd">Result</view>
+              <view class="result-ft">{{result ? results[result] : ''}}</view>
+            </view>
+          </picker>
         </view>
       </view>
     </view>

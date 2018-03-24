@@ -8,9 +8,12 @@ const port = process.env.PORT || 9001;
 const debug = !(process.env.PROD || false);
 const log = debug ? (...args) => console.log(...args) : () => { };
 
+const initResults = new Array(31).fill(null).map((v, i) => i).concat([0.5, 40, 55, 89, 100]).sort();
+
 const initPayload = {
   init: true,
   cards,
+  results: initResults,
   inviteIconUrl: '../../image/user-plus.png',
   addStoryIconUrl: '../../image/plus.png',
   shareImageUrl: '',
@@ -93,44 +96,59 @@ const emitAll = (room, keys) => {
   room._sockets.forEach(socket => emit(socket, room, keys));
 };
 
+const emitHost = (room, keys) => {
+  room._sockets.forEach(socket => socket.isHost && emit(socket, room, keys));
+};
+
 const error = (socket, msg) => {
   log('[error]', msg);
   socket.error(msg);
 };
 
 const calculator = (room) => {
-  const { calcMethod, players } = room;
+  const { calcMethod, subCalcMethod, players } = room;
+
+  if (calcMethod === 2) {
+    return;
+  }
+
   const scores = players
     .map(p => p.score)
     .filter(s => s !== null && s >= 0)
     .sort((a, b) => a - b);
 
   if (scores.length === 0) {
-    room.averageScore = '';
-    room.medianScore = '';
+    room.result = null;
     return;
-  }
-
-  if (scores.length > 2 && room.calcMethod === 1) {
+  } else if (scores.length > 2 && room.subCalcMethod === 1) {
     scores.pop();
     scores.splice(0, 1);
   }
 
-  console.log('calc scores', scores);
+  let result;
 
-  const { length } = scores;
-  let sum = 0;
-  for (let i = 0; i < length; i++) {
-    sum += scores[i];
-  }
-
-  room.averageScore = Math.round(sum / length);
-  if (length % 2 === 0) {
-    room.medianScore = Math.round((scores[length / 2] + scores[length / 2 - 1]) / 2);
+  if (calcMethod === 0) {
+    result = scores.reduce((v, s) => v + s, 0);
   } else {
-    room.medianScore = scores[(length - 1) / 2];
+    const { length } = scores;
+    result = length % 2 === 0 ?
+      Math.round((scores[length / 2] + scores[length / 2 - 1]) / 2) : scores[(length - 1) / 2]
   }
-};
+
+  room.result = initResults.map((value, index) => ({
+    value,
+    index,
+    abs: Math.abs(value - result)
+  })).sort((i, j) => {
+    if (i.abs > j.abs) {
+      return 1;
+    } else if (i.abs < j.abs) {
+      return -1;
+    } else {
+      return i.value - j.value;
+    }
+  })[0].index;
+}
 
 if (debug) {
   app.get('/', (req, res) => {
@@ -282,25 +300,31 @@ io.on('connection', (socket) => {
     if (player) {
       player.score = card ? card.value : null;
       calculator(room);
-      emitAll(room, ['players', 'averageScore', 'medianScore']);
+      emitAll(room, ['players']);
+      emitHost(room, ['result']);
     }
   });
 
-  socket.on('calc method', ({ id, calcMethod, subCalcMethod }) => {
+  socket.on('calc method', ({ id, calcMethod, subCalcMethod, result }) => {
     log('[calc method]', { id, calcMethod });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     const room = rooms[id];
 
-    if (calcMethod) {
-      room.calcMethod = parseInt(calcMethod);
+    if (calcMethod !== null && calcMethod !== undefined) {
+      room.calcMethod = calcMethod;
     }
 
-    if (subCalcMethod) {
-      room.subCalcMethod = parseInt(subCalcMethod);
+    if (subCalcMethod !== null && subCalcMethod !== undefined) {
+      room.subCalcMethod = subCalcMethod;
+    }
+
+    if (result !== null && result !== undefined) {
+      room.result = result;
+      room.calcMethod = 2;
     }
 
     calculator(room);
-    emitAll(room, ['averageScore', 'medianScore']);
+    emitHost(room, ['calcMethod', 'subCalcMethod', 'result']);
   });
 
   socket.on('disconnect', () => {

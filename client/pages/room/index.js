@@ -84,17 +84,18 @@ Page({
     this.setData({ loading: true });
   },
   onCalcMethodChange(e) {
-    const calcMethod = e.detail.value;
+    const calcMethod = parseInt(e.detail.value);
     this.setData({ calcMethod });
     app.globalData.socket.emit('calc method', { id: this.data.id, calcMethod });
   },
   onSubCalcMethodChange(e) {
-    const subCalcMethod = e.detail.value;
+    const subCalcMethod = parseInt(e.detail.value);
     this.setData({ subCalcMethod });
     app.globalData.socket.emit('calc method', { id: this.data.id, subCalcMethod });
   },
   onResultChange(e) {
-    this.setData({ resultType: e.detail.value });
+    const result = parseFloat(e.detail.value);
+    app.globalData.socket.emit('calc method', { id: this.data.id, result });
   },
   onBackTap() {
     if (getCurrentPages().length > 1) {
