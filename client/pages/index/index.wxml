@@ -12,10 +12,10 @@
               {{room.name}}
             </view>
             <view class="room-item-bd">
-              {{room.count}} {{room.count > 1 ? 'stories' : 'story'}}
+              {{room.count}}
             </view>
             <view class="room-item-ft">
-              {{room.score}}
+              {{room.total}}
             </view>
           </view>
         </view>

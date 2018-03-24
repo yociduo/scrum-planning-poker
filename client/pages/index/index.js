@@ -10,10 +10,8 @@ Page({
     const rooms = keys
       .filter(i => /\d/.test(i))
       .map(id => {
-        const { name, scores } = wx.getStorageSync(id);
-        const count = scores ? scores.length : 0;
-        const score = 24
-        return { id, name, count, score };
+        const { name, count, time, total } = wx.getStorageSync(id);
+        return { id, name, count, time, total };
       });
     this.setData({ rooms });
   },
