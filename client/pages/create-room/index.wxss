@@ -1,9 +1,5 @@
 @import "../common/lib/weui.wxss";
 
-.page-section {
-  margin-bottom: 40rpx;
-}
-
 input, textarea {
   width: 100%;
   padding: 16rpx 0;

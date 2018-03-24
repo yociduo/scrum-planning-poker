@@ -212,6 +212,16 @@ form{
   margin-right: 20rpx;
 }
 
+.page-section-divide {
+  border-bottom: 1rpx solid #979797;
+  margin: 40rpx
+}
+
+.btn-area {
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+}
+
 .top-stick {
   top: 0;
   width: 100%;

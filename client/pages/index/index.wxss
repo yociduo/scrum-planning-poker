@@ -31,7 +31,7 @@
   display: flex;
   align-items: center;
   font-size: 34rpx;
-  color: #888888;
+  color: #4A4A4A;
 }
 
 .room-item:active {
@@ -57,7 +57,7 @@
 }
 
 .room-item-ft {
-  margin-right: 30rpx;
+  margin-right: 40rpx;
   text-align: right;
   font-weight: 500;
   color: #0678C1;
