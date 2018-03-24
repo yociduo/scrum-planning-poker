@@ -8,7 +8,7 @@ const port = process.env.PORT || 9001;
 const debug = !(process.env.PROD || false);
 const log = debug ? (...args) => console.log(...args) : () => { };
 
-const initResults = new Array(31).fill(null).map((v, i) => i).concat([0.5, 40, 55, 89, 100]).sort();
+const initResults = new Array(31).fill(null).map((v, i) => i).concat([0.5, 40, 55, 89, 100]).sort((i, j) => i - j);
 
 const initPayload = {
   init: true,

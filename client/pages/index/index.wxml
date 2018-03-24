@@ -7,7 +7,7 @@
     <view class="page-section">
       <view class="page-section-spacing">
         <view class="room-list" wx:if="{{rooms && rooms.length}}">
-          <view class="room-item" wx:for="{{rooms}}" wx:for-item="room" wx:key="room.id" data-id="{{room.id}}" bindtap="onRoomTap">
+          <view class="room-item" wx:for="{{rooms}}" wx:for-item="room" wx:key="room.id" data-room="{{room}}" bindtap="onRoomTap">
             <view class="room-item-hd">
               {{room.name}}
             </view>

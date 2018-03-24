@@ -82,8 +82,8 @@
       <button type="primary" loading="{{loading}}" bindtap="onSaveTap">Save & Next</button>
     </view>
     <view class="page-section-divide" wx:if="{{!finished && isHost}}"></view>
-    <view class="page-section-title">All Stories</view>
-    <view class="page-section">
+    <view class="page-section-title" wx:if="{{scores && scores.length}}">All Stories</view>
+    <view class="page-section" wx:if="{{scores && scores.length}}">
       <view class="page-section-spacing">
         <view class="story-box">
           <view class="story" wx:for="{{scores}}" wx:for-item="story" wx:key="story.index">

@@ -245,6 +245,7 @@ button[type="primary"]:not([disabled]):active {
   background-color: #075E96;
 }
 
+button[type=primary][loading],
 button[type=primary][disabled] {
   background-color: #7cb5da;
 }

@@ -30,7 +30,8 @@ Page({
           scores: payload.scores,
           count: payload.count,
           time: payload.time,
-          total: payload.total
+          total: payload.total,
+          finished: payload.finished
         });
       } else if (!payload.closed) {
         const cache = wx.getStorageSync(id);
@@ -61,6 +62,12 @@ Page({
         cache.count = payload.count;
         cache.time = payload.time;
         cache.total = payload.total;
+        wx.setStorageSync(id, cache);
+      }
+
+      if (payload.finished !== null || payload.finished !== undefined) {
+        const cache = wx.getStorageSync(id) || {};
+        cache.finished = payload.finished;
         wx.setStorageSync(id, cache);
       }
 
