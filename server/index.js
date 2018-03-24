@@ -123,12 +123,12 @@ const calculator = (room) => {
     scores.splice(0, 1);
   }
 
+  const { length } = scores;
   let result;
 
   if (calcMethod === 0) {
-    result = scores.reduce((v, s) => v + s, 0);
+    result = scores.reduce((v, s) => v + s, 0) / length;
   } else {
-    const { length } = scores;
     result = length % 2 === 0 ?
       Math.round((scores[length / 2] + scores[length / 2 - 1]) / 2) : scores[(length - 1) / 2]
   }
