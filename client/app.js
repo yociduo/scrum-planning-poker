@@ -49,7 +49,6 @@ App({
     this.globalData.socket.connect();
   },
   globalData: {
-    userInfo: null,
-    roomListLoaded: false
+    userInfo: null
   }
 })

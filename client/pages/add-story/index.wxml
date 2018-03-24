@@ -1,0 +1,18 @@
+<view class="container">
+  <view class="page-body">
+    <form catchsubmit="formSubmit">
+      <view class="page-section-title">Story</view>
+      <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
+      <view class="page-section">
+        <view class="page-section-spacing">
+          <view class="textarea-wrp">
+            <textarea name="stories" auto-height value="{{stories}}" bindinput="onStoryChange" bindblur="onStoriesBlur" />
+          </view>
+        </view>
+      </view>
+      <view class="btn-area">
+        <button type="primary" formType="submit">Add</button>
+      </view>
+    </form>
+  </view>
+</view>

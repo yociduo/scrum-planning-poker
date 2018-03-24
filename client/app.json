@@ -2,7 +2,9 @@
   "pages":[
     "pages/index/index",
     "pages/create-room/index",
-    "pages/room/index"
+    "pages/room/index",
+    "pages/add-story/index",
+    "pages/room-detail/index"
   ],
   "window":{
     "backgroundTextStyle": "light",
