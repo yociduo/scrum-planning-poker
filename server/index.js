@@ -14,6 +14,32 @@ const initPayload = {
   inviteIconUrl: '../../image/user-plus.png',
   addStoryIconUrl: '../../image/plus.png',
   shareImageUrl: '',
+  calcMethods: [
+    {
+      key: 'Average',
+      value: 0,
+      sub: [
+        {
+          key: 'Arithmetic Mean',
+          value: 0
+        },
+        {
+          key: 'Truncated Mean',
+          value: 1
+        }
+      ]
+    },
+    {
+      key: 'Median',
+      value: 1
+    },
+    {
+      key: 'Customized',
+      value: 2
+    }
+  ],
+  calcMethod: 0,
+  subCalcMethod: 0
 };
 
 const toPlayers = (players, isNoymous, socket) => players.map((player, index) => {
@@ -232,7 +258,7 @@ io.on('connection', (socket) => {
 
   socket.on('join room', ({ id, userInfo, isHost }) => {
     log('[join room]', { id, userInfo, isHost });
-    if (!rooms.hasOwnProperty(id)) return socket.emit('init', { ...initPayload, finished: true, currentStory: 'Congratulations!', id });
+    if (!rooms.hasOwnProperty(id)) return socket.emit('init', { ...initPayload, finished: true, closed: true, currentStory: 'Congratulations!', id });
     const room = rooms[id];
     room._sockets.add(socket);
     socket.nickName = userInfo.nickName;
@@ -260,11 +286,19 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('calc method', ({ id, calcMethod }) => {
+  socket.on('calc method', ({ id, calcMethod, subCalcMethod }) => {
     log('[calc method]', { id, calcMethod });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     const room = rooms[id];
-    room.calcMethod = parseInt(calcMethod);
+
+    if (calcMethod) {
+      room.calcMethod = parseInt(calcMethod);
+    }
+
+    if (subCalcMethod) {
+      room.subCalcMethod = parseInt(subCalcMethod);
+    }
+
     calculator(room);
     emitAll(room, ['averageScore', 'medianScore']);
   });

@@ -51,7 +51,7 @@
   width: 50rpx;
 }
 
-.container {
+.top-stick + .container {
   margin-top: 100rpx;
 }
 

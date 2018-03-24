@@ -1,6 +1,16 @@
 <import src="../common/card.wxml" />
 
-<view class="top-stick top-stick-story" wx:if="{{!finished}}">
+<view class="top-stick" wx:if="{{init && !finished}}">
+  <view class="top-stick-hd">
+    {{currentStory}}
+  </view>
+  <view class="top-stick-ft">
+    <button bindtap="onAddTap">
+      <image src="{{addStoryIconUrl}}"></image>
+    </button>
+  </view>
+</view>
+<view class="top-stick top-stick-story" wx:if="{{init && finished && !closed}}">
   <view class="top-stick-hd">
     {{currentStory}}
   </view>
@@ -9,17 +19,7 @@
   </view>
   <view class="top-stick-ft">
     <button open-type="share">
-      <image src="../../image/user-plus.png"></image>
-    </button>
-  </view>
-</view>
-<view class="top-stick" wx:if="{{finished}}">
-  <view class="top-stick-hd">
-    Continue with this room & add story
-  </view>
-  <view class="top-stick-ft">
-    <button open-type="share">
-      <image src="../../image/plus.png"></image>
+      <image src="{{inviteIconUrl}}"></image>
     </button>
   </view>
 </view>
@@ -29,7 +29,7 @@
       <view class="page-section-spacing">
         <view class="card-grids">
           <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
-            <template bindtap="clickCard" is="card" data="{{ card: card, selectedCard: selectedCard }}" />
+            <template is="card" data="{{ card: card, selectedCard: selectedCard }}" />
           </view>
         </view>
       </view>
@@ -43,77 +43,45 @@
               <image class="player-avatar" src="{{player.avatarUrl}}"></image>
             </view>
             <view class="player-bd">
-              <view class="player-text">
-                {{player.nickName}}
-              </view>
+              {{player.nickName}}
             </view>
             <view class="player-ft">
-              <view class="player-value" wx:if="{{isHost}}">{{player.score}}</view>
-              <icon class="icon-small" wx:if="{{player.score && !isHost}}" type="success" size="23" color="#0678C1"></icon>
+              <view class="player-value" wx:if="{{player.score}}">{{player.score}}</view>
+              <icon class="icon-small" wx:if="{{player.showCheck}}" type="success" size="23" color="#0678C1"></icon>
             </view>
           </view>
         </view>
       </view>
     </view>
-    <view class="page-section-title" wx:if="{{!finished}}">Result Calculation</view>
+    <view class="page-section-title" wx:if="{{!finished && isHost}}">Result Calculation</view>
     <view class="page-section" wx:if="{{!finished && isHost}}">
       <view class="page-section-spacing">
         <view class="result-box">
-          <view class="result">
-            <view class="result-bd">Average</view>
-            <view class="result-ft"></view>
-          </view>
-          <view class="result">
-            <view class="result-bd">Arithmetic Mean</view>
-            <view class="result-ft"></view>
-          </view>
-          <picker bindchange="onCalcMethodChange" value="{{calcMethod}}" range="{{calcMethods}}">
-            <view class="result result-box-ft">
-              <view class="result-bd">Result</view>
-              <view class="result-ft">100</view>
+          <picker bindchange="onCalcMethodChange" value="{{calcMethod}}" range="{{calcMethods}}" range-key="key">
+            <view class="result">
+              <view class="result-bd">{{calcMethods[calcMethod].key}}</view>
+              <view class="result-ft"></view>
             </view>
           </picker>
-
-          <!-- <view class="weui-cells weui-cells_after-title">
-            <view class="weui-cell weui-cell_input">
-              <view class="weui-cell__hd">
-                <view class="weui-label">Calc.</view>
-              </view>
-              <view class="weui-cell__bd">
-                <picker bindchange="onCalcMethodChange" value="{{calcMethod}}" range="{{calcMethods}}">
-                  <view class="weui-input">{{calcMethods[calcMethod]}}</view>
-                </picker>
-              </view>
+          <picker wx:if="{{calcMethods[calcMethod].sub}}" bindchange="onSubCalcMethodChange" value="{{subCalcMethod}}" range="{{calcMethods[calcMethod].sub}}" range-key="key">
+            <view class="result">
+              <view class="result-bd">{{calcMethods[calcMethod].sub[subCalcMethod].key}}</view>
+              <view class="result-ft"></view>
             </view>
-            <radio-group bindchange="onResultTypeChange">
-              <label class="weui-cell weui-check__label">
-                <view class="weui-cell__hd">
-                  <radio value="0" checked="true" />
-                </view>
-                <view class="weui-cell__bd">Average</view>
-                <view class="weui-cell__ft">{{averageScore}}</view>
-              </label>
-              <label class="weui-cell weui-check__label">
-                <view class="weui-cell__hd">
-                  <radio value="1" />
-                </view>
-                <view class="weui-cell__bd">Median</view>
-                <view class="weui-cell__ft">{{medianScore}}</view>
-              </label>
-            </radio-group>
-          </view> -->
-          <!-- <view wx:if="{{!hasNext}}" class="textarea-wrp">
-                <textarea name="stories" auto-height value="{{newStories}}" bindinput="onNewStoriesChange" placeholder="This is the last story. Text here to add more." />
-              </view> -->
+          </picker>
+          <!-- <picker bindchange="onCalcMethodChange" value="{{calcMethod}}" range="{{calcMethods}}" range-key="key"> -->
+          <view class="result result-box-ft">
+            <view class="result-bd">Result</view>
+            <view class="result-ft">100</view>
+          </view>
+          <!-- </picker> -->
         </view>
       </view>
     </view>
-    <view class="btn-area">
-      <button wx:if="{{hasNext}}" type="primary" loading="{{loading}}" bindtap="onSaveAndNext">Save & Next</button>
-      <button wx:if="{{!hasNext}}" type="primary" loading="{{loading}}" bindtap="onSaveAndFinish">{{ hasNewStories ? 'Add New Stories' : 'Save & Finish' }}</button>
-      <button bindtap="onClose">Close</button>
+    <view class="btn-area" wx:if="{{!finished && isHost}}">
+      <button type="primary" loading="{{loading}}" bindtap="onSaveTap">Save & Next</button>
     </view>
-    <view class="page-section-divide"></view>
+    <view class="page-section-divide" wx:if="{{!finished && isHost}}"></view>
     <view class="page-section-title">All Stories</view>
     <view class="page-section">
       <view class="page-section-spacing">
@@ -142,6 +110,9 @@
           </view>
         </view>
       </view>
+    </view>
+    <view class="btn-area" wx:if="{{finished}}">
+      <button type="primary" loading="{{loading}}" bindtap="onBackTap">Back</button>
     </view>
   </view>
 </view>

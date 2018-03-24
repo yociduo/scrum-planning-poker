@@ -1,12 +1,7 @@
 const app = getApp();
 
 Page({
-  data: {
-    resultType: 0,
-    newStories: '',
-    hasNewStories: false,
-  },
-  onLoad: function (options) {
+  onLoad(options) {
     const { id } = options;
     const isHost = (wx.getStorageSync('hosted') || []).includes(id);
     this.setData({ id, isHost });
@@ -16,7 +11,6 @@ Page({
     });
 
     app.globalData.socket.on('connect', () => {
-      console.log('system', 'onconnect');
       wx.getUserInfo({
         success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost })
       });
@@ -24,7 +18,6 @@ Page({
 
     app.globalData.socket.on('init', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
-      console.log('system', 'oninit');
       if (payload.finished) {
         const cache = wx.getStorageSync(id);
         if (cache) {
@@ -37,7 +30,7 @@ Page({
             content: 'Room has been deleted!',
             showCancel: false,
             confirmText: 'OK',
-            success: () => this.onClose(),
+            success: () => this.onBackTap(),
           });
         }
       } else {
@@ -66,51 +59,44 @@ Page({
       content,
       showCancel: false,
       confirmText: 'OK',
-      success: () => this.onClose(),
+      success: () => this.onBackTap(),
     }));
   },
-  
-  onShareAppMessage: function () {
+  onShareAppMessage() {
     return { title: this.data.name, imageUrl: this.data.shareImageUrl };
   },
-  onCardClick: function (e) {
+  onAddTap() {
+    wx.navigateTo({ url: `../add-story/index?id=${this.data.id}` });
+  },
+  onCardTap(e) {
     const { id, start, selectedCard } = this.data;
     if (this.data.start) {
-      const { card } = e.target.dataset;
+      const { card } = e.currentTarget.dataset;
       const isSelected = card.value === selectedCard;
       this.setData({ selectedCard: isSelected ? null : card.value });
       app.globalData.socket.emit('select card', { id, card: isSelected ? null : card });
     }
   },
-  onSaveAndNext: function () {
+  onSaveTap() {
     const { id, loading, resultType } = this.data;
     if (loading) return;
     app.globalData.socket.emit('next story', { id, resultType });
     this.setData({ loading: true });
   },
-  onSaveAndFinish: function () {
-    const { id, loading, resultType, newStories } = this.data;
-    if (loading) return;
-    const stories = encodeURIComponent(newStories);
-    app.globalData.socket.emit('next story', { id, resultType, stories });
-    this.setData({ loading: true, newStories: '', hasNewStories: false });
-  },
-  onCalcMethodChange: function (e) {
+  onCalcMethodChange(e) {
     const calcMethod = e.detail.value;
     this.setData({ calcMethod });
     app.globalData.socket.emit('calc method', { id: this.data.id, calcMethod });
   },
-  onResultTypeChange: function (e) {
+  onSubCalcMethodChange(e) {
+    const subCalcMethod = e.detail.value;
+    this.setData({ subCalcMethod });
+    app.globalData.socket.emit('calc method', { id: this.data.id, subCalcMethod });
+  },
+  onResultChange(e) {
     this.setData({ resultType: e.detail.value });
   },
-  onNewStoriesChange: function (e) {
-    const newStories = e.detail.value;
-    this.setData({
-      newStories,
-      hasNewStories: newStories && newStories.trim().split('\n').filter(i => i).length > 0
-    });
-  },
-  onClose: function () {
+  onBackTap() {
     if (getCurrentPages().length > 1) {
       wx.navigateBack({ delta: 1 });
     } else {
