@@ -1,13 +1,13 @@
 <view class="top-stick">
   <button bindtap="onCreateTap">Create a New Room</button>
-</view> 
+</view>
 <view class="container">
   <view class="page-body">
     <view class="page-section-title">History Rooms</view>
     <view class="page-section">
       <view class="page-section-spacing">
         <view class="room-list" wx:if="{{rooms && rooms.length}}">
-          <view class="room-item" wx:for="{{rooms}}" wx:for-item="room" wx:key="room.id">
+          <view class="room-item" wx:for="{{rooms}}" wx:for-item="room" wx:key="room.id" data-id="{{room.id}}" bindtap="onRoomTap">
             <view class="room-item-hd">
               {{room.name}}
             </view>

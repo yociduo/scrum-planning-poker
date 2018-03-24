@@ -22,5 +22,9 @@ Page({
   },
   onCreateTap() {
     wx.navigateTo({ url: '../create-room/index' });
+  },
+  onRoomTap(e) {
+    const { id } = e.currentTarget.dataset;
+    wx.navigateTo({ url: `../room-detail/index?id=${id}` });
   }
 })
