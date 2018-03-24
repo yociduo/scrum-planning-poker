@@ -199,6 +199,10 @@ form{
 }
 
 /* iScrum Poker */
+.page-section {
+  margin-bottom: 40rpx
+}
+
 .page-section-title {
   font-size: 34rpx;
   font-weight: 500;
@@ -218,6 +222,7 @@ form{
 }
 
 .btn-area {
+  margin-top: 40rpx;
   padding-left: 40rpx;
   padding-right: 40rpx;
 }
