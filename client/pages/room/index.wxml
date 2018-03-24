@@ -97,15 +97,15 @@
               {{story.score}}
             </view>
           </view>
-          <view class="story story-box-ft">
+          <view class="story story-box-ft" wx:if="{{finished}}">
             <view class="story-hd">
-              3 Stories
+              {{count}}
             </view>
             <view class="story-bd">
-              00:50:20
+              {{time}}
             </view>
             <view class="story-ft">
-              100
+              {{total}}
             </view>
           </view>
         </view>

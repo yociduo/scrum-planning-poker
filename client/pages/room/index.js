@@ -18,7 +18,21 @@ Page({
 
     app.globalData.socket.on('init', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
-      if (payload.finished) {
+      if (!payload.finished) {
+        const title = payload.name;
+        wx.setNavigationBarTitle({ title });
+        this.setData(payload);
+        if (isHost && !payload.start) {
+          app.globalData.socket.emit('next story', { id });
+        }
+        wx.setStorageSync(id, {
+          name: payload.name,
+          scores: payload.scores,
+          count: payload.count,
+          time: payload.time,
+          total: payload.total
+        });
+      } else if (!payload.closed) {
         const cache = wx.getStorageSync(id);
         if (cache) {
           const title = cache.name;
@@ -34,13 +48,7 @@ Page({
           });
         }
       } else {
-        const title = payload.name;
-        wx.setNavigationBarTitle({ title });
-        this.setData(payload);
-        if (isHost && !payload.start) {
-          app.globalData.socket.emit('next story', { id });
-        }
-        wx.setStorageSync(id, { name: payload.name, scores: payload.scores });
+        wx.redirectTo({ url: `../room-detail/index?id=${id}` });
       }
     });
 
@@ -50,7 +58,14 @@ Page({
       if (payload.scores) {
         const cache = wx.getStorageSync(id) || {};
         cache.scores = payload.scores;
+        cache.count = payload.count;
+        cache.time = payload.time;
+        cache.total = payload.total;
         wx.setStorageSync(id, cache);
+      }
+
+      if (payload.closed) {
+        wx.redirectTo({ url: `../room-detail/index?id=${id}` });
       }
     });
 
@@ -80,7 +95,7 @@ Page({
   onSaveTap() {
     const { id, loading, resultType } = this.data;
     if (loading) return;
-    app.globalData.socket.emit('next story', { id, resultType });
+    app.globalData.socket.emit('next story', { id });
     this.setData({ loading: true });
   },
   onCalcMethodChange(e) {

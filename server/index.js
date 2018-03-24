@@ -40,9 +40,7 @@ const initPayload = {
       key: 'Customized',
       value: 2
     }
-  ],
-  calcMethod: 0,
-  subCalcMethod: 0
+  ]
 };
 
 const toPlayers = (players, isNoymous, socket) => players.map((player, index) => {
@@ -148,7 +146,22 @@ const calculator = (room) => {
       return i.value - j.value;
     }
   })[0].index;
-}
+};
+
+const setIntervalTimer = (room) => setInterval(() => {
+  if (room._timer < 3600 * 3) {
+    room._timer++;
+    room.displayTime = formatTimer(room._timer);
+    emitAll(room, ['displayTime']);
+  } else {
+    clearInterval(room._interval);
+    room.start = false;
+    room.finished = true;
+    room.closed = true;
+    room.currentStory = 'Continue with this room & add story!';
+    emitAll(room, ['start', 'finished', 'currentStory', 'closed']);
+  }
+}, 1000);
 
 if (debug) {
   app.get('/', (req, res) => {
@@ -179,6 +192,8 @@ io.on('connection', (socket) => {
     room._interval = null;
     room._storyIndex = -1;
     room._timer = 0;
+    room._allTimer = 0;
+    room._allScore = 0;
     room.name = decodeURIComponent(name);
     room.players = [];
     room.scores = [];
@@ -186,47 +201,59 @@ io.on('connection', (socket) => {
     room.loading = false;
     room.start = false;
     room.finished = room._stories.length === 0;
-    room.hasNext = room._stories.length > 1;
+    // room.hasNext = room._stories.length > 1;
     room.displayTime = '00:00:00';
     room.calcMethod = 0;
-    room.averageScore = '';
-    room.medianScore = '';
+    room.subCalcMethod = 0;
+    room.count = '0 Story';
+    room.time = '00:00:00';
+    room.total = 0;
     rooms[room.id] = room;
   });
 
-  socket.on('next story', ({ id, resultType }) => {
-    log('[next story]', { id, resultType });
+  socket.on('next story', ({ id }) => {
+    log('[next story]', { id });
     if (!rooms.hasOwnProperty(id)) return error(socket, 'Room has been deleted!');
     const room = rooms[id];
     const keys = new Set();;
 
     if (room._storyIndex !== -1) {
       // save scores
-      room.scores.push({
-        name: room.currentStory,
-        time: room.displayTime,
-        score: parseInt(resultType) === 0 ? room.averageScore : room.medianScore
-      });
+      const { result, currentStory: name, displayTime: time, players } = room;
+      const score = result === null || result === undefined ? '' : initResults[result];
+      const details = players.map(({ nickName, score }) => ({ nickName, score }));
+      const count = room.scores.push({ score, name, time, details });
       keys.add('scores');
+      room._allTimer += room._timer;
+      room.count = `${count} stor${count > 1 ? 'ies' : 'y'}`;
+      keys.add('count');
+      room.time = formatTimer(room._allTimer);
+      keys.add('time');
+      room.total += +score;
+      keys.add('total');
+      room.calcMethod = 0;
+      keys.add('calcMethod');
+      room.subCalcMethod = 0;
+      keys.add('subCalcMethod');
+      room.result = null;
+      keys.add('result');
     } else {
       room.start = true;
       keys.add('start');
-      room._interval = setInterval(() => {
-        room._timer++;
-        room.displayTime = formatTimer(room._timer);
-        emitAll(room, ['displayTime']);
-      }, 1000);
+      room._interval = setIntervalTimer(room);
     }
 
     room._storyIndex++;
     room._timer = 0;
+    room.displayTime = '00:00:00';
+    keys.add('displayTime');
 
     const { length } = room._stories;
     if (length > room._storyIndex) {
-      if (room.hasNext !== ((length - 1) > room._storyIndex)) {
-        room.hasNext = !room.hasNext;
-        keys.add('hasNext');
-      }
+      // if (room.hasNext !== ((length - 1) > room._storyIndex)) {
+      //   room.hasNext = !room.hasNext;
+      //   keys.add('hasNext');
+      // }
 
       room.currentStory = room._stories[room._storyIndex];
       keys.add('currentStory');
@@ -239,9 +266,7 @@ io.on('connection', (socket) => {
       keys.add('start');
       room.finished = true;
       keys.add('finished');
-      room.displayTime = '00:00:00';
-      keys.add('displayTime');
-      room.currentStory = 'Congratulations!';
+      room.currentStory = 'Continue with this room & add story!';
       keys.add('currentStory');
     }
 
@@ -251,10 +276,6 @@ io.on('connection', (socket) => {
     keys.add('players');
     room.selectedCard = null;
     keys.add('selectedCard');
-    room.averageScore = '';
-    keys.add('averageScore');
-    room.medianScore = '';
-    keys.add('medianScore');
 
     emitAll(room, keys);
   });
@@ -269,14 +290,17 @@ io.on('connection', (socket) => {
 
       if (room.finished) {
         room.finished = false;
-        emitAll(room, ['finished']);
+        room.currentStory = room._stories[room._storyIndex];
+        room.start = true;
+        room._interval = setIntervalTimer(room);
+        emitAll(room, ['start', 'finished', 'currentStory']);
       }
     }
   });
 
   socket.on('join room', ({ id, userInfo, isHost }) => {
     log('[join room]', { id, userInfo, isHost });
-    if (!rooms.hasOwnProperty(id)) return socket.emit('init', { ...initPayload, finished: true, closed: true, currentStory: 'Congratulations!', id });
+    if (!rooms.hasOwnProperty(id)) return socket.emit('init', { ...initPayload, finished: true, closed: true, currentStory: 'Continue with this room & add story!', id });
     const room = rooms[id];
     room._sockets.add(socket);
     socket.nickName = userInfo.nickName;
