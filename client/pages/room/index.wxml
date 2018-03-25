@@ -72,7 +72,7 @@
           <picker bindchange="onResultChange" value="{{result}}" range="{{results}}">
             <view class="result result-box-ft">
               <view class="result-bd">Result</view>
-              <view class="result-ft">{{result ? results[result] : ''}}</view>
+              <view class="result-ft">{{result || result === 0 ? results[result] : ''}}</view>
             </view>
           </picker>
         </view>
