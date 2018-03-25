@@ -1,6 +1,6 @@
 <import src="../common/card.wxml" />
 
-<view class="top-stick" wx:if="{{init && finished && !closed}}">
+<view class="top-stick" wx:if="{{init && finished && isHost && !closed}}">
   <view class="top-stick-hd">
     {{currentStory}}
   </view>
@@ -10,7 +10,7 @@
     </button>
   </view>
 </view>
-<view class="top-stick top-stick-story" wx:if="{{init && isHost && !finished}}">
+<view class="top-stick top-stick-story" wx:if="{{init && !finished}}">
   <view class="top-stick-hd">
     {{currentStory}}
   </view>

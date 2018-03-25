@@ -18,10 +18,6 @@ input {
   transform: translateY(-50%);
   transition: 0.3s;
   position: relative;
-  display: flex;
-  align-items: center;
-  padding: 10rpx 30rpx;
-  min-height: 68rpx;
 }
 
 .navigator-box-show {
@@ -30,49 +26,15 @@ input {
 }
 
 .navigator {
-  padding: 20rpx 30rpx;
+  min-height: 68rpx;
+  padding: 10rpx 30rpx;
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.navigator:before {
-  content: " ";
-  position: absolute;
-  left: 30rpx;
-  top: 0;
-  right: 30rpx;
-  height: 1px;
-  border-top: 1rpx solid #d8d8d8;
-  color: #d8d8d8;
-}
-
-.navigator:first-child:before {
-  display: none;
-}
-
 .navigator-text {
   flex: 1;
-}
-
-.navigator-arrow {
-  padding-right: 26rpx;
-  position: relative;
-}
-
-.navigator-arrow:after {
-  content: " ";
-  display: inline-block;
-  height: 18rpx;
-  width: 18rpx;
-  border-width: 2rpx 2rpx 0 0;
-  border-color: #888;
-  border-style: solid;
-  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
-  position: absolute;
-  top: 50%;
-  margin-top: -8rpx;
-  right: 28rpx;
 }
 
 .kind-list {
