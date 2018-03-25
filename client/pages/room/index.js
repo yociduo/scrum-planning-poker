@@ -49,26 +49,34 @@ Page({
           });
         }
       } else {
+        const cache = wx.getStorageSync(id);
+        if (cache) {
+          cache.finished = true;
+          wx.setStorageSync(id, cache);
+        }
         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
       }
     });
 
     app.globalData.socket.on('action', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
+      const refresh = {};
       this.setData(payload);
+
       if (payload.scores) {
-        const cache = wx.getStorageSync(id) || {};
-        cache.scores = payload.scores;
-        cache.count = payload.count;
-        cache.time = payload.time;
-        cache.total = payload.total;
-        wx.setStorageSync(id, cache);
+        refresh.scores = payload.scores;
+        refresh.count = payload.count;
+        refresh.time = payload.time;
+        refresh.total = payload.total;
       }
 
-      if (payload.finished !== null || payload.finished !== undefined) {
+      if (payload.finished !== null && payload.finished !== undefined) {
+        refresh.finished = payload.finished;
+      }
+
+      if (Object.keys(refresh).length > 0) {
         const cache = wx.getStorageSync(id) || {};
-        cache.finished = payload.finished;
-        wx.setStorageSync(id, cache);
+        wx.setStorageSync(id, { ...cache, ...refresh });
       }
 
       if (payload.closed) {
