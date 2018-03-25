@@ -221,7 +221,9 @@ io.on('connection', (socket) => {
       // save scores
       const { result, currentStory: name, displayTime: time, players } = room;
       const score = result === null || result === undefined ? '' : initResults[result];
-      const details = players.map(({ nickName, score }) => ({ nickName, score }));
+      const details = players.map(({ nickName, score }) => {
+        return { nickName, score: score !== null ? cards.find(c => c.value === score).key : '' };
+      });
       const count = room.scores.push({ score, name, time, details });
       keys.add('scores');
       room._allTimer += room._timer;
