@@ -143,7 +143,7 @@ const calculator = (room) => {
     } else if (i.abs < j.abs) {
       return -1;
     } else {
-      return i.value - j.value;
+      return j.value - i.value;
     }
   })[0].index;
 };
