@@ -5,7 +5,7 @@ Page({
     rooms: []
   },
   onShow() {
-    const rooms = wx.getStorageSync('hosted').reverse().map(id => {
+    const rooms = (wx.getStorageSync('hosted') || []).reverse().map(id => {
       const { name, count, time, total, finished } = wx.getStorageSync(id);
       return { id, name, count, time, total, finished };
     });

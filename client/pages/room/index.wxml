@@ -112,7 +112,7 @@
       </view>
     </view>
     <view class="btn-area" wx:if="{{finished}}">
-      <button type="primary" loading="{{loading}}" bindtap="onBackTap">Back</button>
+      <button type="primary" bindtap="onBackTap">Back</button>
     </view>
   </view>
 </view>

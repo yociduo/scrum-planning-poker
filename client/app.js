@@ -18,28 +18,34 @@ App({
           wx.showModal({
             title: 'Enable Debugging',
             content: 'Enable Debugging',
-            success: () => {
+            success: ({ confirm }) => {
               wx.setClipboardData({ data: '' });
-              wx.setEnableDebug({ enableDebug: true });
+              if (confirm) {
+                wx.setEnableDebug({ enableDebug: true });
+              }
             }
           });
         } else if (data === 'prod') {
           wx.showModal({
             title: 'Disable Debugging',
             content: 'Disable Debugging',
-            success: () => {
+            success: ({ confirm }) => {
               wx.setClipboardData({ data: '' });
-              wx.setEnableDebug({ enableDebug: false });
+              if (confirm) {
+                wx.setEnableDebug({ enableDebug: false });
+              }
             }
           });
         } else if (data === 'clear-cache') {
           wx.showModal({
             title: 'Clear Storage',
             content: 'Clear Storage',
-            success: () => {
+            success: ({ confirm }) => {
               wx.setClipboardData({ data: '' });
-              wx.clearStorageSync();
-              wx.reLaunch({ url: 'index' });
+              if (confirm) {
+                wx.clearStorageSync();
+                wx.reLaunch({ url: 'index' });
+              }
             }
           })
         }

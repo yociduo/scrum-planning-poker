@@ -2,9 +2,19 @@ Page({
   onLoad(options) {
     const { id } = options;
     const room = wx.getStorageSync(id);
-    room.id = id;
-    room.scores.forEach((s, id) => s.id = id);
-    this.setData({ ...room });
+    if (room) {
+      room.id = id;
+      room.scores.forEach((s, id) => s.id = id);
+      this.setData({ ...room });
+    } else {
+      wx.showModal({
+        title: 'Error',
+        content: 'Room has been deleted!',
+        showCancel: false,
+        confirmText: 'OK',
+        success: () => this.onBackTap(),
+      });
+    }
   },
   onRoomChange(e) {
     this.setData({ name: e.detail.value });
@@ -22,5 +32,12 @@ Page({
       }
     }
     this.setData({ scores });
+  },
+  onBackTap: function (e) {
+    if (getCurrentPages().length > 1) {
+      wx.navigateBack({ delta: 1 });
+    } else {
+      wx.redirectTo({ url: `../index/index` });
+    }
   }
 });

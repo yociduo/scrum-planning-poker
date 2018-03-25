@@ -37,5 +37,8 @@
         </view>
       </view>
     </view>
+    <view class="btn-area">
+      <button type="primary" bindtap="onBackTap">Back</button>
+    </view>
   </view>
 </view>
