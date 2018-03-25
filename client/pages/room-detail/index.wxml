@@ -1,2 +1,42 @@
-<!--pages/room-detail/index.wxml-->
-<text>pages/room-detail/index.wxml</text>
+<view class="container">
+  <view class="page-body">
+    <view class="page-section-title">Room Name</view>
+    <view class="page-section">
+      <view class="page-section-spacing">
+        <view class="input-wrp">
+          <input name="room" bindinput="onRoomChange" value="{{name}}" />
+        </view>
+      </view>
+    </view>
+    <view class="page-section-title" wx:if="{{scores && scores.length}}">All Stories</view>
+    <view class="page-section" wx:if="{{scores && scores.length}}">
+      <view class="page-section-spacing">
+        <view class="kind-list">
+          <block wx:for-items="{{scores}}" wx:key="{{item.id}}">
+            <view class="kind-list-item">
+              <view id="{{item.id}}" class="kind-list-item-hd {{item.open ? 'kind-list-item-hd-show' : ''}}" bindtap="kindToggle">
+                <view class="kind-list-text">{{item.name}}</view>
+                <view class="kind-list-time">{{item.time}}</view>
+                <view class="kind-list-value">{{item.score}}</view>
+              </view>
+              <view class="kind-list-item-bd {{item.open ? 'kind-list-item-bd-show' : ''}}">
+                <view class="navigator-box {{item.open ? 'navigator-box-show' : ''}}">
+                  <block wx:for-items="{{item.details}}" wx:for-item="user" wx:key="*item">
+                    <view class="kind-list-text"></view>
+                    <view class="kind-list-time">{{user.nickName}}</view>
+                    <view class="kind-list-value">{{user.score}}</view>
+                  </block>
+                </view>
+              </view>
+            </view>
+          </block>
+          <view class="kind-list-ft">
+            <view class="kind-list-text">{{count}}</view>
+            <view class="kind-list-time">{{time}}</view>
+            <view class="kind-list-value">{{total}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

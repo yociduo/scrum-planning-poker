@@ -10,7 +10,7 @@
     </button>
   </view>
 </view>
-<view class="top-stick top-stick-story" wx:if="{{init && !finished}}">
+<view class="top-stick top-stick-story" wx:if="{{init && isHost && !finished}}">
   <view class="top-stick-hd">
     {{currentStory}}
   </view>

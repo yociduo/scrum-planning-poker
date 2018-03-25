@@ -6,7 +6,7 @@ input, textarea {
 
 .textarea-wrp, .input-wrp {
   background-color: #fff;
-  border: 2rpx solid #979797;
+  border: 2rpx solid #d8d8d8;
 }
 
 .input-wrp {
@@ -20,7 +20,6 @@ input, textarea {
 .switch-wrp {
   display: flex;
   margin-bottom: 40rpx;
-  color: #4A4A4A;
   font-size: 34rpx;
   line-height: 40rpx;
 }

@@ -6,7 +6,7 @@ textarea {
 
 .textarea-wrp {
   background-color: #fff;
-  border: 2rpx solid #979797;
+  border: 2rpx solid #d8d8d8;
 }
 
 .textarea-wrp {

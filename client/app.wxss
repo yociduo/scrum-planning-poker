@@ -199,6 +199,10 @@ form{
 }
 
 /* iScrum Poker */
+page {
+  color: #4A4A4A;
+}
+
 .page-section {
   margin-bottom: 40rpx
 }

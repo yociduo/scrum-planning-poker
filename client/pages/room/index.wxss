@@ -8,7 +8,6 @@
   display: flex;
   align-items: center;
   font-size: 34rpx;
-  color: #4a4a4a;
 }
 
 .top-stick-hd {
@@ -83,7 +82,6 @@
   flex: 1;
   font-size: 34rpx;
   font-weight: 500;
-  color: #4a4a4a;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -138,7 +136,7 @@
 .result-box-ft {
   height: 132rpx;
   border-top: 2rpx solid #d8d8d8;
-} 
+}
 
 .story-box-ft .story-ft,
 .result-box-ft .result-ft {
@@ -155,7 +153,6 @@
 .result-bd {
   flex: 1;
   font-weight: 500;
-  color: #4a4a4a;
 }
 
 .result-ft {

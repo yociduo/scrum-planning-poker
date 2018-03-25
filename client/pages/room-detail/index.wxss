@@ -1,1 +1,161 @@
-/* pages/room-detail/index.wxss */
+input {
+  width: 100%;
+  padding: 16rpx 0;
+  font-size: 34rpx;
+}
+
+.input-wrp {
+  background-color: #fff;
+  border: 2rpx solid #d8d8d8;
+  padding: 0 25rpx;
+}
+
+.navigator-box {
+  opacity: 0;
+  background-color: rgba(6, 120, 193, 0.1);
+  line-height: 1.41176471;
+  font-size: 34rpx;
+  transform: translateY(-50%);
+  transition: 0.3s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 10rpx 30rpx;
+  min-height: 68rpx;
+}
+
+.navigator-box-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.navigator {
+  padding: 20rpx 30rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.navigator:before {
+  content: " ";
+  position: absolute;
+  left: 30rpx;
+  top: 0;
+  right: 30rpx;
+  height: 1px;
+  border-top: 1rpx solid #d8d8d8;
+  color: #d8d8d8;
+}
+
+.navigator:first-child:before {
+  display: none;
+}
+
+.navigator-text {
+  flex: 1;
+}
+
+.navigator-arrow {
+  padding-right: 26rpx;
+  position: relative;
+}
+
+.navigator-arrow:after {
+  content: " ";
+  display: inline-block;
+  height: 18rpx;
+  width: 18rpx;
+  border-width: 2rpx 2rpx 0 0;
+  border-color: #888;
+  border-style: solid;
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  position: absolute;
+  top: 50%;
+  margin-top: -8rpx;
+  right: 28rpx;
+}
+
+.kind-list {
+  border: 2rpx solid #d8d8d8;
+}
+
+.kind-list-ft {
+  height: 132rpx;
+  border-top: 2rpx solid #d8d8d8;
+  display: flex;
+  align-items: center;
+  padding: 10rpx 30rpx;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.kind-list-item {
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.kind-list-text, .kind-list-time, .kind-list-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.kind-list-text {
+  text-align: left;
+  font-weight: 500;
+}
+
+.kind-list-time {
+  text-align: center;
+}
+
+.kind-list-value {
+  margin-right: 40rpx;
+  text-align: right;
+  font-weight: 500;
+  color: #0678c1;
+}
+
+.kind-list-ft .kind-list-value {
+  font-size: 40rpx;
+}
+
+.kind-list-item-hd .kind-list-value:after {
+  content: " ";
+  display: inline-block;
+  height: 18rpx;
+  width: 18rpx;
+  border-width: 6rpx 6rpx 0 0;
+  border-color: #9b9b9b;
+  border-style: solid;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 50%;
+  margin-top: -8rpx;
+  right: 28rpx;
+  transition: transform 0.3s, margin-top 0.3s;
+}
+
+.kind-list-item-hd {
+  min-height: 68rpx;
+  padding: 10rpx 30rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* transition: opacity 0.3s; */
+}
+
+.kind-list-item-hd-show .kind-list-value:after {
+  margin-top: -16rpx;
+  transform: rotate(135deg);
+}
+
+.kind-list-item-bd {
+  height: 0;
+  overflow: hidden;
+}
+
+.kind-list-item-bd-show {
+  height: auto;
+}

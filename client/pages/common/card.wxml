@@ -1,10 +1,10 @@
 <template name="card">
   <view class="card {{selectedCard === card.value ? 'selected' : ''}}" data-card="{{card}}" bindtap="onCardTap">
     <view class="card-left-corner">
-      {{card.corner}}
+      {{card.key}}
     </view>
     <view class="card-right-corner">
-      {{card.corner}}
+      {{card.key}}
     </view>
     <view class="card-center">
       {{card.key}}
