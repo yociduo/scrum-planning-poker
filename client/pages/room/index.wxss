@@ -143,9 +143,6 @@
   font-size: 40rpx;
 }
 
-.result {
-}
-
 .result:active {
   background-color: #EEEEEE;
 }
@@ -162,8 +159,8 @@
 .result-ft:after {
   content: " ";
   display: inline-block;
-  height: 18rpx;
-  width: 18rpx;
+  height: 12rpx;
+  width: 12rpx;
   border-width: 6rpx 6rpx 0 0;
   border-color: #9B9B9B;
   border-style: solid;

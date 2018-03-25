@@ -22,8 +22,8 @@
               <view class="kind-list-item-bd {{item.open ? 'kind-list-item-bd-show' : ''}}">
                 <view class="navigator-box {{item.open ? 'navigator-box-show' : ''}}">
                   <view class="navigator" wx:for-items="{{item.details}}" wx:for-item="user" wx:key="*item">
-                    <view class="kind-list-text" style="flex: 2">{{user.nickName}}</view>
-                    <view class="kind-list-value">{{user.score === null || user.score === undefined ? '' : user.score}}</view>
+                    <view class="kind-list-text" style="flex: 2; font-weight: 400;">{{user.nickName}}</view>
+                    <view class="kind-list-value" style="color: #4a4a4a;">{{user.score === null || user.score === undefined ? '' : user.score}}</view>
                   </view>
                 </view>
               </view>

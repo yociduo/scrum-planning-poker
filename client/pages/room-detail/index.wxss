@@ -12,7 +12,7 @@ input {
 
 .navigator-box {
   opacity: 0;
-  background-color: rgba(6, 120, 193, 0.1);
+  background-color: #fbfbfc;
   line-height: 1.41176471;
   font-size: 34rpx;
   transform: translateY(-50%);
@@ -86,8 +86,8 @@ input {
 .kind-list-item-hd .kind-list-value:after {
   content: " ";
   display: inline-block;
-  height: 18rpx;
-  width: 18rpx;
+  height: 12rpx;
+  width: 12rpx;
   border-width: 6rpx 6rpx 0 0;
   border-color: #9b9b9b;
   border-style: solid;
@@ -109,7 +109,7 @@ input {
 }
 
 .kind-list-item-hd-show .kind-list-value:after {
-  margin-top: -16rpx;
+  margin-top: -14rpx;
   transform: rotate(135deg);
 }
 
