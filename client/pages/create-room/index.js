@@ -7,22 +7,15 @@ Page({
     room: initRoom,
     stories: initStories
   },
-  onRoomChange(e) {
-    this.setData({ room: e.detail.value });
-  },
-  onRoomFocus() {
-    this.setData({ room: '' });
-  },
-  onRoomBlur() {
-    if (!this.data.room) {
-      this.setData({ room: initRoom })
+  onRoomBlur(e) {
+    const { value } = e.detail;
+    if (!value || !/\w+/.test(value)) {
+      this.setData({ room: initRoom });
     }
   },
-  onStoryChange(e) {
-    this.setData({ stories: e.detail.value });
-  },
-  onStoriesBlur() {
-    if (!this.data.stories || !/\w+/.test(this.data.stories)) {
+  onStoriesBlur(e) {
+    const { value } = e.detail;
+    if (!value || !/\w+/.test(value)) {
       this.setData({ stories: initStories });
     }
   },

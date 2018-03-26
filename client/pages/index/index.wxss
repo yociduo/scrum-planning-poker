@@ -43,16 +43,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  flex: 1;
 }
 
 .room-item-hd {
   text-align: left;
   font-weight: 500;
+  flex: 2;
 }
 
 .room-item-bd {
   text-align: center;
+  flex: 1;
 }
 
 .room-item-ft {
@@ -60,6 +61,7 @@
   text-align: right;
   font-weight: 500;
   color: #0678C1;
+  flex: 1;
 }
 
 .room-item-ft:after {
