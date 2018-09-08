@@ -1,4 +1,6 @@
 <import src="../common/card.wxml" />
+<import src="../../components/dialog/dialog.wxml"/>
+<template data="{{...myDialog}}" is="dialog" />
 
 <view class="top-stick" wx:if="{{init && finished && isHost && !closed}}">
   <view class="top-stick-hd">

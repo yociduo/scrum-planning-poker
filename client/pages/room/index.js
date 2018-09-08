@@ -1,3 +1,4 @@
+import myDialog from '../../components/dialog/dialog';
 const app = getApp();
 
 Page({
@@ -6,8 +7,24 @@ Page({
     const isHost = (wx.getStorageSync('hosted') || []).includes(id);
     this.setData({ id, isHost });
 
+    const showModal = () => {
+      myDialog.showModal({
+        title: "Welcome",
+        content: "Please allow our permission request for your public information. Thank you.",
+        confirmOpenType: "getUserInfo",  //如果不设置就是普通弹框
+        confirmText: "Allow",
+        showCancel: false,
+        success: (e) => {
+          const userInfo = e.detail.userInfo;
+          app.globalData.socket.emit('join room', { id, userInfo, isHost });
+        },
+        fail: () => true
+      });
+    };
+
     wx.getUserInfo({
       success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost }),
+      fail: showModal
     });
 
     app.globalData.socket.on('connect', () => {
