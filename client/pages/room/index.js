@@ -7,7 +7,7 @@ Page({
     this.setData({ id, isHost });
 
     wx.getUserInfo({
-      success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost })
+      success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost }),
     });
 
     app.globalData.socket.on('connect', () => {
@@ -43,6 +43,7 @@ Page({
           wx.showModal({
             title: 'Error',
             content: 'Room has been deleted!',
+            confirmColor: '#0678C1',
             showCancel: false,
             confirmText: 'OK',
             success: () => this.onBackTap(),
@@ -89,6 +90,7 @@ Page({
       content,
       showCancel: false,
       confirmText: 'OK',
+      confirmColor: '#0678C1',
       success: () => this.onBackTap(),
     }));
   },

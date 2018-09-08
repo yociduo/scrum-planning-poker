@@ -18,6 +18,7 @@ App({
           wx.showModal({
             title: 'Enable Debugging',
             content: 'Enable Debugging',
+            confirmColor: '#0678C1',
             success: ({ confirm }) => {
               wx.setClipboardData({ data: '' });
               if (confirm) {
@@ -29,6 +30,7 @@ App({
           wx.showModal({
             title: 'Disable Debugging',
             content: 'Disable Debugging',
+            confirmColor: '#0678C1',
             success: ({ confirm }) => {
               wx.setClipboardData({ data: '' });
               if (confirm) {
@@ -40,6 +42,7 @@ App({
           wx.showModal({
             title: 'Clear Storage',
             content: 'Clear Storage',
+            confirmColor: '#0678C1',
             success: ({ confirm }) => {
               wx.setClipboardData({ data: '' });
               if (confirm) {

@@ -10,6 +10,7 @@ Page({
       wx.showModal({
         title: 'Error',
         content: 'Room has been deleted!',
+        confirmColor: '#0678C1',
         showCancel: false,
         confirmText: 'OK',
         success: () => this.onBackTap(),
