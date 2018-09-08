@@ -1,0 +1,86 @@
+.flex {
+  display: flex;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, .5);
+  font-size: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: auto;
+  z-index:9999;
+}
+.modal:after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+.dialog {
+  display: inline-block;
+  font-size: 14px;
+  vertical-align: middle;
+  text-align: left;
+  white-space: normal;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.modal-content {
+  width: 80vw;
+  max-width: 300px;
+  background-color: #fff;
+}
+.modal-header {
+  font-size: 18px;
+  padding: 20px 25px 8px;
+  text-align: center;
+}
+.modal-body{
+  padding: 0 24px 12px;
+  color: #808080;
+}
+.modal-footer {
+  border-top: 1px solid #ddd;
+  border:　1px solid red;
+}
+.modal-btn {
+  display: block;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+  color: #3CC51F;
+  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  position: relative;
+  background: #fff;
+  border-radius: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.modal-btn:after {
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2rpx;
+  bottom: 0;
+  border-left: 2rpx solid #D5D5D6;
+  color: #D5D5D6;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleX(0.5);
+  transform: scaleX(0.5);
+}
+.modal-btn:first-child:after {
+  display: none;
+}
+.modal-btn-default {
+  color: #353535;
+}
+.modal-btn-primary {
+  color: #0678C1;
+}

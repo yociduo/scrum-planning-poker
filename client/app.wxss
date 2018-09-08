@@ -1,3 +1,5 @@
+@import "./components/dialog/dialog.wxss";
+
 /* reset */
 page {
   background-color: #F8F8F8;
