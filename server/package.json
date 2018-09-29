@@ -2,14 +2,38 @@
   "name": "scrum-planning-poker",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch-server": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
+    "build-ts": "tsc",
+    "copy-static-assets": "ts-node copyStaticAssets.ts",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "serve": "node dist/app.js",
+    "build": "npm run tslint && npm run build-ts && npm run copy-static-assets",
+    "start": "npm run serve",
   },
   "author": "",
   "dependencies": {
-    "express": "^4.16.3",
-    "socket.io": "^2.0.4"
+    "class-validator": "^0.9.1",
+    "koa": "^2.5.3",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "multer": "^1.4.0",
+    "mysql": "^2.16.0",
+    "reflect-metadata": "^0.1.12",
+    "routing-controllers": "^0.7.7",
+    "socket.io": "^2.0.4",
+    "typedi": "^0.8.0",
+    "typeorm": "^0.2.7"
+  },
+  "devDependencies": {
+    "@types/koa": "2.0.39",
+    "@types/koa-bodyparser": "^5.0.1",
+    "@types/koa-router": "^7.0.32",
+    "@types/node": "^10.11.3",
+    "nodemon": "^1.18.4",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0",
+    "typescript": "^3.1.1"
   }
 }
