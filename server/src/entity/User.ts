@@ -22,11 +22,11 @@ export class User {
   id: number;
 
   @Length(255)
-  @Column()
+  @Column({ default: '' })
   nickName: string;
 
   @Length(255)
-  @Column()
+  @Column({ default: '' })
   avatarUrl: string;
 
   @IsInt()
@@ -34,23 +34,23 @@ export class User {
   gender?: number;
 
   @Length(255)
-  @Column()
+  @Column({ default: '' })
   city: string;
 
   @Length(255)
-  @Column()
+  @Column({ default: '' })
   country: string;
 
   @Length(255)
-  @Column()
+  @Column({ default: '' })
   province: string;
 
   @Length(255)
-  @Column()
+  @Column({ default: '' })
   openId: string;
 
   @Length(255)
-  @Column()
+  @Column({ default: '' })
   sessionKey: string;
 
   @OneToMany(() => Score, score => score.user)

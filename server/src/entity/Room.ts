@@ -22,7 +22,7 @@ export class Room {
   id: number;
 
   @Length(255)
-  @Column()
+  @Column({ default: '' })
   name: string;
 
   @OneToMany(() => UserRoom, userRoom => userRoom.user)
@@ -31,20 +31,20 @@ export class Room {
   @OneToMany(() => Story, story => story.room)
   stories: Story[];
 
-  @ManyToOne(() => User, user => user.createdRooms)
+  @ManyToOne(() => User, user => user.createdRooms, { nullable: false })
   creator: User;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => User, user => user.updatedRooms)
+  @ManyToOne(() => User, user => user.updatedRooms, { nullable: false })
   updater: User;
 
   @UpdateDateColumn()
   updatedAt: Date;
 
   @IsBoolean()
-  @Column()
+  @Column({ default: false })
   isDeleted: boolean;
 
 }
