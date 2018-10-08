@@ -1,8 +1,9 @@
 import 'reflect-metadata';
-import { createKoaServer, useContainer } from 'routing-controllers';
+import { createKoaServer, useContainer, Action } from 'routing-controllers';
 import { Container } from 'typedi';
 import { createConnection } from 'typeorm';
 import { controllers } from './controller';
+import { decorators } from './decorator';
 
 createConnection().then(async () => {
   /**
@@ -20,6 +21,7 @@ createConnection().then(async () => {
      * Here we specify what controllers should be registered in our express server.
      */
     controllers,
+    ...decorators,
   });
 
   /**
