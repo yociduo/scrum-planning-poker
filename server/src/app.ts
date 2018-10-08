@@ -1,16 +1,17 @@
 import 'reflect-metadata';
-import { createKoaServer, useContainer } from 'routing-controllers';
+import { createKoaServer, useContainer as routingUseContainer } from 'routing-controllers';
 import { Container } from 'typedi';
-import { createConnection } from 'typeorm';
+import { useContainer as ormUseContainer, createConnection } from 'typeorm';
 import { controllers } from './controller';
 import { decorators } from './decorator';
 
-createConnection().then(async () => {
-  /**
-   * Setup routing-controllers to use typedi container.
-   */
-  useContainer(Container);
+/**
+ * Setup routing-controllers to use typedi container.
+ */
+routingUseContainer(Container);
+ormUseContainer(Container);
 
+createConnection().then(async () => {
   /**
    * We create a new koa server instance.
    * We could have also use useKoaServer here to attach controllers to an existing koa instance.
