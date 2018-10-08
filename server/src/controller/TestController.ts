@@ -9,25 +9,15 @@ import {
   CurrentUser,
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { Repository, getManager } from 'typeorm';
 import { EntityFromParam, EntityFromBody } from 'typeorm-routing-controllers-extensions';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { User, Room } from '../entity';
+import { WxLogin } from '../model';
 import { UserRepository, RoomRepository } from '../repository';
 
 @Service()
 @JsonController()
 export class TestController {
-
-  // private userRepository = getManager().getRepository(User);
-
-  // private roomRepository = getManager().getRepository(Room);
-
-  // @InjectRepository(User)
-  // private userRepository: Repository<User>;
-
-  // @InjectRepository(Room)
-  // private roomRepository: Repository<Room>;
 
   @InjectRepository(User)
   private userRepository: UserRepository;
@@ -35,43 +25,53 @@ export class TestController {
   @InjectRepository(Room)
   private roomRepository: RoomRepository;
 
+  @Post('/test/wxlogin')
+  login(@Body() data: WxLogin): Promise<string> {
+    return this.userRepository.wxLogin(data);
+  }
+
+  @Authorized()
   @Get('/test/users')
   getUsers(): Promise<User[]> {
     return this.userRepository.find();
   }
 
+  @Authorized()
   @Get('/test/users/:id')
   getUser(@EntityFromParam('id') user: User): User {
     // return this.userRepository.findOne(id);
     return user;
   }
 
+  @Authorized()
   @Post('/test/users')
   createUser(@EntityFromBody() user: User): Promise<User> {
     return this.userRepository.save(user);
   }
 
+  @Authorized()
   @Put('/test/users')
   updateUser(@EntityFromBody() user: User): Promise<User> {
     return this.userRepository.save(user);
   }
 
+  @Authorized()
   @Get('/test/rooms')
   getRooms(): Promise<Room[]> {
     return this.roomRepository.find();
   }
 
+  @Authorized()
   @Get('/test/rooms/:id')
   getRoom(@Param('id') id: number): Promise<Room> {
     return this.roomRepository.findOne(id);
   }
 
+  @Authorized()
   @Post('/test/rooms')
   async createRoom(@Body() room: Room, @CurrentUser({ required: true }) user: User): Promise<Room> {
-    console.log(user);
-    const user2 = await this.userRepository.findOne(1);
-    room.creator = user2;
-    room.updater = user2;
+    room.creator = user;
+    room.updater = user;
     return this.roomRepository.save(room);
   }
 
