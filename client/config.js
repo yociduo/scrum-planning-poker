@@ -1,4 +1,4 @@
-const host = '://localhost:3000';
+const host = '://localhost:3000/api';
 // const host = 's://www.peajs.top';
 
 const config = {

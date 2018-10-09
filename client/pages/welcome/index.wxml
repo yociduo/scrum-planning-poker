@@ -1,2 +1,7 @@
-<!--pages/welcome/index.wxml-->
-<text>pages/welcome/index.wxml</text>
+<view class="container">
+  <view class="page-body">
+    <view class="btn-area">
+      <button type="primary" open-type="getUserInfo" bindgetuserinfo="onGotUserInfo">Start</button>
+    </view>
+  </view>
+</view>
