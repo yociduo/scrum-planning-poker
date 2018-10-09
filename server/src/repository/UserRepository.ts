@@ -52,14 +52,14 @@ export class UserRepository extends Repository<User> {
 
   verify(token: string): number {
     try {
-      return Number(jwt.verify(token.slice(7), 'secret'));
+      return Number(jwt.verify(token.slice(7), config.jwtSecret));
     } catch {
       return null;
     }
   }
 
   sign(user: User): string {
-    return jwt.sign(user.id.toString(), 'secret');
+    return jwt.sign(user.id.toString(), config.jwtSecret);
   }
 
   decrypt(encryptedData: string, iv: string, sessionKey: string) {
