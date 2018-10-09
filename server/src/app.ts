@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { createKoaServer, useContainer as routingUseContainer } from 'routing-controllers';
 import { Container } from 'typedi';
 import { useContainer as ormUseContainer, createConnection } from 'typeorm';
+import { config } from './config';
 import { controllers } from './controller';
 import { decorators } from './decorator';
 
@@ -29,8 +30,8 @@ createConnection().then(async () => {
   /**
    * Start the koa app.
    */
-  koaApp.listen(3000);
+  koaApp.listen(config.port);
 
-  console.log('Server is up and running at port 3000');
+  console.log(`Server is up and running at port ${config.port}`);
 
 }).catch(error => console.log(error));

@@ -35,6 +35,10 @@ export class User {
 
   @Length(255)
   @Column({ default: '' })
+  language: string;
+
+  @Length(255)
+  @Column({ default: '' })
   city: string;
 
   @Length(255)
