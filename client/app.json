@@ -4,7 +4,8 @@
     "pages/create-room/index",
     "pages/room/index",
     "pages/add-story/index",
-    "pages/room-detail/index"
+    "pages/room-detail/index",
+    "pages/welcome/index"
   ],
   "window":{
     "backgroundTextStyle": "light",

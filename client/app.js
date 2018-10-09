@@ -1,15 +1,10 @@
-import io from './vendor/wxsocket.io/index';
-const socketUrl = require('./config').socketUrl;
-
 App({
-  onLaunch() {
-
-    // login
-    wx.login({});
-
-    // connect socket
-    const socket = io(socketUrl);
-    this.globalData.socket = socket;
+  onLaunch(options) {
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({ url: `./pages/welcome/index?backUrl=${encodeURIComponent(options.path)}` });
+    }
+    this.globalData.token = token;
   },
   onShow() {
     wx.getClipboardData({
@@ -47,17 +42,16 @@ App({
               wx.setClipboardData({ data: '' });
               if (confirm) {
                 wx.clearStorageSync();
-                wx.reLaunch({ url: 'index' });
+                wx.reLaunch({ url: './pages/index/index' });
               }
             }
           })
         }
       }
-    })
-
-    this.globalData.socket.connect();
+    });
   },
   globalData: {
-    userInfo: null
-  }
-})
+    userInfo: null,
+    token: null,
+  },
+});

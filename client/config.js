@@ -1,9 +1,10 @@
-// const host = '://localhost:9001';
-const host = 's://www.peajs.top';
+const host = '://localhost:3000';
+// const host = 's://www.peajs.top';
 
 const config = {
   host,
   socketUrl: `ws${host}`,
+  apiUrl: `http${host}`,
 };
 
 module.exports = config;
