@@ -1,4 +1,4 @@
-const app = getApp();
+const { apiUrl } = require('../../config');
 const initStories = new Array(3).fill(null).map((n, i) => 'Story ' + (i + 1)).join('\n');
 const initRoom = 'Room';
 
@@ -20,26 +20,43 @@ Page({
     }
   },
   formSubmit(e) {
-    const { room, stories, needScore, isNoymous } = e.detail.value;
-    if (room) {
-      // generate id
-      const id = Math.ceil(Math.random() * 10000000).toString();
+    const { room: name, stories, needScore, isNoymous } = e.detail.value;
+    if (name) {
+      // // generate id
+      // const id = Math.ceil(Math.random() * 10000000).toString();
 
-      // store hosted room id
-      const hosted = wx.getStorageSync('hosted') || [];
-      hosted.push(id);
-      wx.setStorageSync('hosted', hosted);
+      // // store hosted room id
+      // const hosted = wx.getStorageSync('hosted') || [];
+      // hosted.push(id);
+      // wx.setStorageSync('hosted', hosted);
 
-      app.globalData.socket.emit('create room', {
-        id,
-        needScore,
-        isNoymous,
-        name: encodeURIComponent(room),
-        stories: encodeURIComponent(stories),
-      });
+      // app.globalData.socket.emit('create room', {
+      //   id,
+      //   needScore,
+      //   isNoymous,
+      //   name: encodeURIComponent(room),
+      //   stories: encodeURIComponent(stories),
+      // });
 
-      wx.navigateTo({
-        url: `../room/index?id=${id}`,
+      wx.request({
+        url: `${apiUrl}/rooms`,
+        method: 'POST',
+        data: {
+          name,
+          stories: stories.trim().split('\n').filter(n => n).map(name => ({ name })),
+          options: {
+            needScore,
+            isNoymous,
+          },
+        },
+        header: {
+          'Authorization': `Bearer ${wx.getStorageSync('token')}`
+        },
+        success: ({ data, statusCode }) => {
+          if (statusCode === 200) {
+            wx.navigateTo({ url: `../room/index?id=${data.id}` });
+          }
+        }
       });
     }
   }

@@ -3,7 +3,6 @@ import { createKoaServer, useContainer as routingUseContainer } from 'routing-co
 import { Container } from 'typedi';
 import { useContainer as ormUseContainer, createConnection } from 'typeorm';
 import { config } from './config';
-import { controllers } from './controller';
 import { decorators } from './decorator';
 
 /**
@@ -22,7 +21,8 @@ createConnection().then(async () => {
      * We can add options about how routing-controllers should configure itself.
      * Here we specify what controllers should be registered in our express server.
      */
-    controllers,
+    controllers: [`${__dirname}/controller/*.ts`],
+    middlewares: [`${__dirname}/middleware/*.ts`],
     cors: true,
     ...decorators,
   });

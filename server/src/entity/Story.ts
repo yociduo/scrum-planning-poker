@@ -24,48 +24,48 @@ export class Story {
   id: number;
 
   @Length(1023)
-  @Column()
+  @Column({ default: '' })
   name: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string;
 
-  @ManyToOne(() => Room, room => room.stories)
+  @ManyToOne(() => Room, room => room.stories, { nullable: false })
   room: Room;
 
   @OneToMany(() => Score, score => score.user)
   scores: Score[];
 
   @IsHexadecimal()
-  @Column('decimal', { precision: 1 })
+  @Column('decimal', { default: 0, precision: 1 })
   score: number;
 
   @IsInt()
-  @Column('smallint')
+  @Column('smallint', { default: 0 })
   timer: number;
 
   @IsInt()
   @Column('smallint', { nullable: true })
   meanType: number;
 
-  @ManyToOne(() => User, user => user.createdStories)
+  @ManyToOne(() => User, user => user.createdStories, { nullable: false })
   creator: User;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => User, user => user.updatedStories)
+  @ManyToOne(() => User, user => user.updatedStories, { nullable: false })
   updater: User;
 
   @UpdateDateColumn()
   updatedAt: Date;
 
   @IsBoolean()
-  @Column()
+  @Column({ default: false })
   isDeleted: boolean;
 
   @IsBoolean()
-  @Column()
+  @Column({ default: false })
   isCompleted: boolean;
 
 }

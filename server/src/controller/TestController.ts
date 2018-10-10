@@ -16,7 +16,7 @@ import { WxLogin } from '../model';
 import { UserRepository, RoomRepository } from '../repository';
 
 @Service()
-@JsonController()
+@JsonController('/api')
 export class TestController {
 
   @InjectRepository(User)
