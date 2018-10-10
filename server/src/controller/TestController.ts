@@ -41,6 +41,11 @@ export class TestController {
   @InjectRepository(User)
   private userRepository: UserRepository;
 
+  @Get()
+  test() {
+    return 'Working!';
+  }
+
   @Post('/wxlogin')
   login(@Body() data: WxLogin): Promise<string> {
     return this.userRepository.wxLogin(data);

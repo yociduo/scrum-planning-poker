@@ -1,15 +1,18 @@
 import 'reflect-metadata';
+import * as Koa from 'koa';
 import { createKoaServer, useContainer as routingUseContainer } from 'routing-controllers';
+import { createSocketServer, useContainer as socketUseContainer } from 'socket-controllers';
 import { Container } from 'typedi';
 import { useContainer as ormUseContainer, createConnection } from 'typeorm';
 import { config } from './config';
 import { decorators } from './decorator';
 
 /**
- * Setup routing-controllers to use typedi container.
+ * Setup routing-controllers typeorm and socket-controllers to use typedi container.
  */
 routingUseContainer(Container);
 ormUseContainer(Container);
+socketUseContainer(Container);
 
 createConnection().then(async () => {
   /**
@@ -26,6 +29,10 @@ createConnection().then(async () => {
     routePrefix: '/api',
     cors: true,
     ...decorators,
+  });
+
+  createSocketServer(config.port + 1, {
+    controllers: [`${__dirname}/socket/*.ts`],
   });
 
   /**

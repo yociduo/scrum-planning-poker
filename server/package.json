@@ -27,7 +27,7 @@
     "mysql": "^2.16.0",
     "reflect-metadata": "^0.1.12",
     "routing-controllers": "^0.7.7",
-    "socket.io": "^2.0.4",
+    "socket-controllers": "0.0.3",
     "typedi": "^0.8.0",
     "typeorm": "^0.2.7",
     "typeorm-routing-controllers-extensions": "^0.2.0",
