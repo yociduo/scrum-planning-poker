@@ -47,7 +47,7 @@ export class Room {
   @Column({ default: false })
   isDeleted: boolean;
 
-  @Column('simple-json')
+  @Column('simple-json', { nullable: true })
   options: any;
 
 }

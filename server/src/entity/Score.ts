@@ -19,18 +19,18 @@ export class Score {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.scores)
+  @ManyToOne(() => User, user => user.scores, { nullable: false })
   user: User;
 
-  @ManyToOne(() => Story, story => story.scores)
+  @ManyToOne(() => Story, story => story.scores, { nullable: false })
   story: Story;
 
   @IsHexadecimal()
-  @Column('decimal', { precision: 1 })
+  @Column('decimal', { default: 0, precision: 1 })
   score: number;
 
   @IsInt()
-  @Column('smallint')
+  @Column('smallint', { default: 0 })
   timer: number;
 
   @CreateDateColumn()

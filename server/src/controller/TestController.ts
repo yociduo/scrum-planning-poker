@@ -16,7 +16,7 @@ import { WxLogin } from '../model';
 import { UserRepository, RoomRepository } from '../repository';
 
 @Service()
-@JsonController('/api')
+@JsonController('/test')
 export class TestController {
 
   @InjectRepository(User)
@@ -25,57 +25,67 @@ export class TestController {
   @InjectRepository(Room)
   private roomRepository: RoomRepository;
 
-  @Post('/test/wxlogin')
+  @Post('/wxlogin')
   login(@Body() data: WxLogin): Promise<string> {
     return this.userRepository.wxLogin(data);
   }
 
   @Authorized()
-  @Get('/test/users')
+  @Get('/users')
   getUsers(): Promise<User[]> {
     return this.userRepository.find();
   }
 
   @Authorized()
-  @Get('/test/users/:id')
+  @Get('/users/:id')
   getUser(@EntityFromParam('id') user: User): User {
     // return this.userRepository.findOne(id);
     return user;
   }
 
   @Authorized()
-  @Post('/test/users')
+  @Post('/users')
   createUser(@EntityFromBody() user: User): Promise<User> {
     return this.userRepository.save(user);
   }
 
   @Authorized()
-  @Put('/test/users')
+  @Put('/users')
   updateUser(@EntityFromBody() user: User): Promise<User> {
     return this.userRepository.save(user);
   }
 
   @Authorized()
-  @Get('/test/rooms')
-  getRooms(): Promise<Room[]> {
-    return this.roomRepository.find();
+  @Get('/rooms')
+  getRooms(@CurrentUser({ required: true }) user: User): Promise<Room[]> {
+    return this.roomRepository.getByUser(user);
   }
 
   @Authorized()
-  @Get('/test/rooms/:id')
+  @Get('/rooms/:id')
   getRoom(@Param('id') id: number): Promise<Room> {
     return this.roomRepository.findOne(id);
   }
 
   @Authorized()
-  @Post('/test/rooms')
-  async createRoom(@Body() room: Room, @CurrentUser({ required: true }) user: User): Promise<Room> {
-    room.creator = user;
-    room.updater = user;
-    return this.roomRepository.save(room);
+  @Post('/rooms')
+  createRoom(@Body() room: Room, @CurrentUser({ required: true }) user: User): Promise<Room> {
+    return this.roomRepository.createWithStory(user, room);
   }
 
-  // @Get('/test/rooms/:id/:name')
+  @Authorized()
+  @Post('/rooms/:id/join')
+  joinRoom(@Param('id') id: number, @CurrentUser({ required: true }) user: User): Promise<boolean> {
+    return this.roomRepository.joinOrLeave(id, user);
+  }
+
+  @Authorized()
+  @Post('/rooms/:id/leave')
+  leaveRoom(@Param('id') id: number, @CurrentUser({ required: true }) user: User): Promise<boolean> {
+    return this.roomRepository.joinOrLeave(id, user, true);
+  }
+
+  // @Get('/rooms/:id/:name')
   // async createRoom(@Param('id') id: number, @Param('name') name: string) {
   //   const user = await this.userRepository.findOne(id);
   //   const room = new Room();

@@ -23,6 +23,7 @@ createConnection().then(async () => {
      */
     controllers: [`${__dirname}/controller/*.ts`],
     middlewares: [`${__dirname}/middleware/*.ts`],
+    routePrefix: '/api',
     cors: true,
     ...decorators,
   });

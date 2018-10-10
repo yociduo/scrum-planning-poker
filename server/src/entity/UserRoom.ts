@@ -18,10 +18,10 @@ export class UserRoom {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.visitedRooms)
+  @ManyToOne(() => User, user => user.visitedRooms, { nullable: false })
   user: User;
 
-  @ManyToOne(() => Room, room => room.users)
+  @ManyToOne(() => Room, room => room.users, { nullable: false })
   room: Room;
 
   @CreateDateColumn()
@@ -31,11 +31,11 @@ export class UserRoom {
   updatedAt: Date;
 
   @IsBoolean()
-  @Column()
+  @Column({ default: false })
   isLeft: boolean;
 
   @IsBoolean()
-  @Column()
+  @Column({ default: false })
   isHost: boolean;
 
 }

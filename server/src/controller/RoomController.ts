@@ -5,16 +5,22 @@ import { Room, User } from '../entity';
 import { RoomRepository } from '../repository';
 
 @Service()
-@JsonController('/api/rooms')
+@JsonController('/rooms')
 export class RoomController {
 
   @InjectRepository(Room)
   private roomRepository: RoomRepository;
 
   @Authorized()
+  @Get()
+  get(@CurrentUser({ required: true }) user: User): Promise<Room[]> {
+    return this.roomRepository.getByUser(user);
+  }
+
+  @Authorized()
   @Post()
   create(@CurrentUser({ required: true }) user: User, @Body() room: Room): Promise<Room> {
-    return this.roomRepository.createRoomWithStory(user, room);
+    return this.roomRepository.createWithStory(user, room);
   }
 
 }
