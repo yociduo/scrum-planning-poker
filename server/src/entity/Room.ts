@@ -14,6 +14,7 @@ import {
 import { Story } from './Story';
 import { User } from './User';
 import { UserRoom } from './UserRoom';
+import { RoomOptions } from '../model';
 
 @Entity({ name: 'Rooms' })
 export class Room {
@@ -48,6 +49,6 @@ export class Room {
   isDeleted: boolean;
 
   @Column('simple-json', { nullable: true })
-  options: any;
+  options?: RoomOptions;
 
 }

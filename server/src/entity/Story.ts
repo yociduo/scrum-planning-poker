@@ -28,7 +28,7 @@ export class Story {
   name: string;
 
   @Column('text', { nullable: true })
-  description: string;
+  description?: string;
 
   @ManyToOne(() => Room, room => room.stories, { nullable: false })
   room: Room;
@@ -37,8 +37,8 @@ export class Story {
   scores: Score[];
 
   @IsHexadecimal()
-  @Column('decimal', { default: 0, precision: 1 })
-  score: number;
+  @Column('decimal', { nullable: true, precision: 1 })
+  score?: number;
 
   @IsInt()
   @Column('smallint', { default: 0 })
@@ -46,7 +46,7 @@ export class Story {
 
   @IsInt()
   @Column('smallint', { nullable: true })
-  meanType: number;
+  meanType?: number;
 
   @ManyToOne(() => User, user => user.createdStories, { nullable: false })
   creator: User;
@@ -64,8 +64,8 @@ export class Story {
   @Column({ default: false })
   isDeleted: boolean;
 
-  @IsBoolean()
-  @Column({ default: false })
+  // @IsBoolean()
+  // @Column({ default: false })
   isCompleted: boolean;
 
 }
