@@ -26,7 +26,7 @@ export class Score {
   story: Story;
 
   @IsHexadecimal()
-  @Column('decimal', { nullable: true, precision: 1 })
+  @Column('decimal', { nullable: true, precision: 4, scale: 1  })
   score?: number;
 
   @IsInt()

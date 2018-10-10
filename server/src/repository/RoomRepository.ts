@@ -41,11 +41,7 @@ export class RoomRepository extends Repository<Room> {
   }
 
   async joinOrLeave(id: number, user: User, isLeft: boolean = false): Promise<boolean> {
-    const room = await this.findOne(id, { relations: ['creator'] });
-    if (!room) {
-      return false;
-    }
-
+    const room = await this.findOneOrFail(id, { relations: ['creator'] });
     let userRoom = await getManager().findOne(UserRoom, { where: { user, room } });
 
     if (!userRoom) {
