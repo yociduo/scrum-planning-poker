@@ -6,17 +6,40 @@ import { Room, User, Story, UserRoom } from '../entity';
 @EntityRepository(Room)
 export class RoomRepository extends Repository<Room> {
 
-  async getByUser(user: User): Promise<Room[]> {
-    return (await getManager()
-      .createQueryBuilder(UserRoom, 'userRoom')
-      .leftJoinAndSelect('userRoom.room', 'room')
-      .leftJoinAndSelect('room.users', 'roomUser')
-      .leftJoinAndSelect('room.stories', 'story')
-      .leftJoinAndSelect('roomUser.user', 'user')
-      .where('userRoom.userId = :id', { id: user.id })
-      .orderBy('room.createdAt', 'DESC')
-      .getMany())
-      .map(ur => ur.room);
+  async getByUser(user: User): Promise<any> {
+    return await getManager().query(`
+      SELECT
+        room.id AS id,
+        room.name AS name,
+        room.createdAt AS createdAt,
+        room.updatedAt AS updatedAt,
+        (room.creatorId = ?) AS isCreator,
+        COUNT(story.score) AS storyCount,
+        SUM(story.score) AS scoreSum,
+        SUM(story.timer) AS timerSum,
+        ((COUNT(ISNULL(story.score)) = COUNT(story.score)) = TRUE) AS isCompleted
+      FROM test.UserRooms userRoom
+      LEFT JOIN test.Rooms room ON room.id = userRoom.roomId
+      LEFT JOIN test.Stories story ON story.roomId = room.id
+      WHERE userRoom.userId = ?
+      AND room.isDeleted = false
+      AND story.isDeleted = false
+      GROUP BY userRoom.roomId
+      ORDER BY room.createdAt DESC
+    `, [user.id, user.id]);
+
+    // return (await getManager()
+    //   .createQueryBuilder(UserRoom, 'userRoom')
+    //   .leftJoinAndSelect('userRoom.room', 'room')
+    //   .leftJoin('room.stories', 'story')
+    //   .where('userRoom.userId = :id', { id: user.id })
+    //   .andWhere('room.isDeleted = false')
+    //   .andWhere('story.isDeleted = false')
+    //   .orderBy('room.createdAt', 'DESC')
+    //   .addSelect('COUNT(story.score)', 'storyCount')
+    //   .groupBy('room.id')
+    //   .getMany())
+    //   .map(ur => ur.room);
   }
 
   async createWithStory(user: User, room: Room): Promise<Room> {
