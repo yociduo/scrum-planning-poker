@@ -15,7 +15,7 @@ export class RoomRepository extends Repository<Room> {
         room.updatedAt AS updatedAt,
         (room.creatorId = ?) AS isCreator,
         COUNT(story.score) AS storyCount,
-        SUM(story.score) AS scoreSum,
+        IFNULL(SUM(story.score), 0) AS scoreSum,
         SUM(story.timer) AS timerSum,
         ((COUNT(ISNULL(story.score)) = COUNT(story.score)) = TRUE) AS isCompleted
       FROM test.UserRooms userRoom

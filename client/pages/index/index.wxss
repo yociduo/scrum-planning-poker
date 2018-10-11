@@ -15,7 +15,8 @@
 }
 
 .container {
-  margin-top: 100rpx;
+  padding-top: 100rpx;
+  box-sizing: border-box;
 }
 
 .room-list {
