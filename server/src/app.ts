@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import * as Koa from 'koa';
 import { createKoaServer, useContainer as routingUseContainer } from 'routing-controllers';
 import { createSocketServer, useContainer as socketUseContainer } from 'socket-controllers';
 import { Container } from 'typedi';
@@ -31,15 +30,15 @@ createConnection().then(async () => {
     ...decorators,
   });
 
-  createSocketServer(config.port + 1, {
+  createSocketServer(config.socketPort, {
     controllers: [`${__dirname}/socket/*.ts`],
   });
 
   /**
    * Start the koa app.
    */
-  koaApp.listen(config.port);
+  koaApp.listen(config.apiPort);
 
-  console.log(`Server is up and running at port ${config.port}`);
+  console.log(`Server is up and running at port ${config.apiPort}`);
 
 }).catch(error => console.log(error));
