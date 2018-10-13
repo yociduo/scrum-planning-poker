@@ -1,7 +1,18 @@
-const { apiUrl } = require('./config');
+const io = require('./vendor/socket.io-mp-client/socket.io-mp');
+const { apiUrl, socketUrl } = require('./config');
 
 App({
   onLaunch(options) {
+    this.globalData.socket = io(socketUrl, {
+      transports: ['websocket'],
+    });
+
+    this.globalData.socket.on('connect', () => {
+      if (this.globalData.token) {
+        this.globalData.socket.emit('login', this.globalData.token);
+      }
+    });
+
     const token = wx.getStorageSync('token');
     this.globalData.token = token;
     if (token) return;
@@ -26,6 +37,7 @@ App({
                 success: ({ data, statusCode }) => {
                   if (statusCode === 200) {
                     this.globalData.token = data;
+                    this.globalData.socket.emit('login', this.globalData.token);
                     wx.setStorageSync('token', data);
                   }
                 }
@@ -46,9 +58,10 @@ App({
         }
       }
     });
-
   },
   onShow() {
+    this.globalData.socket.connect();
+
     wx.getClipboardData({
       success: ({ data }) => {
         if (data === 'debug') {
@@ -92,9 +105,13 @@ App({
       }
     });
   },
+  onHide() {
+    this.globalData.socket.disconnect();
+  },
   globalData: {
     userInfo: null,
     token: null,
     code: null,
+    socket: null,
   },
 });
