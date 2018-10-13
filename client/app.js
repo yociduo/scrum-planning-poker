@@ -3,18 +3,9 @@ const { apiUrl, socketUrl } = require('./config');
 
 App({
   onLaunch(options) {
-    this.globalData.socket = io(socketUrl, {
-      transports: ['websocket'],
-    });
-
-    this.globalData.socket.on('connect', () => {
-      if (this.globalData.token) {
-        this.globalData.socket.emit('login', this.globalData.token);
-      }
-    });
-
     const token = wx.getStorageSync('token');
     this.globalData.token = token;
+    this.initSocket();
     if (token) return;
 
     wx.login({
@@ -37,7 +28,7 @@ App({
                 success: ({ data, statusCode }) => {
                   if (statusCode === 200) {
                     this.globalData.token = data;
-                    this.globalData.socket.emit('login', this.globalData.token);
+                    this.initSocket();
                     wx.setStorageSync('token', data);
                   }
                 }
@@ -60,7 +51,9 @@ App({
     });
   },
   onShow() {
-    this.globalData.socket.connect();
+    if (this.globalData.socket) {
+      this.globalData.socket.connect();
+    }
 
     wx.getClipboardData({
       success: ({ data }) => {
@@ -106,7 +99,17 @@ App({
     });
   },
   onHide() {
-    this.globalData.socket.disconnect();
+    if (this.globalData.socket) {
+      this.globalData.socket.disconnect();
+    }
+  },
+  initSocket() {
+    if (this.globalData.token) {
+      this.globalData.socket = io(socketUrl, {
+        transports: ['websocket'],
+        query: 'token=' + this.globalData.token
+      });
+    }
   },
   globalData: {
     userInfo: null,

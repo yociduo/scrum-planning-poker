@@ -17,7 +17,7 @@ Page({
       success: ({ data, statusCode }) => {
         if (statusCode === 200) {
           app.globalData.token = data;
-          app.globalData.socket.emit('login', app.globalData.token);
+          app.initSocket();
           wx.setStorageSync('token', data);
           wx.navigateTo({ url: `../../${this.backUrl}` });
         }

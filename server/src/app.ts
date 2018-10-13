@@ -5,6 +5,7 @@ import { Container } from 'typedi';
 import { useContainer as ormUseContainer, createConnection } from 'typeorm';
 import { config } from './config';
 import { decorators } from './decorator';
+import './middleware/socket/AuthenitificationMiddleware';
 
 /**
  * Setup routing-controllers typeorm and socket-controllers to use typedi container.
@@ -24,7 +25,7 @@ createConnection().then(async () => {
      * Here we specify what controllers should be registered in our express server.
      */
     controllers: [`${__dirname}/controller/api/*.ts`],
-    middlewares: [`${__dirname}/middleware/*.ts`],
+    middlewares: [`${__dirname}/middleware/api/*.ts`],
     routePrefix: '/api',
     cors: true,
     ...decorators,
