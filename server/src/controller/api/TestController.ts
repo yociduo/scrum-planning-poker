@@ -11,19 +11,9 @@ import {
 import { Service } from 'typedi';
 import { EntityFromParam, EntityFromBody } from 'typeorm-routing-controllers-extensions';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import {
-  Room,
-  Score,
-  Story,
-  User,
-} from '../entity';
-import { WxLogin } from '../model';
-import {
-  RoomRepository,
-  ScoreRepository,
-  StoryRepository,
-  UserRepository,
-} from '../repository';
+import { Room, Score, Story, User } from '../../entity';
+import { WxLogin } from '../../model';
+import { RoomRepository, ScoreRepository, StoryRepository, UserRepository } from '../../repository';
 
 @Service()
 @JsonController('/test')

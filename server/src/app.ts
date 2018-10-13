@@ -23,7 +23,7 @@ createConnection().then(async () => {
      * We can add options about how routing-controllers should configure itself.
      * Here we specify what controllers should be registered in our express server.
      */
-    controllers: [`${__dirname}/controller/*.ts`],
+    controllers: [`${__dirname}/controller/api/*.ts`],
     middlewares: [`${__dirname}/middleware/*.ts`],
     routePrefix: '/api',
     cors: true,
@@ -31,7 +31,7 @@ createConnection().then(async () => {
   });
 
   createSocketServer(config.socketPort, {
-    controllers: [`${__dirname}/socket/*.ts`],
+    controllers: [`${__dirname}/controller/socket/*.ts`],
   });
 
   /**

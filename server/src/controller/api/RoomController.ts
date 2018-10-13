@@ -1,8 +1,8 @@
 import { JsonController, Get, Post, Body, CurrentUser, Authorized } from 'routing-controllers';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Room, User } from '../entity';
-import { RoomRepository } from '../repository';
+import { Room, User } from '../../entity';
+import { RoomRepository } from '../../repository';
 
 @Service()
 @JsonController('/rooms')
