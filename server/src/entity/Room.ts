@@ -26,8 +26,8 @@ export class Room {
   @Column({ default: '' })
   name: string;
 
-  @OneToMany(() => UserRoom, userRoom => userRoom.user)
-  users: UserRoom[];
+  @OneToMany(() => UserRoom, userRoom => userRoom.room)
+  userRooms: UserRoom[];
 
   @OneToMany(() => Story, story => story.room)
   stories: Story[];

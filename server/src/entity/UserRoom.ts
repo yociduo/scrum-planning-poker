@@ -21,7 +21,7 @@ export class UserRoom {
   @ManyToOne(() => User, user => user.visitedRooms, { nullable: false })
   user: User;
 
-  @ManyToOne(() => Room, room => room.users, { nullable: false })
+  @ManyToOne(() => Room, room => room.userRooms, { nullable: false })
   room: Room;
 
   @CreateDateColumn()
