@@ -2,9 +2,16 @@ import { Service } from 'typedi';
 import { Repository, EntityRepository, getManager } from 'typeorm';
 import { Room, User, Story, UserRoom } from '../entity';
 
+export interface ICachedRoom {
+  room: Room;
+  timer?: NodeJS.Timer;
+}
+
 @Service()
 @EntityRepository(Room)
 export class RoomRepository extends Repository<Room> {
+
+  private runningRooms: { [key: number]: ICachedRoom } = {};
 
   async getByUser(user: User): Promise<Room[]> {
     return await getManager().query(`
@@ -63,38 +70,71 @@ export class RoomRepository extends Repository<Room> {
     return newRoom;
   }
 
-  async joinOrLeave(id: number, user: User, isLeft: boolean = false): Promise<boolean> {
-    const room = await this.findOneOrFail(id, { relations: ['creator'] });
-    let userRoom = await getManager().findOne(UserRoom, { where: { user, room } });
+  async joinOrLeave(id: number, user: User, isLeft: boolean = false): Promise<void> {
+    const cached = await this.getCachedRoom(id);
+    const { room, timer } = cached;
+    let userRoom = room.userRooms.find(ur => ur.user.id === user.id);
 
-    if (!userRoom) {
+    const exist = !!userRoom;
+    if (!exist) {
       userRoom = new UserRoom();
       userRoom.user = user;
       userRoom.room = room;
+      userRoom.isHost = room.creator.id === user.id;
     }
 
-    userRoom.isHost = room.creator.id === user.id;
     userRoom.isLeft = isLeft;
     await getManager().save(UserRoom, userRoom);
-    return true;
+    if (!exist) {
+      room.userRooms.push(userRoom);
+    }
+
+    if (room.userRooms.every(r => r.isLeft)) {
+      if (room.currentStory) {
+        await getManager().save(Story, room.currentStory);
+      }
+      if (timer) {
+        clearInterval(timer);
+      }
+      delete this.runningRooms[id];
+    } else if (!room.currentStory) {
+      this.startNextStory(cached);
+    }
   }
 
   async getRoomDetail(id: number, user: User): Promise<Room> {
-    const userRoom = await getManager()
-      .createQueryBuilder(UserRoom, 'userRoom')
-      .leftJoinAndSelect('userRoom.room', 'room')
-      .leftJoinAndSelect('room.stories', 'story')
-      .where('userRoom.userId = :userId', { userId: user.id })
-      .andWhere('userRoom.roomId = :roomId', { roomId: id })
-      .andWhere('room.isDeleted = false')
-      .andWhere('story.isDeleted = false')
-      .orderBy('story.updatedAt', 'ASC')
-      .getOne();
-
-    const { room } = userRoom;
-    room.isHost = userRoom.isHost;
-    room.isCompleted = !room.stories.some(story => !story.isDeleted && story.score === null);
+    const cached = await this.getCachedRoom(id);
+    const room = { ...cached.room };
+    room.isHost = room.userRooms.find(ur => ur.user.id === user.id).isHost;
+    room.stories = room.stories.filter(s => !s.isDeleted && s.score !== null);
     return room;
+  }
+
+  private async getCachedRoom(id: number, force: boolean = false): Promise<ICachedRoom> {
+    if (!this.runningRooms.hasOwnProperty(id) || force) {
+      const room = await this.findOneOrFail(id, {
+        relations: ['userRooms', 'userRooms.user', 'stories', 'stories.scores', 'creator', 'updater'],
+      });
+      this.runningRooms[id] = { room };
+    }
+
+    return this.runningRooms[id];
+  }
+
+  private async startNextStory(cached: ICachedRoom) {
+    cached.room.currentStory = cached.room.stories.find(s => !s.isDeleted && s.score === null);
+    if (cached.room.currentStory) {
+      if (!cached.timer) {
+        cached.timer = setInterval(() => {
+          cached.room.currentStory.timer++;
+        }, 1000);
+      }
+    } else {
+      if (cached.timer) {
+        clearInterval(cached.timer);
+        delete cached.timer;
+      }
+    }
   }
 
 }

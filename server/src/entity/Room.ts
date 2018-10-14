@@ -51,6 +51,8 @@ export class Room {
   @Column('simple-json', { nullable: true })
   options?: RoomOptions;
 
+  currentStory?: Story;
+
   isHost?: boolean;
 
   isCompleted?: boolean;
