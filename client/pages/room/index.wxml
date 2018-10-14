@@ -1,24 +1,15 @@
 <import src="../common/card.wxml" />
-<import src="../../components/dialog/dialog.wxml"/>
-<template data="{{...myDialog}}" is="dialog" />
-
-<view class="top-stick" wx:if="{{init && finished && isHost && !closed}}">
-  <view class="top-stick-hd">
-    {{currentStory}}
-  </view>
+<view class="top-stick" wx:if="{{init && isCompleted && isHost}}">
+  <view class="top-stick-hd">Continue with this room & add story!</view>
   <view class="top-stick-ft">
     <button bindtap="onAddTap">
       <image src="{{addStoryIconUrl}}"></image>
     </button>
   </view>
 </view>
-<view class="top-stick top-stick-story" wx:if="{{init && !finished}}">
-  <view class="top-stick-hd">
-    {{currentStory}}
-  </view>
-  <view class="top-stick-bd">
-    {{displayTime}}
-  </view>
+<view class="top-stick top-stick-story" wx:if="{{init && !isCompleted}}">
+  <view class="top-stick-hd">{{currentStory.name}}</view>
+  <view class="top-stick-bd">{{currentStory.timer}}</view>
   <view class="top-stick-ft">
     <button open-type="share">
       <image src="{{inviteIconUrl}}"></image>
@@ -27,7 +18,7 @@
 </view>
 <view class="container" wx:if="{{init}}">
   <view class="page-body">
-    <view class="page-section" wx:if="{{(!isHost || needScore) && !finished}}">
+    <view class="page-section" wx:if="{{(!isHost || options.needScore) && !isCompleted}}">
       <view class="page-section-spacing">
         <view class="card-grids">
           <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
@@ -36,8 +27,8 @@
         </view>
       </view>
     </view>
-    <view class="page-section-title" wx:if="{{!finished}}">Players</view>
-    <view class="page-section" wx:if="{{!finished}}">
+    <view class="page-section-title" wx:if="{{!isCompleted}}">Players</view>
+    <view class="page-section" wx:if="{{!isCompleted}}">
       <view class="page-section-spacing">
         <view class="player-box" wx:if="{{players && players.length}}">
           <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
@@ -55,8 +46,8 @@
         </view>
       </view>
     </view>
-    <view class="page-section-title" wx:if="{{!finished && isHost}}">Result Calculation</view>
-    <view class="page-section" wx:if="{{!finished && isHost}}">
+    <view class="page-section-title" wx:if="{{!isCompleted && isHost}}">Result Calculation</view>
+    <view class="page-section" wx:if="{{!isCompleted && isHost}}">
       <view class="page-section-spacing">
         <view class="result-box">
           <picker bindchange="onCalcMethodChange" value="{{calcMethod}}" range="{{calcMethods}}" range-key="key">
@@ -80,40 +71,28 @@
         </view>
       </view>
     </view>
-    <view class="btn-area" wx:if="{{!finished && isHost}}">
+    <view class="btn-area" wx:if="{{currentStory && isHost}}">
       <button type="primary" loading="{{loading}}" bindtap="onSaveTap">Save & Next</button>
     </view>
-    <view class="page-section-divide" wx:if="{{!finished && isHost}}"></view>
-    <view class="page-section-title" wx:if="{{scores && scores.length}}">All Stories</view>
-    <view class="page-section" wx:if="{{scores && scores.length}}">
+    <view class="page-section-divide" wx:if="{{currentStory && isHost}}"></view>
+    <view class="page-section-title" wx:if="{{stories && stories.length}}">All Stories</view>
+    <view class="page-section" wx:if="{{stories && stories.length}}">
       <view class="page-section-spacing">
         <view class="story-box">
-          <view class="story" wx:for="{{scores}}" wx:for-item="story" wx:key="story.index">
-            <view class="story-hd">
-              {{story.name}}
-            </view>
-            <view class="story-bd">
-              {{story.time}}
-            </view>
-            <view class="story-ft">
-              {{story.score}}
-            </view>
+          <view class="story" wx:for="{{stories}}" wx:for-item="story" wx:key="story.index">
+            <view class="story-hd">{{story.name}}</view>
+            <view class="story-bd">{{story.timer}}</view>
+            <view class="story-ft">{{story.score}}</view>
           </view>
-          <view class="story story-box-ft" wx:if="{{finished}}">
-            <view class="story-hd">
-              {{count}}
-            </view>
-            <view class="story-bd">
-              {{time}}
-            </view>
-            <view class="story-ft">
-              {{total}}
-            </view>
+          <view class="story story-box-ft" wx:if="{{!currentStory}}">
+            <view class="story-hd">{{count}}</view>
+            <view class="story-bd">{{timer}}</view>
+            <view class="story-ft">{{total}}</view>
           </view>
         </view>
       </view>
     </view>
-    <view class="btn-area" wx:if="{{finished}}">
+    <view class="btn-area" wx:if="{{!currentStory}}">
       <button type="primary" bindtap="onBackTap">Back</button>
     </view>
   </view>

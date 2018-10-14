@@ -105,8 +105,29 @@ export class RoomRepository extends Repository<Room> {
   async getRoomDetail(id: number, user: User): Promise<Room> {
     const cached = await this.getCachedRoom(id);
     const room = { ...cached.room };
+    const stories = room.stories;
     room.isHost = room.userRooms.find(ur => ur.user.id === user.id).isHost;
-    room.stories = room.stories.filter(s => !s.isDeleted && s.score !== null);
+    room.isCreator = room.creator.id === user.id;
+    room.isCompleted = true;
+    room.storyCount = 0;
+    room.scoreSum = 0;
+    room.timerSum = 0;
+    room.stories = [];
+    stories.forEach(s => {
+      if (!s.isDeleted) {
+        const story = { ...s };
+        if (s.score !== null) {
+          story.displayTimer = this.formatTimer(story.timer);
+          room.stories.push(story);
+          room.scoreSum += s.score;
+          room.timerSum += s.timer;
+        } else {
+          room.isCompleted = false;
+        }
+        room.storyCount++;
+      }
+    });
+    room.displayTimerSum = this.formatTimer(room.timerSum);
     return room;
   }
 
@@ -115,6 +136,8 @@ export class RoomRepository extends Repository<Room> {
       const room = await this.findOneOrFail(id, {
         relations: ['userRooms', 'userRooms.user', 'stories', 'stories.scores', 'creator', 'updater'],
       });
+      room.calcMethod = 0;
+      room.subCalcMethod = 0;
       this.runningRooms[id] = { room };
     }
 
@@ -135,6 +158,18 @@ export class RoomRepository extends Repository<Room> {
         delete cached.timer;
       }
     }
+  }
+
+  private formatTimer(timer: number): string {
+    const hour = Math.floor(timer / 3600);
+    const minute = Math.floor((timer % 3600) / 60);
+    const second = timer % 60;
+    return `${this.formatNumber(hour)}:${this.formatNumber(minute)}:${this.formatNumber(second)}`;
+  }
+
+  private formatNumber(n: number): string {
+    const ns = n.toString()
+    return ns[1] ? ns : '0' + ns;
   }
 
 }

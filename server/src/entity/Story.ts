@@ -68,4 +68,6 @@ export class Story {
   // @Column({ default: false })
   // isCompleted: boolean;
 
+  displayTimer?: string;
+
 }

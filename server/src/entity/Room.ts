@@ -55,6 +55,20 @@ export class Room {
 
   isHost?: boolean;
 
+  isCreator?: boolean;
+
   isCompleted?: boolean;
+
+  storyCount?: number;
+
+  scoreSum?: number;
+
+  timerSum?: number;
+
+  displayTimerSum?: string;
+
+  calcMethod?: number;
+
+  subCalcMethod?: number;
 
 }

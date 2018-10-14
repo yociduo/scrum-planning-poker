@@ -1,77 +1,30 @@
-import myDialog from '../../components/dialog/dialog';
+import { calcMethods, cards, formatTimer, initResults } from '../../utils/util';
 const app = getApp();
 
 Page({
+  data: {
+    init: false,
+    cards,
+    calcMethods,
+    results: initResults,
+    inviteIconUrl: '../../image/user-plus.png',
+    addStoryIconUrl: '../../image/plus.png',
+    shareImageUrl: '',
+  },
   onLoad(options) {
-    const { id } = options;
-    const isHost = (wx.getStorageSync('hosted') || []).includes(id);
-    this.setData({ id, isHost });
-
-    const showModal = () => {
-      myDialog.showModal({
-        title: "Welcome",
-        content: "Please allow our permission request for your public information. Thank you.",
-        confirmOpenType: "getUserInfo",  //如果不设置就是普通弹框
-        confirmText: "Allow",
-        showCancel: false,
-        success: (e) => {
-          const userInfo = e.detail.userInfo;
-          app.globalData.socket.emit('join room', { id, userInfo, isHost });
-        },
-        fail: () => true
-      });
-    };
-
-    wx.getUserInfo({
-      success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost }),
-      fail: showModal
-    });
-
-    app.globalData.socket.on('connect', () => {
-      wx.getUserInfo({
-        success: ({ userInfo }) => app.globalData.socket.emit('join room', { id, userInfo, isHost })
-      });
-    });
+    this.setData({ id: Number(options.id) });
 
     app.globalData.socket.on('init', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
-      if (!payload.finished) {
+      if (payload.stories && payload.stories.length) {
+        payload.stories.forEach(story => story.timer = formatTimer(story.timer))
+      }
+
+      if (payload.currentStory) {
         const title = payload.name;
         wx.setNavigationBarTitle({ title });
-        this.setData(payload);
-        if (isHost && !payload.start) {
-          app.globalData.socket.emit('next story', { id });
-        }
-        wx.setStorageSync(id, {
-          name: payload.name,
-          scores: payload.scores,
-          count: payload.count,
-          time: payload.time,
-          total: payload.total,
-          finished: payload.finished
-        });
-      } else if (!payload.closed) {
-        const cache = wx.getStorageSync(id);
-        if (cache) {
-          const title = cache.name;
-          wx.setNavigationBarTitle({ title });
-          this.setData({ ...payload, ...cache });
-        } else {
-          wx.showModal({
-            title: 'Error',
-            content: 'Room has been deleted!',
-            confirmColor: '#0678C1',
-            showCancel: false,
-            confirmText: 'OK',
-            success: () => this.onBackTap(),
-          });
-        }
+        this.setData({ init: true, ...payload });
       } else {
-        const cache = wx.getStorageSync(id);
-        if (cache) {
-          cache.finished = true;
-          wx.setStorageSync(id, cache);
-        }
         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
       }
     });
@@ -110,6 +63,15 @@ Page({
       confirmColor: '#0678C1',
       success: () => this.onBackTap(),
     }));
+  },
+  onUnload() {
+    app.globalData.socket.emit('leave room', this.data.id);
+  },
+  onShow() {
+    app.globalData.socket.emit('join room', this.data.id);
+  },
+  onHide() {
+    app.globalData.socket.emit('leave room', this.data.id);
   },
   onShareAppMessage() {
     return { title: this.data.name, imageUrl: this.data.shareImageUrl };
