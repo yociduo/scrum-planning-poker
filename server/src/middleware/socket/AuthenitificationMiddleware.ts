@@ -1,15 +1,19 @@
 import * as jwt from 'jsonwebtoken';
 import { Middleware, MiddlewareInterface } from 'socket-controllers';
+import { getManager } from 'typeorm';
 import { config } from '../../config';
+import { User } from '../../entity';
+import { Socket } from '../../socket';
 
 @Middleware()
 export class AuthenitificationMiddleware implements MiddlewareInterface {
 
-  use(socket: any, next: ((err?: any) => any)): any {
+  async use(socket: Socket, next: ((err?: any) => any)) {
     const { token } = socket.handshake.query;
     try {
-      socket.userId = Number(jwt.verify(token, config.jwtSecret));
-    } catch {}
+      const userId = Number(jwt.verify(token, config.jwtSecret));
+      socket.user = await getManager().getRepository(User).findOne(userId);
+    } catch { }
 
     next();
   }

@@ -6,7 +6,7 @@ import { Room, User, Story, UserRoom } from '../entity';
 @EntityRepository(Room)
 export class RoomRepository extends Repository<Room> {
 
-  async getByUser(user: User): Promise<any> {
+  async getByUser(user: User): Promise<Room[]> {
     return await getManager().query(`
       SELECT
         room.id AS id,
@@ -18,9 +18,9 @@ export class RoomRepository extends Repository<Room> {
         IFNULL(SUM(story.score), 0) AS scoreSum,
         SUM(story.timer) AS timerSum,
         ((COUNT(ISNULL(story.score)) = COUNT(story.score)) = TRUE) AS isCompleted
-      FROM test.UserRooms userRoom
-      LEFT JOIN test.Rooms room ON room.id = userRoom.roomId
-      LEFT JOIN test.Stories story ON story.roomId = room.id
+      FROM UserRooms userRoom
+      LEFT JOIN Rooms room ON room.id = userRoom.roomId
+      LEFT JOIN Stories story ON story.roomId = room.id
       WHERE userRoom.userId = ?
       AND room.isDeleted = false
       AND story.isDeleted = false
@@ -77,6 +77,24 @@ export class RoomRepository extends Repository<Room> {
     userRoom.isLeft = isLeft;
     await getManager().save(UserRoom, userRoom);
     return true;
+  }
+
+  async getRoomDetail(id: number, user: User): Promise<Room> {
+    const userRoom = await getManager()
+      .createQueryBuilder(UserRoom, 'userRoom')
+      .leftJoinAndSelect('userRoom.room', 'room')
+      .leftJoinAndSelect('room.stories', 'story')
+      .where('userRoom.userId = :userId', { userId: user.id })
+      .andWhere('userRoom.roomId = :roomId', { roomId: id })
+      .andWhere('room.isDeleted = false')
+      .andWhere('story.isDeleted = false')
+      .orderBy('story.updatedAt', 'ASC')
+      .getOne();
+
+    const { room } = userRoom;
+    room.isHost = userRoom.isHost;
+    room.isCompleted = !room.stories.some(story => !story.isDeleted && story.score === null);
+    return room;
   }
 
 }

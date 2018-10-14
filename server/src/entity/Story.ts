@@ -66,6 +66,6 @@ export class Story {
 
   // @IsBoolean()
   // @Column({ default: false })
-  isCompleted: boolean;
+  // isCompleted: boolean;
 
 }
