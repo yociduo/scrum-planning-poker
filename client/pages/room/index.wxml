@@ -30,17 +30,17 @@
     <view class="page-section-title" wx:if="{{!isCompleted}}">Players</view>
     <view class="page-section" wx:if="{{!isCompleted}}">
       <view class="page-section-spacing">
-        <view class="player-box" wx:if="{{players && players.length}}">
-          <view class="player" wx:for="{{players}}" wx:for-item="player" wx:key="player.avatarUrl">
+        <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
+          <view class="player" wx:for="{{currentStory.scores}}" wx:for-item="score" wx:key="score.user.avatarUrl">
             <view class="player-hd">
-              <image class="player-avatar" src="{{player.avatarUrl}}"></image>
+              <image class="player-avatar" src="{{score.user.avatarUrl}}"></image>
             </view>
             <view class="player-bd">
-              {{player.nickName}}
+              {{score.user.nickName}}
             </view>
             <view class="player-ft">
-              <view class="player-value" wx:if="{{player.score}}">{{player.score}}</view>
-              <icon class="icon-small" wx:if="{{player.showCheck}}" type="success" size="23" color="#0678C1"></icon>
+              <view class="player-value" wx:if="{{score.displayCard && (isHost || options.isNoymous)}}">{{score.displayCard}}</view>
+              <icon class="icon-small" wx:if="{{score.displayCard && !isHost && !options.isNoymous}}" type="success" size="23" color="#0678C1"></icon>
             </view>
           </view>
         </view>
@@ -81,13 +81,13 @@
         <view class="story-box">
           <view class="story" wx:for="{{stories}}" wx:for-item="story" wx:key="story.index">
             <view class="story-hd">{{story.name}}</view>
-            <view class="story-bd">{{story.timer}}</view>
+            <view class="story-bd">{{story.displayTimer}}</view>
             <view class="story-ft">{{story.score}}</view>
           </view>
           <view class="story story-box-ft" wx:if="{{!currentStory}}">
-            <view class="story-hd">{{count}}</view>
-            <view class="story-bd">{{timer}}</view>
-            <view class="story-ft">{{total}}</view>
+            <view class="story-hd">{{storyCount + (storyCount > 1 ? ' Stories' : ' Story')}}</view>
+            <view class="story-bd">{{displayTimerSum}}</view>
+            <view class="story-ft">{{scoreSum}}</view>
           </view>
         </view>
       </view>

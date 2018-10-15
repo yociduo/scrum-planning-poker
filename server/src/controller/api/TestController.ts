@@ -86,13 +86,13 @@ export class TestController {
 
   @Authorized()
   @Post('/rooms/:id/join')
-  joinRoom(@Param('id') id: number, @CurrentUser({ required: true }) user: User): Promise<boolean> {
+  joinRoom(@Param('id') id: number, @CurrentUser({ required: true }) user: User): Promise<void> {
     return this.roomRepository.joinOrLeave(id, user);
   }
 
   @Authorized()
   @Post('/rooms/:id/leave')
-  leaveRoom(@Param('id') id: number, @CurrentUser({ required: true }) user: User): Promise<boolean> {
+  leaveRoom(@Param('id') id: number, @CurrentUser({ required: true }) user: User): Promise<void> {
     return this.roomRepository.joinOrLeave(id, user, true);
   }
 

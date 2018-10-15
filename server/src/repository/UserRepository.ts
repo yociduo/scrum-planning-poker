@@ -30,6 +30,7 @@ export class UserRepository extends Repository<User> {
       const userInfo = this.decrypt(data.encryptedData, data.iv, sessionKey);
       user = new User();
       user.nickName = userInfo.nickName;
+      user.avatarUrl = userInfo.avatarUrl;
       user.gender = userInfo.gender;
       user.language = userInfo.language;
       user.city = userInfo.city;

@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { Repository, EntityRepository, getManager } from 'typeorm';
-import { Room, User, Story, UserRoom } from '../entity';
+import { Room, User, Story, UserRoom, Score } from '../entity';
 
 export interface ICachedRoom {
   room: Room;
@@ -21,10 +21,10 @@ export class RoomRepository extends Repository<Room> {
         room.createdAt AS createdAt,
         room.updatedAt AS updatedAt,
         (room.creatorId = ?) AS isCreator,
-        COUNT(story.score) AS storyCount,
+        COUNT(story.id) AS storyCount,
         IFNULL(SUM(story.score), 0) AS scoreSum,
         SUM(story.timer) AS timerSum,
-        ((COUNT(ISNULL(story.score)) = COUNT(story.score)) = TRUE) AS isCompleted
+        (COUNT(ISNULL(story.score)) = COUNT(story.score)) AS isCompleted
       FROM UserRooms userRoom
       LEFT JOIN Rooms room ON room.id = userRoom.roomId
       LEFT JOIN Stories story ON story.roomId = room.id
@@ -86,6 +86,7 @@ export class RoomRepository extends Repository<Room> {
     userRoom.isLeft = isLeft;
     await getManager().save(UserRoom, userRoom);
     if (!exist) {
+      delete userRoom.room;
       room.userRooms.push(userRoom);
     }
 
@@ -98,7 +99,7 @@ export class RoomRepository extends Repository<Room> {
       }
       delete this.runningRooms[id];
     } else if (!room.currentStory) {
-      this.startNextStory(cached);
+      await this.startNextStory(cached, [user]);
     }
   }
 
@@ -127,6 +128,10 @@ export class RoomRepository extends Repository<Room> {
         room.storyCount++;
       }
     });
+    if (room.currentStory) {
+      room.selectedCard = room.currentStory.scores.find(s => s.user.id === user.id).card;
+    }
+
     room.displayTimerSum = this.formatTimer(room.timerSum);
     return room;
   }
@@ -134,7 +139,7 @@ export class RoomRepository extends Repository<Room> {
   private async getCachedRoom(id: number, force: boolean = false): Promise<ICachedRoom> {
     if (!this.runningRooms.hasOwnProperty(id) || force) {
       const room = await this.findOneOrFail(id, {
-        relations: ['userRooms', 'userRooms.user', 'stories', 'stories.scores', 'creator', 'updater'],
+        relations: ['userRooms', 'userRooms.user', 'stories', 'stories.scores', 'stories.scores.user', 'creator', 'updater'],
       });
       room.calcMethod = 0;
       room.subCalcMethod = 0;
@@ -144,13 +149,36 @@ export class RoomRepository extends Repository<Room> {
     return this.runningRooms[id];
   }
 
-  private async startNextStory(cached: ICachedRoom) {
+  private async startNextStory(cached: ICachedRoom, users: User[]) {
     cached.room.currentStory = cached.room.stories.find(s => !s.isDeleted && s.score === null);
     if (cached.room.currentStory) {
       if (!cached.timer) {
         cached.timer = setInterval(() => {
           cached.room.currentStory.timer++;
         }, 1000);
+      }
+
+      cached.room.currentStory.scores.forEach(score => {
+        if (score.card !== null || score.card !== undefined) {
+          switch (score.card) {
+            case -1: score.displayCard = '?'; break;
+            case -2: score.displayCard = 'C'; break;
+            default: score.displayCard = score.card.toString(); break;
+          }
+        }
+      });
+
+      for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        const exist = cached.room.currentStory.scores.some(s => s.user.id === user.id);
+        if (!exist) {
+          const score = new Score();
+          score.user = user;
+          score.story = cached.room.currentStory;
+          await getManager().save(Score, score);
+          delete score.story;
+          cached.room.currentStory.scores.push(score);
+        }
       }
     } else {
       if (cached.timer) {

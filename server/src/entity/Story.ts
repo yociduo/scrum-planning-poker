@@ -33,7 +33,7 @@ export class Story {
   @ManyToOne(() => Room, room => room.stories, { nullable: false })
   room: Room;
 
-  @OneToMany(() => Score, score => score.user)
+  @OneToMany(() => Score, score => score.story)
   scores: Score[];
 
   @IsHexadecimal()

@@ -108,13 +108,13 @@ const cards = [
     icon: '../../image/cards/Q.png',
     corner: '../../image/cards/_Q.png',
   },
-  {
-    key: 'C',
-    corner: 'coffee',
-    value: -2,
-    icon: '../../image/cards/C.png',
-    corner: '../../image/cards/_C.png',
-  }
+  // {
+  //   key: 'C',
+  //   corner: 'coffee',
+  //   value: -2,
+  //   icon: '../../image/cards/C.png',
+  //   corner: '../../image/cards/_C.png',
+  // }
 ];
 
 const formatTime = date => {

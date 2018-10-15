@@ -25,9 +25,9 @@ export class Score {
   @ManyToOne(() => Story, story => story.scores, { nullable: false })
   story: Story;
 
-  @IsHexadecimal()
-  @Column('decimal', { nullable: true, precision: 4, scale: 1  })
-  score?: number;
+  @IsInt()
+  @Column('smallint', { nullable: true })
+  card?: number;
 
   @IsInt()
   @Column('smallint', { default: 0 })
@@ -38,5 +38,7 @@ export class Score {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  displayCard?: string;
 
 }
