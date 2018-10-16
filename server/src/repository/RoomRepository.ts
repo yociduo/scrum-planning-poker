@@ -153,6 +153,25 @@ export class RoomRepository extends Repository<Room> {
     return null;
   }
 
+  async calcMethod({ id, calcMethod, subCalcMethod, currentScore }: Room): Promise<Room> {
+    const cached = await this.getCachedRoom(id);
+    if (calcMethod !== null && calcMethod !== undefined) {
+      cached.room.calcMethod = calcMethod;
+    }
+
+    if (subCalcMethod !== null && subCalcMethod !== undefined) {
+      cached.room.subCalcMethod = subCalcMethod;
+    }
+
+    if (currentScore !== null && currentScore !== undefined) {
+      cached.room.currentScore = currentScore;
+    } else {
+      this.calculator(cached.room);
+    }
+
+    return cached.room;
+  }
+
   private async getCachedRoom(id: number, force: boolean = false): Promise<ICachedRoom> {
     if (!this.runningRooms.hasOwnProperty(id) || force) {
       const room = await this.findOneOrFail(id, {
@@ -263,12 +282,12 @@ export class RoomRepository extends Repository<Room> {
   }
 
   private convertScore = (score: Score) => {
-    if (score.card !== null && score.card !== undefined) {
-      switch (score.card) {
-        case -1: score.displayCard = '?'; break;
-        case -2: score.displayCard = 'C'; break;
-        default: score.displayCard = score.card.toString(); break;
-      }
+    switch (score.card) {
+      case -1: score.displayCard = '?'; break;
+      case -2: score.displayCard = 'C'; break;
+      case null:
+      case undefined: score.displayCard = null; break;
+      default: score.displayCard = score.card.toString(); break;
     }
   }
 

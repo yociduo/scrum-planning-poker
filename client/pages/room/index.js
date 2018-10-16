@@ -111,8 +111,8 @@ Page({
     app.globalData.socket.emit('calc method', { id: this.data.id, subCalcMethod });
   },
   onResultChange(e) {
-    const result = parseFloat(e.detail.value);
-    app.globalData.socket.emit('calc method', { id: this.data.id, result });
+    const currentScore = parseFloat(e.detail.value);
+    app.globalData.socket.emit('calc method', { id: this.data.id, currentScore });
   },
   onBackTap() {
     if (getCurrentPages().length > 1) {

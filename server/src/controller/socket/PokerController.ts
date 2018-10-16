@@ -61,4 +61,14 @@ export class PokerController {
     }
   }
 
+  @OnMessage('calc method')
+  async calcMethod(@ConnectedSocket() socket: Socket, @MessageBody() request: Room) {
+    console.log(`User ${socket.user.id} changed ${JSON.stringify(request)}`);
+    const room = await this.roomRepository.calcMethod(request);
+    if (room) {
+      const { id, calcMethod, subCalcMethod, currentScore } = room;
+      socket.emit('action', { id, calcMethod, subCalcMethod, currentScore });
+    }
+  }
+
 }
