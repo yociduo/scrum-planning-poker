@@ -80,13 +80,11 @@ Page({
     wx.navigateTo({ url: `../add-story/index?id=${this.data.id}` });
   },
   onCardTap(e) {
-    const { id, start, selectedCard } = this.data;
-    if (this.data.start) {
-      const { card } = e.currentTarget.dataset;
-      const isSelected = card.value === selectedCard;
-      this.setData({ selectedCard: isSelected ? null : card.value });
-      app.globalData.socket.emit('select card', { id, card: isSelected ? null : card });
-    }
+    const { id, selectedCard } = this.data;
+    const { card } = e.currentTarget.dataset;
+    const value = card.value === selectedCard ? null : card.value;
+    this.setData({ selectedCard: value });
+    app.globalData.socket.emit('select card', { id, card: value });
   },
   onSaveTap() {
     const { id, loading, resultType } = this.data;

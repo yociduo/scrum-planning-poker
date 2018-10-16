@@ -4,6 +4,7 @@ import {
   OnConnect,
   OnDisconnect,
   OnMessage,
+  SocketIO,
   SocketController,
 } from 'socket-controllers';
 import { InjectRepository } from 'typeorm-typedi-extensions';
@@ -48,6 +49,16 @@ export class PokerController {
       const { id, currentStory } = room;
       socket.to(formatRoomId(roomId)).emit('action', { id, currentStory });
     });
+  }
+
+  @OnMessage('select card')
+  async selectCard(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() { id, card }: { id: number, card: number }) {
+    console.log(`User ${socket.user.id} selected card ${card}`);
+    const room = await this.roomRepository.selectCard(id, socket.user, card);
+    if (room) {
+      const { currentScore, currentStory } = room;
+      io.to(formatRoomId(id)).emit('action', { id, currentScore, currentStory });
+    }
   }
 
 }

@@ -2,6 +2,8 @@ import { Service } from 'typedi';
 import { Repository, EntityRepository, getManager } from 'typeorm';
 import { Room, User, Story, UserRoom, Score } from '../entity';
 
+const initResults = new Array(31).fill(null).map((v, i) => i).concat([0.5, 40, 55, 89, 100]).sort((i, j) => i - j);
+
 export interface ICachedRoom {
   room: Room;
   timer?: NodeJS.Timer;
@@ -136,6 +138,21 @@ export class RoomRepository extends Repository<Room> {
     return room;
   }
 
+  async selectCard(id: number, user: User, card: number): Promise<Room> {
+    const cached = await this.getCachedRoom(id);
+    if (cached.room.currentStory) {
+      const score = cached.room.currentStory.scores.find(s => s.user.id === user.id);
+      score.card = card;
+      score.timer = cached.room.currentStory.timer;
+      await getManager().save(Score, score);
+      this.convertScore(score);
+      this.calculator(cached.room);
+      return cached.room;
+    }
+
+    return null;
+  }
+
   private async getCachedRoom(id: number, force: boolean = false): Promise<ICachedRoom> {
     if (!this.runningRooms.hasOwnProperty(id) || force) {
       const room = await this.findOneOrFail(id, {
@@ -150,6 +167,10 @@ export class RoomRepository extends Repository<Room> {
   }
 
   private async startNextStory(cached: ICachedRoom, users: User[]) {
+    if (cached.room.currentStory) {
+      // Todo: reset
+    }
+
     cached.room.currentStory = cached.room.stories.find(s => !s.isDeleted && s.score === null);
     if (cached.room.currentStory) {
       if (!cached.timer) {
@@ -158,15 +179,7 @@ export class RoomRepository extends Repository<Room> {
         }, 1000);
       }
 
-      cached.room.currentStory.scores.forEach(score => {
-        if (score.card !== null || score.card !== undefined) {
-          switch (score.card) {
-            case -1: score.displayCard = '?'; break;
-            case -2: score.displayCard = 'C'; break;
-            default: score.displayCard = score.card.toString(); break;
-          }
-        }
-      });
+      cached.room.currentStory.scores.forEach(this.convertScore);
 
       for (let i = 0; i < users.length; i++) {
         const user = users[i];
@@ -180,11 +193,58 @@ export class RoomRepository extends Repository<Room> {
           cached.room.currentStory.scores.push(score);
         }
       }
+
+      this.calculator(cached.room);
+
     } else {
       if (cached.timer) {
         clearInterval(cached.timer);
         delete cached.timer;
       }
+    }
+  }
+
+  private calculator = (room: Room) => {
+    const { calcMethod, subCalcMethod, currentStory } = room;
+    if (currentStory) {
+      if (calcMethod === 2) {
+        return;
+      }
+
+      const scores = currentStory.scores.map(s => s.card).filter(s => s && s >= 0).sort((a, b) => a - b);
+
+      if (scores.length === 0) {
+        room.currentScore = null;
+        return;
+      } else if (scores.length > 2 && subCalcMethod === 1) {
+        scores.pop();
+        scores.splice(0, 1);
+      }
+
+      const { length } = scores;
+
+      let result: number;
+
+      if (calcMethod === 0) {
+        result = scores.reduce((v, s) => v + s, 0) / length;
+      } else {
+        result = length % 2 === 0 ?
+          Math.round((scores[length / 2] + scores[length / 2 - 1]) / 2) : scores[(length - 1) / 2]
+      }
+
+      room.currentScore = initResults.map((value, index) => ({
+        value,
+        index,
+        abs: Math.abs(value - result)
+      })).sort((i, j) => {
+        if (i.abs > j.abs) {
+          return 1;
+        } else if (i.abs < j.abs) {
+          return -1;
+        } else {
+          return j.value - i.value;
+        }
+      })[0].index;
     }
   }
 
@@ -198,6 +258,16 @@ export class RoomRepository extends Repository<Room> {
   private formatNumber(n: number): string {
     const ns = n.toString()
     return ns[1] ? ns : '0' + ns;
+  }
+
+  private convertScore = (score: Score) => {
+    if (score.card !== null && score.card !== undefined) {
+      switch (score.card) {
+        case -1: score.displayCard = '?'; break;
+        case -2: score.displayCard = 'C'; break;
+        default: score.displayCard = score.card.toString(); break;
+      }
+    }
   }
 
 }

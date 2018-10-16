@@ -62,10 +62,10 @@
               <view class="result-ft"></view>
             </view>
           </picker>
-          <picker bindchange="onResultChange" value="{{result}}" range="{{results}}">
+          <picker bindchange="onResultChange" value="{{currentScore}}" range="{{results}}">
             <view class="result result-box-ft">
               <view class="result-bd">Result</view>
-              <view class="result-ft">{{result || result === 0 ? results[result] : ''}}</view>
+              <view class="result-ft">{{currentScore || currentScore === 0 ? results[currentScore] : ''}}</view>
             </view>
           </picker>
         </view>

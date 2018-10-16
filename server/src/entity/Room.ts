@@ -53,7 +53,11 @@ export class Room {
 
   currentStory?: Story;
 
+  currentScore?: number;
+
   selectedCard?: number;
+
+  scoreResult?: number;
 
   isHost?: boolean;
 
