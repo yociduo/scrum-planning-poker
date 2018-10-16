@@ -173,9 +173,11 @@ export class RoomRepository extends Repository<Room> {
 
     cached.room.currentStory = cached.room.stories.find(s => !s.isDeleted && s.score === null);
     if (cached.room.currentStory) {
+      cached.room.currentStory.displayTimer = this.formatTimer(cached.room.currentStory.timer);
       if (!cached.timer) {
         cached.timer = setInterval(() => {
           cached.room.currentStory.timer++;
+          cached.room.currentStory.displayTimer = this.formatTimer(cached.room.currentStory.timer);
         }, 1000);
       }
 

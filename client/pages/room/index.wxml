@@ -9,7 +9,7 @@
 </view>
 <view class="top-stick top-stick-story" wx:if="{{init && !isCompleted}}">
   <view class="top-stick-hd">{{currentStory.name}}</view>
-  <view class="top-stick-bd">{{currentStory.timer}}</view>
+  <view class="top-stick-bd">{{currentStory.displayTimer}}</view>
   <view class="top-stick-ft">
     <button open-type="share">
       <image src="{{inviteIconUrl}}"></image>

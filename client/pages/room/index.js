@@ -24,6 +24,13 @@ Page({
         const title = payload.name;
         wx.setNavigationBarTitle({ title });
         this.setData({ init: true, ...payload });
+        this.interval = setInterval(() => {
+          const { currentStory } = this.data;
+          currentStory.timer++;
+          currentStory.displayTimer = formatTimer(currentStory.timer);
+          this.setData({ currentStory });
+        }, 1000);
+
       } else {
         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
       }
@@ -66,6 +73,7 @@ Page({
   },
   onUnload() {
     app.globalData.socket.emit('leave room', this.data.id);
+    clearInterval(this.interval);
   },
   onShow() {
     app.globalData.socket.emit('join room', this.data.id);
