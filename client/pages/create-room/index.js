@@ -47,6 +47,7 @@ Page({
           options: {
             needScore,
             isNoymous,
+            calcMethod: 1
           },
         },
         header: {

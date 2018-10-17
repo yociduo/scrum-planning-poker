@@ -26,7 +26,7 @@ export class RoomRepository extends Repository<Room> {
         COUNT(story.id) AS storyCount,
         IFNULL(SUM(story.score), 0) AS scoreSum,
         SUM(story.timer) AS timerSum,
-        (COUNT(ISNULL(story.score)) = COUNT(story.score)) AS isCompleted
+        SUM(!story.isCompleted) = 0 AS isCompleted
       FROM UserRooms userRoom
       LEFT JOIN Rooms room ON room.id = userRoom.roomId
       LEFT JOIN Stories story ON story.roomId = room.id
@@ -106,35 +106,14 @@ export class RoomRepository extends Repository<Room> {
   }
 
   async getRoomDetail(id: number, user: User): Promise<Room> {
-    const cached = await this.getCachedRoom(id);
-    const room = { ...cached.room };
-    const stories = room.stories;
+    const { room } = await this.getCachedRoom(id);
     room.isHost = room.userRooms.find(ur => ur.user.id === user.id).isHost;
     room.isCreator = room.creator.id === user.id;
-    room.isCompleted = true;
-    room.storyCount = 0;
-    room.scoreSum = 0;
-    room.timerSum = 0;
-    room.stories = [];
-    stories.forEach(s => {
-      if (!s.isDeleted) {
-        const story = { ...s };
-        if (s.score !== null) {
-          story.displayTimer = this.formatTimer(story.timer);
-          room.stories.push(story);
-          room.scoreSum += s.score;
-          room.timerSum += s.timer;
-        } else {
-          room.isCompleted = false;
-        }
-        room.storyCount++;
-      }
-    });
+
     if (room.currentStory) {
       room.selectedCard = room.currentStory.scores.find(s => s.user.id === user.id).card;
     }
 
-    room.displayTimerSum = this.formatTimer(room.timerSum);
     return room;
   }
 
@@ -153,22 +132,36 @@ export class RoomRepository extends Repository<Room> {
     return null;
   }
 
-  async calcMethod({ id, calcMethod, subCalcMethod, currentScore }: Room): Promise<Room> {
+  async calcMethod(id: number, calcMethod: number): Promise<Room> {
     const cached = await this.getCachedRoom(id);
-    if (calcMethod !== null && calcMethod !== undefined) {
-      cached.room.calcMethod = calcMethod;
+    cached.room.options.calcMethod = calcMethod;
+    await getManager().save(Room, cached.room);
+    this.calculator(cached.room);
+    return cached.room;
+  }
+
+  async nextStory(id: number): Promise<Room> {
+    const cached = await this.getCachedRoom(id);
+    const { userRooms, options, currentStory, currentScore } = cached.room;
+    const users = userRooms.filter(ur => !ur.isLeft && (!ur.isHost || options.needScore)).map(ur => ur.user);
+    if (currentStory) {
+      currentStory.score = initResults[currentScore];
+      currentStory.isCompleted = true;
+      await getManager().save(Story, currentStory);
+      cached.room.scoreSum += currentStory.score;
+      cached.room.timerSum += currentStory.timer;
+      cached.room.displayTimerSum = this.formatTimer(cached.room.timerSum);
     }
 
-    if (subCalcMethod !== null && subCalcMethod !== undefined) {
-      cached.room.subCalcMethod = subCalcMethod;
-    }
+    await this.startNextStory(cached, users);
+    return cached.room;
+  }
 
-    if (currentScore !== null && currentScore !== undefined) {
-      cached.room.currentScore = currentScore;
-    } else {
-      this.calculator(cached.room);
-    }
-
+  async changeCurrentScore(id: number, currentScore: number): Promise<Room> {
+    const cached = await this.getCachedRoom(id);
+    cached.room.options.calcMethod = 3;
+    cached.room.currentScore = currentScore;
+    await getManager().save(Room, cached.room);
     return cached.room;
   }
 
@@ -177,8 +170,24 @@ export class RoomRepository extends Repository<Room> {
       const room = await this.findOneOrFail(id, {
         relations: ['userRooms', 'userRooms.user', 'stories', 'stories.scores', 'stories.scores.user', 'creator', 'updater'],
       });
-      room.calcMethod = 0;
-      room.subCalcMethod = 0;
+      room.isCompleted = true;
+      room.storyCount = 0;
+      room.scoreSum = 0;
+      room.timerSum = 0;
+      room.stories.forEach(story => {
+        story.displayTimer = this.formatTimer(story.timer);
+        if (!story.isDeleted) {
+          if (story.isCompleted !== null) {
+            room.scoreSum += story.score;
+            room.timerSum += story.timer;
+          } else {
+            room.isCompleted = false;
+          }
+          room.storyCount++;
+        }
+      });
+      room.displayTimerSum = this.formatTimer(room.timerSum);
+
       this.runningRooms[id] = { room };
     }
 
@@ -186,12 +195,11 @@ export class RoomRepository extends Repository<Room> {
   }
 
   private async startNextStory(cached: ICachedRoom, users: User[]) {
+    cached.room.currentScore = null;
+    cached.room.currentStory = cached.room.stories.find(s => !s.isDeleted && !s.isCompleted);
+    cached.room.selectedCard = null;
     if (cached.room.currentStory) {
-      // Todo: reset
-    }
-
-    cached.room.currentStory = cached.room.stories.find(s => !s.isDeleted && s.score === null);
-    if (cached.room.currentStory) {
+      cached.room.isCompleted = false;
       cached.room.currentStory.displayTimer = this.formatTimer(cached.room.currentStory.timer);
       if (!cached.timer) {
         cached.timer = setInterval(() => {
@@ -218,6 +226,8 @@ export class RoomRepository extends Repository<Room> {
       this.calculator(cached.room);
 
     } else {
+      cached.room.currentStory = null;
+      cached.room.isCompleted = true;
       if (cached.timer) {
         clearInterval(cached.timer);
         delete cached.timer;
@@ -226,9 +236,9 @@ export class RoomRepository extends Repository<Room> {
   }
 
   private calculator = (room: Room) => {
-    const { calcMethod, subCalcMethod, currentStory } = room;
+    const { options: { calcMethod }, currentStory } = room;
     if (currentStory) {
-      if (calcMethod === 2) {
+      if (calcMethod === 3) {
         return;
       }
 
@@ -237,7 +247,7 @@ export class RoomRepository extends Repository<Room> {
       if (scores.length === 0) {
         room.currentScore = null;
         return;
-      } else if (scores.length > 2 && subCalcMethod === 1) {
+      } else if (scores.length > 2 && calcMethod === 1) {
         scores.pop();
         scores.splice(0, 1);
       }

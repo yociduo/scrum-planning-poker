@@ -57,7 +57,7 @@ export class Room {
 
   selectedCard?: number;
 
-  scoreResult?: number;
+  loading?: boolean;
 
   isHost?: boolean;
 
@@ -72,9 +72,5 @@ export class Room {
   timerSum?: number;
 
   displayTimerSum?: string;
-
-  calcMethod?: number;
-
-  subCalcMethod?: number;
 
 }

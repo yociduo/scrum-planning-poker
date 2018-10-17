@@ -64,9 +64,9 @@ export class Story {
   @Column({ default: false })
   isDeleted: boolean;
 
-  // @IsBoolean()
-  // @Column({ default: false })
-  // isCompleted: boolean;
+  @IsBoolean()
+  @Column({ default: false })
+  isCompleted: boolean;
 
   displayTimer?: string;
 

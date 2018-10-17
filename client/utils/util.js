@@ -1,25 +1,44 @@
+// const calcMethods = [
+//   {
+//     key: 'Average',
+//     value: 0,
+//     sub: [
+//       {
+//         key: 'Arithmetic Mean',
+//         value: 0
+//       },
+//       {
+//         key: 'Truncated Mean',
+//         value: 1
+//       }
+//     ]
+//   },
+//   {
+//     key: 'Median',
+//     value: 1
+//   },
+//   {
+//     key: 'Customized',
+//     value: 2
+//   }
+// ];
+
 const calcMethods = [
   {
-    key: 'Average',
-    value: 0,
-    sub: [
-      {
-        key: 'Arithmetic Mean',
-        value: 0
-      },
-      {
-        key: 'Truncated Mean',
-        value: 1
-      }
-    ]
+    key: 'Arithmetic Mean',
+    value: 0
   },
   {
-    key: 'Median',
+    key: 'Truncated Mean',
     value: 1
   },
   {
-    key: 'Customized',
+    key: 'Median',
     value: 2
+  },
+  {
+    key: 'Customized',
+    value: 3
   }
 ];
 

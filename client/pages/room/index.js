@@ -17,7 +17,7 @@ Page({
     app.globalData.socket.on('init', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
       if (payload.stories && payload.stories.length) {
-        payload.stories.forEach(story => story.timer = formatTimer(story.timer))
+        payload.stories = payload.stories.filter(s => s.isCompleted && !s.isDeleted);
       }
 
       if (payload.currentStory) {
@@ -26,9 +26,13 @@ Page({
         this.setData({ init: true, ...payload });
         this.interval = setInterval(() => {
           const { currentStory } = this.data;
-          currentStory.timer++;
-          currentStory.displayTimer = formatTimer(currentStory.timer);
-          this.setData({ currentStory });
+          if (currentStory) {
+            currentStory.timer++;
+            currentStory.displayTimer = formatTimer(currentStory.timer);
+            this.setData({ currentStory });
+          } else {
+            clearInterval(this.interval);
+          }
         }, 1000);
 
       } else {
@@ -38,24 +42,27 @@ Page({
 
     app.globalData.socket.on('action', ({ id, ...payload }) => {
       if (id !== this.data.id) return;
-      const refresh = {};
+      if (payload.stories && payload.stories.length) {
+        payload.stories = payload.stories.filter(s => s.isCompleted && !s.isDeleted);
+      }
+      // const refresh = {};
       this.setData(payload);
 
-      if (payload.scores) {
-        refresh.scores = payload.scores;
-        refresh.count = payload.count;
-        refresh.time = payload.time;
-        refresh.total = payload.total;
-      }
+      // if (payload.scores) {
+      //   refresh.scores = payload.scores;
+      //   refresh.count = payload.count;
+      //   refresh.time = payload.time;
+      //   refresh.total = payload.total;
+      // }
 
-      if (payload.finished !== null && payload.finished !== undefined) {
-        refresh.finished = payload.finished;
-      }
+      // if (payload.finished !== null && payload.finished !== undefined) {
+      //   refresh.finished = payload.finished;
+      // }
 
-      if (Object.keys(refresh).length > 0) {
-        const cache = wx.getStorageSync(id) || {};
-        wx.setStorageSync(id, { ...cache, ...refresh });
-      }
+      // if (Object.keys(refresh).length > 0) {
+      //   const cache = wx.getStorageSync(id) || {};
+      //   wx.setStorageSync(id, { ...cache, ...refresh });
+      // }
 
       if (payload.closed) {
         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
@@ -95,24 +102,23 @@ Page({
     app.globalData.socket.emit('select card', { id, card: value });
   },
   onSaveTap() {
-    const { id, loading, resultType } = this.data;
+    const { id, loading } = this.data;
     if (loading) return;
-    app.globalData.socket.emit('next story', { id });
+    app.globalData.socket.emit('next story', id);
     this.setData({ loading: true });
   },
   onCalcMethodChange(e) {
     const calcMethod = parseInt(e.detail.value);
-    this.setData({ calcMethod });
     app.globalData.socket.emit('calc method', { id: this.data.id, calcMethod });
   },
-  onSubCalcMethodChange(e) {
-    const subCalcMethod = parseInt(e.detail.value);
-    this.setData({ subCalcMethod });
-    app.globalData.socket.emit('calc method', { id: this.data.id, subCalcMethod });
-  },
+  // onSubCalcMethodChange(e) {
+  //   const subCalcMethod = parseInt(e.detail.value);
+  //   this.setData({ subCalcMethod });
+  //   app.globalData.socket.emit('calc method', { id: this.data.id, subCalcMethod });
+  // },
   onResultChange(e) {
     const currentScore = parseFloat(e.detail.value);
-    app.globalData.socket.emit('calc method', { id: this.data.id, currentScore });
+    app.globalData.socket.emit('current score', { id: this.data.id, currentScore });
   },
   onBackTap() {
     if (getCurrentPages().length > 1) {

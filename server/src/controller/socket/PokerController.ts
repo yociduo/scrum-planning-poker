@@ -62,12 +62,34 @@ export class PokerController {
   }
 
   @OnMessage('calc method')
-  async calcMethod(@ConnectedSocket() socket: Socket, @MessageBody() request: Room) {
-    console.log(`User ${socket.user.id} changed ${JSON.stringify(request)}`);
-    const room = await this.roomRepository.calcMethod(request);
+  async calcMethod(@ConnectedSocket() socket: Socket, @MessageBody() { id, calcMethod }: { id: number, calcMethod: number }) {
+    console.log(`User ${socket.user.id} changed calc method ${JSON.stringify(calcMethod)}`);
+    const room = await this.roomRepository.calcMethod(id, calcMethod);
     if (room) {
-      const { id, calcMethod, subCalcMethod, currentScore } = room;
-      socket.emit('action', { id, calcMethod, subCalcMethod, currentScore });
+      const { id, options, currentScore } = room;
+      socket.emit('action', { id, options, currentScore });
+    }
+  }
+
+  @OnMessage('current score')
+  async changeCurrentScore(@ConnectedSocket() socket: Socket, @MessageBody() { id, currentScore }: { id: number, currentScore: number }) {
+    console.log(`User ${socket.user.id} change current score to ${currentScore}`);
+    const room = await this.roomRepository.changeCurrentScore(id, currentScore);
+    if (room) {
+      const { id, currentStory, currentScore, options } = room;
+      socket.emit('action', { id, currentStory, currentScore, options });
+    }
+  }
+
+  @OnMessage('next story')
+  async nextStory(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() roomId: number) {
+    console.log(`User ${socket.user.id} next story for room ${roomId}`);
+    const room = await this.roomRepository.nextStory(roomId);
+    if (room) {
+      const { id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum } = room;
+      io.to(formatRoomId(id)).emit('action', {
+        id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, loading: false
+      });
     }
   }
 

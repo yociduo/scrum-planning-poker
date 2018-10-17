@@ -50,18 +50,18 @@
     <view class="page-section" wx:if="{{!isCompleted && isHost}}">
       <view class="page-section-spacing">
         <view class="result-box">
-          <picker bindchange="onCalcMethodChange" value="{{calcMethod}}" range="{{calcMethods}}" range-key="key">
+          <picker bindchange="onCalcMethodChange" value="{{options.calcMethod}}" range="{{calcMethods}}" range-key="key">
             <view class="result">
-              <view class="result-bd">{{calcMethods[calcMethod].key}}</view>
+              <view class="result-bd">{{calcMethods[options.calcMethod].key}}</view>
               <view class="result-ft"></view>
             </view>
           </picker>
-          <picker wx:if="{{calcMethods[calcMethod].sub}}" bindchange="onSubCalcMethodChange" value="{{subCalcMethod}}" range="{{calcMethods[calcMethod].sub}}" range-key="key">
+          <!-- <picker wx:if="{{calcMethods[calcMethod].sub}}" bindchange="onSubCalcMethodChange" value="{{subCalcMethod}}" range="{{calcMethods[calcMethod].sub}}" range-key="key">
             <view class="result">
               <view class="result-bd">{{calcMethods[calcMethod].sub[subCalcMethod].key}}</view>
               <view class="result-ft"></view>
             </view>
-          </picker>
+          </picker> -->
           <picker bindchange="onResultChange" value="{{currentScore}}" range="{{results}}">
             <view class="result result-box-ft">
               <view class="result-bd">Result</view>
@@ -71,10 +71,10 @@
         </view>
       </view>
     </view>
-    <view class="btn-area" wx:if="{{currentStory && isHost}}">
+    <view class="btn-area" wx:if="{{!isCompleted && isHost}}">
       <button type="primary" loading="{{loading}}" bindtap="onSaveTap">Save & Next</button>
     </view>
-    <view class="page-section-divide" wx:if="{{currentStory && isHost}}"></view>
+    <view class="page-section-divide" wx:if="{{!isCompleted && isHost}}"></view>
     <view class="page-section-title" wx:if="{{stories && stories.length}}">All Stories</view>
     <view class="page-section" wx:if="{{stories && stories.length}}">
       <view class="page-section-spacing">
@@ -84,7 +84,7 @@
             <view class="story-bd">{{story.displayTimer}}</view>
             <view class="story-ft">{{story.score}}</view>
           </view>
-          <view class="story story-box-ft" wx:if="{{!currentStory}}">
+          <view class="story story-box-ft" wx:if="{{isCompleted}}">
             <view class="story-hd">{{storyCount + (storyCount > 1 ? ' Stories' : ' Story')}}</view>
             <view class="story-bd">{{displayTimerSum}}</view>
             <view class="story-ft">{{scoreSum}}</view>
@@ -92,7 +92,7 @@
         </view>
       </view>
     </view>
-    <view class="btn-area" wx:if="{{!currentStory}}">
+    <view class="btn-area" wx:if="{{isCompleted}}">
       <button type="primary" bindtap="onBackTap">Back</button>
     </view>
   </view>
