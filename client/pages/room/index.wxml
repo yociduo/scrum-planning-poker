@@ -82,7 +82,7 @@
           <view class="story" wx:for="{{stories}}" wx:for-item="story" wx:key="story.index">
             <view class="story-hd">{{story.name}}</view>
             <view class="story-bd">{{story.displayTimer}}</view>
-            <view class="story-ft">{{story.score}}</view>
+            <view class="story-ft">{{story.score || story.score === 0 ? story.score : ''}}</view>
           </view>
           <view class="story story-box-ft" wx:if="{{isCompleted}}">
             <view class="story-hd">{{storyCount + (storyCount > 1 ? ' Stories' : ' Story')}}</view>

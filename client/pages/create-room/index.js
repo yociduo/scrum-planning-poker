@@ -55,7 +55,7 @@ Page({
         },
         success: ({ data, statusCode }) => {
           if (statusCode === 200) {
-            wx.navigateTo({ url: `../room/index?id=${data.id}` });
+            wx.redirectTo({ url: `../room/index?id=${data.id}` });
           }
         }
       });
