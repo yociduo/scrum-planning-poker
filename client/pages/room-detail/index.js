@@ -1,21 +1,25 @@
+const app = getApp();
+
 Page({
   onLoad(options) {
-    const { id } = options;
-    const room = wx.getStorageSync(id);
-    if (room) {
-      room.id = id;
-      room.scores.forEach((s, id) => s.id = id);
-      this.setData({ ...room });
-    } else {
-      wx.showModal({
-        title: 'Error',
-        content: 'Room has been deleted!',
-        confirmColor: '#0678C1',
-        showCancel: false,
-        confirmText: 'OK',
-        success: () => this.onBackTap(),
-      });
-    }
+    // const { id } = options;
+    // const room = wx.getStorageSync(id);
+    // if (room) {
+    //   room.id = id;
+    //   room.scores.forEach((s, id) => s.id = id);
+    //   this.setData({ ...room });
+    // } else {
+    //   wx.showModal({
+    //     title: 'Error',
+    //     content: 'Room has been deleted!',
+    //     confirmColor: '#0678C1',
+    //     showCancel: false,
+    //     confirmText: 'OK',
+    //     success: () => this.onBackTap(),
+    //   });
+    // }
+
+    this.setData({ ...app.globalData.room })
   },
   onRoomChange(e) {
     this.setData({ name: e.detail.value });
@@ -24,15 +28,15 @@ Page({
     wx.setStorageSync(this.data.id, room);
   },
   kindToggle: function (e) {
-    const id = e.currentTarget.id, scores = this.data.scores;
-    for (let i = 0, len = scores.length; i < len; ++i) {
-      if (scores[i].id == id) {
-        scores[i].open = !scores[i].open
+    const id = e.currentTarget.id, stories = this.data.stories;
+    for (let i = 0, len = stories.length; i < len; ++i) {
+      if (stories[i].id == id) {
+        stories[i].open = !stories[i].open
       } else {
-        scores[i].open = false
+        stories[i].open = false
       }
     }
-    this.setData({ scores });
+    this.setData({ stories });
   },
   onBackTap: function (e) {
     if (getCurrentPages().length > 1) {

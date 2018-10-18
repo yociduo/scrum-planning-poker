@@ -25,8 +25,8 @@ export class Score {
   @ManyToOne(() => Story, story => story.scores, { nullable: false })
   story: Story;
 
-  @IsInt()
-  @Column('smallint', { nullable: true })
+  @IsHexadecimal()
+  @Column('decimal', { nullable: true, precision: 4, scale: 1  })
   card?: number;
 
   @IsInt()

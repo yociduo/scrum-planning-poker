@@ -36,6 +36,7 @@ Page({
         }, 1000);
 
       } else {
+        app.globalData.room = payload;
         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
       }
     });
