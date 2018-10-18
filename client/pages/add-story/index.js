@@ -4,7 +4,8 @@ let id, initStories;
 Page({
   onLoad(options) {
     id = options.id;
-    const start = wx.getStorageSync(id).scores.length + 1;
+    // const start = wx.getStorageSync(id).scores.length + 1;
+    const start = 1;
     initStories = new Array(3).fill(null).map((n, i) => 'Story ' + (i + start)).join('\n');
     this.setData({ stories: initStories });
   },
@@ -18,7 +19,9 @@ Page({
   },
   formSubmit(e) {
     const { stories } = e.detail.value;
-    app.globalData.socket.emit('add story', { id, stories });
-    wx.navigateBack({ delta: 1 });
+    app.globalData.socket.emit('add story', { id, stories: stories.trim().split('\n').filter(n => n).map(name => ({ name })) });
+    setTimeout(() => {
+      wx.navigateBack({ delta: 1 });
+    }, 2000);
   }
 })

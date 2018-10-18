@@ -8,7 +8,7 @@ import {
   SocketController,
 } from 'socket-controllers';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Room } from '../../entity';
+import { Room, Story } from '../../entity';
 import { RoomRepository } from '../../repository';
 import { Socket, formatRoomId } from '../../socket';
 
@@ -89,6 +89,18 @@ export class PokerController {
       const { id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum } = room;
       io.to(formatRoomId(id)).emit('action', {
         id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, loading: false
+      });
+    }
+  }
+
+  @OnMessage('add story')
+  async addStory(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() { id, stories }: { id: number, stories: Story[] }) {
+    console.log(`User ${socket.user.id} add story ${stories} for room ${id}`);
+    const room = await this.roomRepository.addStory(id, stories, socket.user);
+    if (room) {
+      const { id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, storyCount } = room;
+      io.to(formatRoomId(id)).emit('action', {
+        id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, storyCount
       });
     }
   }

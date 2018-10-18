@@ -111,7 +111,8 @@ export class RoomRepository extends Repository<Room> {
     room.isCreator = room.creator.id === user.id;
 
     if (room.currentStory) {
-      room.selectedCard = room.currentStory.scores.find(s => s.user.id === user.id).card;
+      const score = room.currentStory.scores.find(s => s.user.id === user.id);
+      room.selectedCard = score ? score.card : null;
     }
 
     return room;
@@ -163,6 +164,22 @@ export class RoomRepository extends Repository<Room> {
     cached.room.currentScore = currentScore;
     await getManager().save(Room, cached.room);
     return cached.room;
+  }
+
+  async addStory(id: number, stories: Story[], user: User): Promise<Room> {
+    const room = await this.findOne(id);
+    await getManager().transaction(async (transactionalEntityManager) => {
+      for (let i = 0; i < stories.length; i++) {
+        const newStory = new Story();
+        newStory.name = stories[i].name;
+        newStory.room = room;
+        newStory.creator = user;
+        newStory.updater = user;
+        await transactionalEntityManager.insert(Story, newStory);
+      }
+    });
+    await this.getCachedRoom(id, true);
+    return await this.nextStory(id);
   }
 
   private async getCachedRoom(id: number, force: boolean = false): Promise<ICachedRoom> {
