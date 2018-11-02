@@ -24,17 +24,20 @@ Page({
         const title = payload.name;
         wx.setNavigationBarTitle({ title });
         this.setData({ init: true, ...payload });
-        this.interval = setInterval(() => {
-          const { currentStory } = this.data;
-          if (currentStory) {
-            currentStory.timer++;
-            currentStory.displayTimer = formatTimer(currentStory.timer);
-            this.setData({ currentStory });
-          } else {
-            clearInterval(this.interval);
-          }
-        }, 1000);
 
+        if (!this.interval) {
+          this.interval = setInterval(() => {
+            const { currentStory } = this.data;
+            if (currentStory) {
+              currentStory.timer++;
+              currentStory.displayTimer = formatTimer(currentStory.timer);
+              this.setData({ currentStory });
+            } else {
+              clearInterval(this.interval);
+              this.interval = undefined;
+            }
+          }, 1000);
+        }
       } else {
         app.globalData.room = payload;
         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
@@ -68,6 +71,21 @@ Page({
       if (payload.closed) {
         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
       }
+
+      if (!this.interval && payload.currentStory) {
+        this.interval = setInterval(() => {
+          const { currentStory } = this.data;
+          if (currentStory) {
+            currentStory.timer++;
+            currentStory.displayTimer = formatTimer(currentStory.timer);
+            this.setData({ currentStory });
+          } else {
+            clearInterval(this.interval);
+            this.interval = undefined;
+          }
+        }, 1000);
+      }
+
     });
 
     app.globalData.socket.on('error', (content) => wx.showModal({
@@ -82,6 +100,7 @@ Page({
   onUnload() {
     app.globalData.socket.emit('leave room', this.data.id);
     clearInterval(this.interval);
+    this.interval = undefined;
   },
   onShow() {
     app.globalData.socket.emit('join room', this.data.id);
@@ -89,6 +108,7 @@ Page({
   onHide() {
     app.globalData.socket.emit('leave room', this.data.id);
     clearInterval(this.interval);
+    this.interval = undefined;
   },
   onShareAppMessage() {
     return { title: this.data.name, imageUrl: this.data.shareImageUrl };
