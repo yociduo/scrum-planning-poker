@@ -33,7 +33,7 @@
         <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
           <view class="player" wx:for="{{currentStory.scores}}" wx:for-item="score" wx:key="score.user.avatarUrl">
             <view class="player-hd">
-              <image class="player-avatar" src="{{score.user.avatarUrl}}"></image>
+              <image class="player-avatar" src="{{score.user.avatarUrl || '../../image/user.png'}}"></image>
             </view>
             <view class="player-bd">
               {{score.user.nickName}}

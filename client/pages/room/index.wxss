@@ -76,13 +76,13 @@
 }
 
 .player {
-  padding: 19rpx 31rpx 20rpx;
+  padding: 20rpx 30rpx;
 }
 
 .player-hd {
   position: relative;
   margin-right: 20rpx;
-  height: 100rpx;
+  height: 92rpx;
 }
 
 .player-bd {
@@ -92,6 +92,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding-right: 20rpx;
 }
 
 .player-ft {
