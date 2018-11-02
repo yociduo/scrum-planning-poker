@@ -275,7 +275,7 @@ export class RoomRepository extends Repository<Room> {
         return;
       }
 
-      const scores = currentStory.scores.map(s => s.card).filter(s => s && s >= 0).sort((a, b) => a - b);
+      const scores = currentStory.scores.map(s => s.card).filter(s => s !== null && s >= 0).sort((a, b) => a - b);
 
       if (scores.length === 0) {
         room.currentScore = null;
@@ -293,7 +293,7 @@ export class RoomRepository extends Repository<Room> {
         result = scores.reduce((v, s) => v + s, 0) / length;
       } else {
         result = length % 2 === 0 ?
-          Math.round((scores[length / 2] + scores[length / 2 - 1]) / 2) : scores[(length - 1) / 2]
+          Math.round((scores[length / 2] + scores[length / 2 - 1]) / 2) : scores[(length - 1) / 2];
       }
 
       room.currentScore = initResults.map((value, index) => ({
