@@ -45,7 +45,14 @@
   font-weight: 500;
 }
 
-.top-stick-story .top-stick-ft button,
+.top-stick-story .top-stick-ft button {
+  width: 90rpx;
+  height: 78rpx;
+  padding: 20rpx;
+  margin-left: -20rpx;
+  margin-right: -20rpx;
+}
+
 .top-stick-story .top-stick-ft image {
   width: 50rpx;
 }
