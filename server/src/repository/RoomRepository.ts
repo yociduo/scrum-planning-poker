@@ -1,3 +1,4 @@
+// tslint:disable
 import { Service } from 'typedi';
 import { Repository, EntityRepository, getManager } from 'typeorm';
 import { Room, User, Story, UserRoom, Score } from '../entity';

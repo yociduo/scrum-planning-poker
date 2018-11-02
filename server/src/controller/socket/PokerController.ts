@@ -1,3 +1,4 @@
+// tslint:disable
 import {
   ConnectedSocket,
   MessageBody,
@@ -88,7 +89,7 @@ export class PokerController {
     if (room) {
       const { id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum } = room;
       io.to(formatRoomId(id)).emit('action', {
-        id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, loading: false
+        id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, loading: false,
       });
     }
   }
@@ -100,7 +101,7 @@ export class PokerController {
     if (room) {
       const { id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, storyCount } = room;
       io.to(formatRoomId(id)).emit('action', {
-        id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, storyCount
+        id, currentStory, currentScore, selectedCard, stories, isCompleted, scoreSum, displayTimerSum, timerSum, storyCount,
       });
     }
   }
