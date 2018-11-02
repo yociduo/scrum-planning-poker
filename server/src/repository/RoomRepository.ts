@@ -76,22 +76,7 @@ export class RoomRepository extends Repository<Room> {
   async joinOrLeave(id: number, user: User, isLeft: boolean = false): Promise<void> {
     const cached = await this.getCachedRoom(id);
     const { room, timer } = cached;
-    let userRoom = room.userRooms.find(ur => ur.user.id === user.id);
-
-    const exist = !!userRoom;
-    if (!exist) {
-      userRoom = new UserRoom();
-      userRoom.user = user;
-      userRoom.room = room;
-      userRoom.isHost = room.creator.id === user.id;
-    }
-
-    userRoom.isLeft = isLeft;
-    await getManager().save(UserRoom, userRoom);
-    if (!exist) {
-      delete userRoom.room;
-      room.userRooms.push(userRoom);
-    }
+    const userRoom = await this.createUserRoom(cached, user, isLeft);
 
     if (room.userRooms.every(r => r.isLeft)) {
       if (room.currentStory) {
@@ -101,8 +86,14 @@ export class RoomRepository extends Repository<Room> {
         clearInterval(timer);
       }
       delete this.runningRooms[id];
-    } else if (!room.currentStory) {
-      await this.startNextStory(cached, room.options.needScore || !userRoom.isHost ? [user] : []);
+    } else {
+      if (room.currentStory) {
+        if (room.options.needScore || !userRoom.isHost) {
+          await this.createScore(cached, user);
+        }
+      } else {
+        await this.startNextStory(cached, room.options.needScore || !userRoom.isHost ? [user] : []);
+      }
     }
   }
 
@@ -229,16 +220,7 @@ export class RoomRepository extends Repository<Room> {
       cached.room.currentStory.scores.forEach(this.convertScore);
 
       for (let i = 0; i < users.length; i++) {
-        const user = users[i];
-        const exist = cached.room.currentStory.scores.some(s => s.user.id === user.id);
-        if (!exist) {
-          const score = new Score();
-          score.user = user;
-          score.story = cached.room.currentStory;
-          await getManager().save(Score, score);
-          delete score.story;
-          cached.room.currentStory.scores.push(score);
-        }
+        await this.createScore(cached, users[i]);
       }
 
       this.calculator(cached.room);
@@ -250,6 +232,39 @@ export class RoomRepository extends Repository<Room> {
         clearInterval(cached.timer);
         delete cached.timer;
       }
+    }
+  }
+
+  private async createUserRoom(cached: ICachedRoom, user: User, isLeft: boolean): Promise<UserRoom> {
+    let userRoom = cached.room.userRooms.find(ur => ur.user.id === user.id);
+
+    const exist = !!userRoom;
+    if (!exist) {
+      userRoom = new UserRoom();
+      userRoom.user = user;
+      userRoom.room = cached.room;
+      userRoom.isHost = cached.room.creator.id === user.id;
+    }
+
+    userRoom.isLeft = isLeft;
+    await getManager().save(UserRoom, userRoom);
+    if (!exist) {
+      delete userRoom.room;
+      cached.room.userRooms.push(userRoom);
+    }
+
+    return userRoom;
+  }
+
+  private async createScore(cached: ICachedRoom, user: User): Promise<void> {
+    const exist = cached.room.currentStory.scores.some(s => s.user.id === user.id);
+    if (!exist) {
+      const score = new Score();
+      score.user = user;
+      score.story = cached.room.currentStory;
+      await getManager().save(Score, score);
+      delete score.story;
+      cached.room.currentStory.scores.push(score);
     }
   }
 
