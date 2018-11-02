@@ -88,6 +88,7 @@ Page({
   },
   onHide() {
     app.globalData.socket.emit('leave room', this.data.id);
+    clearInterval(this.interval);
   },
   onShareAppMessage() {
     return { title: this.data.name, imageUrl: this.data.shareImageUrl };
