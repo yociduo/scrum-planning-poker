@@ -102,7 +102,7 @@ export class RoomRepository extends Repository<Room> {
       }
       delete this.runningRooms[id];
     } else if (!room.currentStory) {
-      await this.startNextStory(cached, [user]);
+      await this.startNextStory(cached, room.options.needScore || !userRoom.isHost ? [user] : []);
     }
   }
 
@@ -145,7 +145,6 @@ export class RoomRepository extends Repository<Room> {
   async nextStory(id: number): Promise<Room> {
     const cached = await this.getCachedRoom(id);
     const { userRooms, options, currentStory, currentScore } = cached.room;
-    const users = userRooms.filter(ur => !ur.isLeft && (!ur.isHost || options.needScore)).map(ur => ur.user);
     if (currentStory) {
       currentStory.score = initResults[currentScore];
       currentStory.isCompleted = true;
@@ -155,6 +154,7 @@ export class RoomRepository extends Repository<Room> {
       cached.room.displayTimerSum = this.formatTimer(cached.room.timerSum);
     }
 
+    const users = userRooms.filter(ur => !ur.isLeft && (!ur.isHost || options.needScore)).map(ur => ur.user);
     await this.startNextStory(cached, users);
     return cached.room;
   }
