@@ -14,7 +14,7 @@
       <view class="page-section">
         <view class="page-section-spacing">
           <view class="textarea-wrp">
-            <textarea name="stories" auto-height value="{{stories}}" bindblur="onStoriesBlur" />
+            <textarea name="stories" auto-height value="{{stories}}" bindblur="onStoriesBlur" maxlength="-1" />
           </view>
         </view>
       </view>
