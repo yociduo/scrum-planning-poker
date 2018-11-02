@@ -19,7 +19,7 @@ Page({
   },
   formSubmit(e) {
     const { stories } = e.detail.value;
-    app.globalData.socket.emit('add story', { id, stories: stories.trim().split('\n').filter(n => n).map(name => ({ name })) });
+    app.globalData.socket.emit('add story', { id, stories: stories.trim().split('\n').map(name => name.trim()).filter(n => n).map(name => ({ name })) });
     setTimeout(() => {
       wx.navigateBack({ delta: 1 });
     }, 2000);

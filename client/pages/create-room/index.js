@@ -43,7 +43,7 @@ Page({
         method: 'POST',
         data: {
           name,
-          stories: stories.trim().split('\n').filter(n => n).map(name => ({ name })),
+          stories: stories.trim().split('\n').map(name => name.trim()).filter(n => n).map(name => ({ name })),
           options: {
             needScore,
             isNoymous,
