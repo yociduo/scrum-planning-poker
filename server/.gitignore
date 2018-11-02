@@ -8,6 +8,7 @@ node_modules
 
 # Build directory
 build
+dist
 
 # Editor's config directories
 .vscode

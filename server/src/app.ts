@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import * as dotenv from 'dotenv';
 import { createKoaServer, useContainer as routingUseContainer } from 'routing-controllers';
 import { createSocketServer, useContainer as socketUseContainer } from 'socket-controllers';
 import { Container } from 'typedi';
@@ -7,6 +8,9 @@ import { config } from './config';
 import { decorators } from './decorator';
 import './middleware/socket/AuthenitificationMiddleware';
 
+// Load environment variables from .env file, where API keys and passwords are configured
+dotenv.config({ path: '.env' });
+
 /**
  * Setup routing-controllers typeorm and socket-controllers to use typedi container.
  */
@@ -14,7 +18,31 @@ routingUseContainer(Container);
 ormUseContainer(Container);
 socketUseContainer(Container);
 
-createConnection().then(async () => {
+createConnection({
+  type: 'mysql',
+  host: config.databaseHost,
+  port: config.databasePort,
+  username: config.databaseUsername,
+  password: config.databasePassword,
+  database: config.databaseScheme,
+  synchronize: true,
+  logging: false,
+  bigNumberStrings: false,
+  entities: [
+    'src/entity/**/*.ts',
+  ],
+  migrations: [
+    'src/migration/**/*.ts',
+  ],
+  subscribers: [
+    'src/subscriber/**/*.ts',
+  ],
+  cli: {
+    entitiesDir: 'src/entity',
+    migrationsDir: 'src/migration',
+    subscribersDir: 'src/subscriber',
+  },
+}).then(async () => {
   /**
    * We create a new koa server instance.
    * We could have also use useKoaServer here to attach controllers to an existing koa instance.
@@ -42,4 +70,4 @@ createConnection().then(async () => {
 
   console.log(`Server is up and running at port ${config.apiPort}`);
 
-}).catch(error => console.log(error));
+}).catch(error => console.log('TypeORM connection error: ', error));

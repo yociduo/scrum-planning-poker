@@ -2,14 +2,18 @@
   "name": "scrum-planning-poker",
   "version": "0.0.1",
   "description": "",
+  "main": "dist/src/app.js",
   "scripts": {
-    "watch-server": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
+    "watch": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
     "build-ts": "tsc",
-    "copy-static-assets": "ts-node copyStaticAssets.ts",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "serve": "node build/src/app.js",
-    "build": "npm run tslint && npm run build-ts && npm run copy-static-assets",
+    "serve": "node dist/app.js",
+    "build": "npm run tslint && npm run build-ts",
     "start": "npm run serve"
+  },
+  "engines": {
+    "node": "8.x.x",
+    "npm": "5.x.x"
   },
   "author": "",
   "dependencies": {
@@ -34,6 +38,7 @@
     "typeorm-typedi-extensions": "^0.2.1"
   },
   "devDependencies": {
+    "@types/dotenv": "^4.0.3",
     "@types/jsonwebtoken": "^7.2.8",
     "@types/koa": "2.0.39",
     "@types/koa-bodyparser": "^5.0.1",
@@ -43,7 +48,6 @@
     "@types/shelljs": "^0.8.0",
     "@types/socket.io": "^1.4.38",
     "nodemon": "^1.18.4",
-    "shelljs": "^0.8.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
