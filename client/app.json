@@ -13,7 +13,7 @@
     "backgroundColorTop": "#f8f8fa",
     "backgroundColorBottom": "#f8f8fa",
     "navigationBarBackgroundColor": "#0678C1",
-    "navigationBarTitleText": "iScrum Poker",
+    "navigationBarTitleText": "Scrum敏捷估算",
     "navigationBarTextStyle": "white"
   },
   "networkTimeout": {

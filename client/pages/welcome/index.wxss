@@ -1,1 +1,43 @@
 /* pages/welcome/index.wxss */
+
+.welcome-bg {
+  position: absolute;
+  top: -200rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #0678C1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.welcome-bg image {
+  width: 57vw;
+  height: 105vw;
+  z-index: 3;
+}
+
+.welcome-bg-circle {
+  width: 120vw;
+  height: 120vw;
+  background-color: #fff;
+  position: absolute;
+  left: -10vw;
+  top: calc(105vw + 200rpx);
+  border-radius: 60vw;
+}
+
+.welcome-title {
+  color: #fff;
+  text-align: center;
+  font-size: 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.welcome-btn-area {
+  position: absolute;
+  bottom: 60rpx;
+}
