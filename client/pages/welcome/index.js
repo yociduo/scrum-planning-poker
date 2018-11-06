@@ -1,4 +1,3 @@
-const { apiUrl } = require('../../config');
 const app = getApp();
 
 Page({
@@ -6,22 +5,34 @@ Page({
     this.backUrl = backUrl ? decodeURIComponent(backUrl) : 'pages/index/index';
   },
   onGotUserInfo(e) {
-    const { code } = app.globalData;
     const { encryptedData, iv } = e.detail;
-    wx.request({
-      url: `${apiUrl}/users/wxLogin`,
-      method: 'POST',
-      data: {
-        code, encryptedData, iv
-      },
-      success: ({ data, statusCode }) => {
-        if (statusCode === 200) {
-          app.globalData.token = data;
-          app.initSocket();
-          wx.setStorageSync('token', data);
-          wx.navigateTo({ url: `../../${this.backUrl}` });
+    if (encryptedData && iv) {
+      this.login(e.detail);
+    } else {
+      this.openSetting();
+    }
+  },
+  login(res) {
+    app.getUserInfo(res, () => wx.navigateTo({ url: `../../${this.backUrl}` }));
+  },
+  openSetting() {
+    wx.openSetting({
+      success: (res) => {
+        if (res.authSetting['scope.userInfo']) {
+          this.login(res);
+        } else {
+          wx.showModal({
+            title: 'Sorry',
+            content: 'Your profile information is required. Please grant the permission.',
+            confirmText: 'OK',
+            confirmColor: '#0678C1',
+            showCancel: false,
+            success: () => {
+              this.openSetting();
+            }
+          });
         }
-      },
+      }
     });
   }
 });

@@ -21,6 +21,9 @@ Page({
       success: ({ data: rooms, statusCode }) => {
         if (statusCode === 200) {
           this.setData({ rooms });
+        } else if (statusCode === 401) {
+          wx.removeStorageSync('token');
+          wx.reLaunch({ url: `../welcome/index?backUrl=${encodeURIComponent('pages/index/index')}` });
         }
       }
     });
