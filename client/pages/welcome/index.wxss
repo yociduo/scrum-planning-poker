@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-.welcome-bg image {
+.welcome-bg cover-image {
   width: 57vw;
   height: 105vw;
   z-index: 3;
