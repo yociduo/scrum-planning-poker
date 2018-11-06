@@ -54,7 +54,7 @@ createConnection({
      */
     controllers: [`${__dirname}/controller/api/*.ts`],
     middlewares: [`${__dirname}/middleware/api/*.ts`],
-    routePrefix: '/api',
+    routePrefix: config.routePrefix,
     cors: true,
     ...decorators,
   });

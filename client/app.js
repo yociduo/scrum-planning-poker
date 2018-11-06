@@ -1,5 +1,5 @@
 const io = require('./vendor/socket.io-mp-client/socket.io-mp');
-const { apiUrl, socketUrl } = require('./config');
+const { apiUrl, socketUrl, socketPath } = require('./config');
 
 App({
   onLaunch(options) {
@@ -110,7 +110,7 @@ App({
   initSocket() {
     if (this.globalData.token) {
       this.globalData.socket = io(socketUrl, {
-        path: '/sp/socket.io',
+        path: socketPath,
         transports: ['websocket'],
         query: 'token=' + this.globalData.token
       });

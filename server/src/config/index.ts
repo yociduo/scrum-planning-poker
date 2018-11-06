@@ -4,6 +4,7 @@ dotenv.config({ path: '.env' });
 
 export interface IConfig {
   host: string;
+  routePrefix: string;
   apiPort: number;
   socketPort: number;
   jwtSecret: string;
@@ -18,6 +19,7 @@ export interface IConfig {
 
 export const config: IConfig = {
   host: process.env.HOST,
+  routePrefix: process.env.ROUTE_PREFIX,
   apiPort: Number(process.env.API_PORT || 3000),
   socketPort: Number(process.env.SOCKET_PORT || 3001),
   jwtSecret: process.env.JWT_SECRET,
