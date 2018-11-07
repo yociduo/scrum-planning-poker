@@ -20,6 +20,9 @@ Page({
     }
   },
   formSubmit(e) {
+    if (this.data.submitting) return;
+    this.setData({ submitting: true });
+
     const { room: name, stories, needScore, isNoymous } = e.detail.value;
     if (name) {
       // // generate id
@@ -57,6 +60,9 @@ Page({
           if (statusCode === 200) {
             wx.redirectTo({ url: `../room/index?id=${data.id}` });
           }
+        },
+        complete: () => {
+          this.setData({ submitting: false });
         }
       });
     }

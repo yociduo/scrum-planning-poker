@@ -35,7 +35,7 @@
         </view>
       </view>
       <view class="btn-area">
-        <button type="primary" formType="submit">Create</button>
+        <button type="primary" formType="submit" loading="{{submitting}}">Create</button>
       </view>
     </form>
   </view>
