@@ -17,9 +17,12 @@ App({
         if (res.authSetting['scope.userInfo']) {
           this.getUserInfo(res);
         } else {
+          let query = Object.keys(options.query).reduce((q, k, i) => {
+            return q + (i > 0 ? '&' : '?') + k + '=' + options.query[k];
+          }, '');
           // for desktop
-          // wx.reLaunch({ url: `./pages/welcome/index?backUrl=${encodeURIComponent(options.path)}` });
-          wx.reLaunch({ url: `../welcome/index?backUrl=${encodeURIComponent(options.path)}` });
+          // wx.reLaunch({ url: `./pages/welcome/index?backUrl=${encodeURIComponent(options.path + query)}` });
+          wx.reLaunch({ url: `../welcome/index?backUrl=${encodeURIComponent(options.path + query)}` });
         }
       }
     });
