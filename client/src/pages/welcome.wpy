@@ -48,7 +48,7 @@
     <view class="page-body">
       <view class="welcome-bg">
         <view class="welcome-title">Ready to enter the game?</view>
-        <cover-image src="../../image/cover.png"></cover-image>
+        <cover-image src="../images/cover.png"></cover-image>
         <view class="welcome-bg-circle"></view>
       </view>
       <view class="welcome-btn-area btn-area">
