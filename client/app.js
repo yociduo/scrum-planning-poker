@@ -17,7 +17,7 @@ App({
         if (res.authSetting['scope.userInfo']) {
           this.getUserInfo(res);
         } else {
-          wx.reLaunch({ url: `./pages/welcome/index?backUrl=${encodeURIComponent(options.path)}` });
+          wx.reLaunch({ url: `../welcome/index?backUrl=${encodeURIComponent(options.path)}` });
         }
       }
     });
