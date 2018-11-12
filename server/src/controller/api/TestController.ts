@@ -96,6 +96,12 @@ export class TestController {
     return this.roomRepository.joinOrLeave(id, user, true);
   }
 
+  @Get('/error')
+  error() {
+    console.log('test');
+    throw new Error('test');
+  }
+
   // @Get('/rooms/:id/:name')
   // async createRoom(@Param('id') id: number, @Param('name') name: string) {
   //   const user = await this.userRepository.findOne(id);

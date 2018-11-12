@@ -70,4 +70,4 @@ createConnection({
 
   console.log(`Server is up and running at port ${config.apiPort}`);
 
-}).catch(error => console.log('TypeORM connection error: ', error));
+}).catch(error => console.error('TypeORM connection error: ', error));
