@@ -23,7 +23,11 @@ export class UserRepository extends Repository<User> {
       },
     });
 
-    const { openid: openId, session_key: sessionKey } = response.data;
+    const { openid: openId, session_key: sessionKey, errcode, errmsg } = response.data;
+    if (errcode) {
+      throw new Error(errmsg);
+    }
+
     let user = await this.findOne({ where: { openId } });
 
     if (!user) {
