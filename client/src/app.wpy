@@ -4,14 +4,16 @@
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
+import wepy from 'wepy';
+import 'wepy-async-function';
+import { setStore } from 'wepy-redux';
+import configStore from './store';
+import { defaultLang, LANG_KEY } from '@/utils/utils';
+import T from '@/utils/i18n';
+import locales from '@/utils/locales';
 
-import { setStore } from 'wepy-redux'
-import configStore from './store'
-
-const store = configStore()
-setStore(store)
+const store = configStore();
+setStore(store);
 
 export default class extends wepy.app {
   config = {
@@ -28,45 +30,60 @@ export default class extends wepy.app {
       navigationBarTitleText: 'Scrum敏捷估算',
       navigationBarTextStyle: 'white'
     }
-  }
+  };
 
   globalData = {
-    userInfo: null
-  }
+    userInfo: null,
+    lang: defaultLang
+  };
 
-  constructor () {
-    super()
-    this.use('requestfix')
+  constructor() {
+    super();
+    this.use('promisify');
+    this.use('requestfix');
   }
 
   onLaunch() {
-    this.testAsync()
-  }
-
-  sleep (s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-
-  async testAsync () {
-    const data = await this.sleep(3)
-    console.log(data)
+    this.registerLocales();
   }
 
   getUserInfo(cb) {
-    const that = this
+    const that = this;
     if (this.globalData.userInfo) {
-      return this.globalData.userInfo
+      return this.globalData.userInfo;
     }
     wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
+      success(res) {
+        that.globalData.userInfo = res.userInfo;
+        cb && cb(res.userInfo);
       }
-    })
+    });
+  }
+
+  registerLocales() {
+    T.registerLocales(locales);
+    let lang = wepy.getStorageSync(LANG_KEY);
+    if (!lang) {
+      lang = this.getSystemLang();
+      wepy.getStorageSync(LANG_KEY, lang);
+    }
+    this.globalData.lang = lang;
+    T.setLocale(this.globalData.lang);
+    wepy.T = T;
+  }
+
+  getSystemLang() {
+    try {
+      const { language } = wepy.getSystemInfoSync();
+      if (language !== defaultLang) {
+        return 'en';
+      } else {
+        return defaultLang;
+      }
+    } catch (error) {
+      console.error(error);
+      return defaultLang;
+    }
   }
 }
 </script>
