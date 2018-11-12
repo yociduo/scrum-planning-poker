@@ -47,21 +47,22 @@
   <view class="container">
     <view class="page-body">
       <view class="welcome-bg">
-        <view class="welcome-title">Ready to enter the game?</view>
+        <view class="welcome-title">{{t.title}}</view>
         <cover-image src="../images/cover.png"></cover-image>
         <view class="welcome-bg-circle"></view>
       </view>
       <view class="welcome-btn-area btn-area">
-        <button type="primary" open-type="getUserInfo" bindgetuserinfo="onGotUserInfo">Let's Go!</button>
+        <button type="primary" open-type="getUserInfo" bindgetuserinfo="onGotUserInfo">{{t.button}}</button>
       </view>
     </view>
   </view>
 </template>
 
 <script>
-  import wepy from 'wepy'
+  import wepy from 'wepy';
+  import LocalesMixin from '@/mixins/locales-mixin';
 
   export default class Welcome extends wepy.page {
-
+    mixins = [LocalesMixin]
   }
 </script>

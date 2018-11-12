@@ -2,10 +2,10 @@ const T = {
   locale: '',
   locales: {},
   registerLocales(locales) {
-    this.locales = locales;
+    T.locales = locales;
   },
   setLocale(code) {
-    this.locale = code;
+    T.locale = code;
   },
   /**
    * 返回带（或不带）参数的类型的翻译结果
@@ -18,22 +18,26 @@ const T = {
    *       返回："当前学生15位"
    */
   _(key, data) {
-    let locale = this.locale;
-    let locales = this.locales;
+    let locale = T.locale;
+    let locales = T.locales;
     let hasKey = locale && locales[locale] && locales[locale][key];
 
     if (hasKey) {
-      key = locales[locale][key];
+      if (typeof hasKey === 'string') {
+        key = locales[locale][key];
 
-      let res = key.replace(/\{[\s\w]+\}/g, x => {
-        x = x.substring(1, x.length - 1).trim();
-        return data[x];
-      });
+        let res = key.replace(/\{[\s\w]+\}/g, x => {
+          x = x.substring(1, x.length - 1).trim();
+          return data[x];
+        });
 
-      return res;
+        return res;
+      } else {
+        return hasKey;
+      }
     }
 
-    console.warn(`语言处理错误${key}`);
+    console.warn(`语言处理错误: ${key}`);
     // throw new Error(`语言处理错误${key}`);
   },
   /**
@@ -47,19 +51,23 @@ const T = {
    *       返回："Send"
    */
   _b(key, data) {
-    let locale = this.locale;
-    let locales = this.locales;
+    let locale = T.locale;
+    let locales = T.locales;
     let hasKey = locale && locales[locale] && locales[locale][key];
 
     if (hasKey) {
-      key = locales[locale][key];
+      if (typeof hasKey === 'string') {
+        key = locales[locale][key];
 
-      let res = key.split('|')[data.first ? 0 : 1].trim();
+        let res = key.split('|')[data.first ? 0 : 1].trim();
 
-      return res;
+        return res;
+      } else {
+        return hasKey;
+      }
     }
 
-    console.warn(`语言处理错误${key}`);
+    console.warn(`语言处理错误: ${key}`);
     // throw new Error(`语言处理错误${key}`);
   }
 
