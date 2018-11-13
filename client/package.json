@@ -10,10 +10,6 @@
     "clean": "find ./dist -maxdepth 1 -not -name 'project.config.json' -not -name 'dist' | xargs rm -rf",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "wepy": {
-    "module-a": false,
-    "./src/components/list": "./src/components/wepy-list.wpy"
-  },
   "author": "Eden Wang <yociduo@vip.qq.com>",
   "license": "MIT",
   "dependencies": {
