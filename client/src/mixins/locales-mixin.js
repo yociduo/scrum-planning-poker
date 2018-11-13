@@ -1,4 +1,5 @@
 import wepy from 'wepy';
+import { defaultLang } from '@/utils/utils';
 import locales from '@/utils/locales';
 import T from '@/utils/i18n';
 
@@ -34,7 +35,7 @@ export default class LocalesMixin extends wepy.mixin {
   handleWebLocales() {
     this.currentPage = window.location.hash.split('#!/pages/')[1];
     T.registerLocale(locales);
-    T.setLocale('en');
+    T.setLocale(defaultLang);
     const _ = T._;
     const pageLocales = _(this.currentPage);
     this.data.t = Object.assign({}, pageLocales);

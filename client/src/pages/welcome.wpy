@@ -52,7 +52,7 @@
         <view class="welcome-bg-circle"></view>
       </view>
       <view class="welcome-btn-area btn-area">
-        <button type="primary" open-type="getUserInfo" bindgetuserinfo="onGotUserInfo">{{t.button}}</button>
+        <button type="primary" open-type="getUserInfo" @getuserinfo="onGotUserInfo">{{t.button}}</button>
       </view>
     </view>
   </view>
@@ -64,5 +64,10 @@
 
   export default class Welcome extends wepy.page {
     mixins = [LocalesMixin]
+    watch = {
+      t() {
+        wepy.setNavigationBarTitle({ title: this.t.title });
+      }
+    }
   }
 </script>
