@@ -8,11 +8,13 @@
 
 <script>
   import wepy from 'wepy';
+  import LoginMixin from '@/mixins/login-mixin';
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: 'test'
     }
+    mixins = [LoginMixin]
     onLoad() {
       console.log('onLoad');
     }

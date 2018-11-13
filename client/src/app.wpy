@@ -8,7 +8,7 @@ import wepy from 'wepy';
 import 'wepy-async-function';
 import { setStore } from 'wepy-redux';
 import configStore from './store';
-import { defaultLang, LANG_KEY } from '@/utils/utils';
+import { defaultLang, LANG_KEY, TOKEN_KEY } from '@/utils/utils';
 import T from '@/utils/i18n';
 import locales from '@/utils/locales';
 
@@ -45,6 +45,7 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.registerLocales();
+    this.globalData.token = wepy.getStorageSync(TOKEN_KEY);
   }
 
   getUserInfo(cb) {

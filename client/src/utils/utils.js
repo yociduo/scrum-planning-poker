@@ -24,3 +24,5 @@ export const formatNumber = n => {
 export const defaultLang = 'zh_CN';
 
 export const LANG_KEY = 'lang';
+
+export const TOKEN_KEY = 'token';

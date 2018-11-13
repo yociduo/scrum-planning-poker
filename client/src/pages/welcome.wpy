@@ -69,5 +69,17 @@
         wepy.setNavigationBarTitle({ title: this.t.title });
       }
     }
+    methods = {
+      onGotUserInfo() {
+        if (this.from) {
+          this.$redirect(this.from.$wxpage.route.replace('pages/', ''), this.from.$wxpage.options);
+        } else {
+          this.$redirect('index');
+        }
+      }
+    }
+    onLoad(options, { from }) {
+      this.from = from;
+    }
   }
 </script>
