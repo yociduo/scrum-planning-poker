@@ -23,7 +23,7 @@ export default class extends wepy.app {
       backgroundColor: '#f8f8fa',
       backgroundColorTop: '#f8f8fa',
       backgroundColorBottom: '#f8f8fa',
-      navigationBarBackgroundColor: '#0678C1',
+      navigationBarBackgroundColor: '#0678c1',
       navigationBarTitleText: 'Scrum敏捷估算',
       navigationBarTextStyle: 'white'
     }
@@ -45,11 +45,27 @@ export default class extends wepy.app {
         return p;
       }
     });
+
+    this.intercept('showModal', {
+      config(p) {
+        p.confirmColor = p.confirmColor || '#0678c1';
+        p.confirmText = p.confirmText || T._('common.button.confirm');
+        p.cancelText = p.cancelText || T._('common.button.cancel');
+        return p;
+      }
+    });
   }
 
   onLaunch() {
     this.registerLocales();
     this.globalData.token = wepy.getStorageSync(TOKEN_KEY);
+    setTimeout(() => {
+      this.checkForUpdates();
+    }, 1000);
+  }
+
+  onShow() {
+    this.checkClipboard();
   }
 
   async login() {
@@ -121,6 +137,39 @@ export default class extends wepy.app {
         });
       }
     });
+  }
+
+  async checkClipboard() {
+    const { data } = await wepy.getClipboardData();
+    if (data === 'debug') {
+      const { confirm } = await wepy.showModal({
+        title: 'Enable Debugging',
+        content: 'Enable Debugging'
+      });
+      wepy.setClipboardData({ data: '' });
+      if (confirm) {
+        wepy.setEnableDebug({ enableDebug: true });
+      }
+    } else if (data === 'prod') {
+      const { confirm } = await wepy.showModal({
+        title: 'Disable Debugging',
+        content: 'Disable Debugging'
+      });
+      wepy.setClipboardData({ data: '' });
+      if (confirm) {
+        wepy.setEnableDebug({ enableDebug: false });
+      }
+    } else if (data === 'clear-cache') {
+      const { confirm } = await wepy.showModal({
+        title: 'Clear Storage',
+        content: 'Clear Storage'
+      });
+      wepy.setClipboardData({ data: '' });
+      if (confirm) {
+        wepy.clearStorageSync();
+        wepy.reLaunch({ url: './pages/index' });
+      }
+    }
   }
 }
 </script>
