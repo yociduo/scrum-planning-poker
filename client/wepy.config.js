@@ -43,7 +43,10 @@ module.exports = {
   plugins: {
   },
   appConfig: {
-    noPromiseAPI: ['createSelectorQuery']
+    noPromiseAPI: ['createSelectorQuery'],
+    apiUrl: prod ? 'https://www.peajs.top/sp/api' : 'http://localhost:3000/api',
+    socketUrl: prod ? 'wss://www.peajs.top' : 'ws://localhost:3001',
+    socketPath: prod ? '/sp/socket.io' : '/socket.io',
   }
 }
 
