@@ -74,6 +74,7 @@ export default class Welcome extends wepy.page {
     async onGotUserInfo(e) {
       const { encryptedData, iv } = e.detail;
       if (encryptedData && iv) {
+        await this.$parent.login();
         this.redirect();
       } else {
         await this.openSetting();

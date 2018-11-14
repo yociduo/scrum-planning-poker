@@ -29,22 +29,22 @@ export class UserRepository extends Repository<User> {
     }
 
     let user = await this.findOne({ where: { openId } });
-
     if (!user) {
-      const userInfo = this.decrypt(data.encryptedData, data.iv, sessionKey);
       user = new User();
-      user.nickName = userInfo.nickName;
-      user.avatarUrl = userInfo.avatarUrl;
-      user.gender = userInfo.gender;
-      user.language = userInfo.language;
-      user.city = userInfo.city;
-      user.country = userInfo.country;
-      user.province = userInfo.province;
-      user.openId = userInfo.openId;
-      user.language = userInfo.language;
-      user.sessionKey = sessionKey;
-      user = await this.save(user);
     }
+
+    const userInfo = this.decrypt(data.encryptedData, data.iv, sessionKey);
+    user.nickName = userInfo.nickName;
+    user.avatarUrl = userInfo.avatarUrl;
+    user.gender = userInfo.gender;
+    user.language = userInfo.language;
+    user.city = userInfo.city;
+    user.country = userInfo.country;
+    user.province = userInfo.province;
+    user.openId = userInfo.openId;
+    user.language = userInfo.language;
+    user.sessionKey = sessionKey;
+    await this.save(user);
 
     const token = this.sign(user);
     return Promise.resolve(token);
