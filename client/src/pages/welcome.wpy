@@ -51,7 +51,7 @@
         <view class="welcome-bg-circle"></view>
       </view>
       <view class="welcome-btn-area btn-area">
-        <button type="primary" open-type="getUserInfo" @getuserinfo="onGotUserInfo">{{t.button}}</button>
+        <button type="primary" open-type="getUserInfo" loading="{{loading}}" @getuserinfo="onGotUserInfo">{{t.button}}</button>
       </view>
     </view>
   </view>
@@ -64,6 +64,10 @@ import LocalesMixin from '@/mixins/locales-mixin';
 export default class Welcome extends wepy.page {
   mixins = [LocalesMixin];
 
+  data = {
+    loading: false
+  }
+
   watch = {
     t() {
       wepy.setNavigationBarTitle({ title: this.t.title });
@@ -74,6 +78,7 @@ export default class Welcome extends wepy.page {
     async onGotUserInfo(e) {
       const { encryptedData, iv } = e.detail;
       if (encryptedData && iv) {
+        this.loading = true;
         await this.$parent.login();
         this.redirect();
       } else {
