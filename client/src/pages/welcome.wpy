@@ -33,8 +33,10 @@
 .welcome-title {
   color: #fff;
   text-align: center;
-  font-size: 40rpx;
+  font-size: 32rpx;
   margin-bottom: 40rpx;
+  margin-left: 80rpx;
+  margin-right: 80rpx;
 }
 
 .welcome-btn-area {
@@ -46,7 +48,7 @@
   <view class="container">
     <view class="page-body">
       <view class="welcome-bg">
-        <view class="welcome-title">{{t.title}}</view>
+        <view class="welcome-title">{{t.text}}</view>
         <cover-image src="../images/cover.png"></cover-image>
         <view class="welcome-bg-circle"></view>
       </view>
