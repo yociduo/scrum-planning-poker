@@ -1,5 +1,10 @@
 export default {
   'en': {
+    'common.title.updates': 'Updates',
+    'common.content.updates': 'New version is ready. Restart now?',
+    'common.title.updates_fail': 'Failed to update',
+    'common.title.grant_permission': 'Sorry',
+    'common.content.grant_permission': 'Your profile information is required. Please grant the permission.',
     'common.button.confirm': 'OK',
     'common.button.cancel': 'Cancel',
     'welcome': {
@@ -9,6 +14,11 @@ export default {
     }
   },
   'zh_CN': {
+    'common.title.updates': '更新提示',
+    'common.content.updates': '新版本已经准备好，是否重启应用？',
+    'common.title.updates_fail': '更新提示',
+    'common.title.grant_permission': '抱歉',
+    'common.content.grant_permission': '需要你的公开信息才能使用所有功能，请授权',
     'common.button.confirm': '确定',
     'common.button.cancel': '取消',
     'welcome': {

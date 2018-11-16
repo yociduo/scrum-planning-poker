@@ -68,7 +68,7 @@ export default class Welcome extends wepy.page {
 
   data = {
     loading: false
-  }
+  };
 
   watch = {
     t() {
@@ -109,17 +109,12 @@ export default class Welcome extends wepy.page {
     if (authSetting['scope.userInfo']) {
       this.redirect();
     } else {
-      wepy.showModal({
-        title: 'Sorry',
-        content:
-          'Your profile information is required. Please grant the permission.',
-        confirmText: 'OK',
-        confirmColor: '#0678C1',
-        showCancel: false,
-        success: () => {
-          this.openSetting();
-        }
+      await wepy.showModal({
+        title: wepy.T._('common.title.grant_permission'),
+        content: wepy.T._('common.content.grant_permission'),
+        showCancel: false
       });
+      this.openSetting();
     }
   }
 }
