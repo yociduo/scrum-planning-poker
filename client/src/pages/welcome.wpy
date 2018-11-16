@@ -96,7 +96,7 @@ export default class Welcome extends wepy.page {
   redirect() {
     if (this.from) {
       this.$redirect(
-        this.from.$wxpage.route.replace('pages/', ''),
+        this.from.$wxpage.route.split('pages/')[1],
         this.from.$wxpage.options
       );
     } else {

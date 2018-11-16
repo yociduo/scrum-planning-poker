@@ -24,7 +24,7 @@ export default class extends wepy.app {
       backgroundColorTop: '#f8f8fa',
       backgroundColorBottom: '#f8f8fa',
       navigationBarBackgroundColor: '#0678c1',
-      navigationBarTitleText: 'Scrum敏捷估算',
+      navigationBarTitleText: '',
       navigationBarTextStyle: 'white'
     }
   };
@@ -93,7 +93,6 @@ export default class extends wepy.app {
     let lang = wepy.getStorageSync(LANG_KEY);
     if (!lang) {
       lang = this.getSystemLang();
-      wepy.setStorageSync(LANG_KEY, lang);
     }
     this.globalData.lang = lang;
     T.setLocale(this.globalData.lang);
