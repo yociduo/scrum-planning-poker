@@ -7,16 +7,22 @@
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import LoginMixin from '@/mixins/login-mixin';
+import wepy from 'wepy';
+import LocalesMixin from '@/mixins/locales-mixin';
+import LoginMixin from '@/mixins/login-mixin';
 
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: 'test'
-    }
-    mixins = [LoginMixin]
-    onLoad() {
-      console.log('onLoad');
-    }
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: 'test'
+  };
+  mixins = [LocalesMixin, LoginMixin];
+  async onShow() {
+    await wepy.showLoading();
+    const rooms = await wepy.request({
+      url: `/rooms`,
+      method: 'GET'
+    });
+    console.log(rooms);
   }
+}
 </script>

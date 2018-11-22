@@ -7,6 +7,7 @@ export default {
     'common.content.grant_permission': 'Your profile information is required. Please grant the permission.',
     'common.button.confirm': 'OK',
     'common.button.cancel': 'Cancel',
+    'common.loading.title': 'Loading...',
     'welcome': {
       'title': 'Scrum Planning Poker',
       'text': 'Scrum Planning Poker makes agile project planning and estimation more accurate, simple, and fun.',
@@ -21,6 +22,7 @@ export default {
     'common.content.grant_permission': '需要你的公开信息才能使用所有功能，请授权',
     'common.button.confirm': '确定',
     'common.button.cancel': '取消',
+    'common.loading.title': '加载中...',
     'welcome': {
       'title': 'Scrum敏捷估算',
       'text': 'Scrum扑克让敏捷项目估算更加精确简单并充满乐趣',

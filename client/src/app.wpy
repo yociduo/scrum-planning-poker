@@ -69,6 +69,14 @@ export default class extends wepy.app {
         return p;
       }
     });
+
+    this.intercept('showLoading', {
+      config(p) {
+        p.title = p.title || T._('common.loading.title');
+        p.mask = p.mask === false ? false : true;
+        return p;
+      }
+    });
   }
 
   onLaunch() {
