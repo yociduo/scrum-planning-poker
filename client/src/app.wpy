@@ -21,11 +21,17 @@ export default class extends wepy.app {
     window: {
       backgroundTextStyle: 'light',
       backgroundColor: '#f8f8fa',
-      backgroundColorTop: '#f8f8fa',
+      backgroundColorTop: '#0678c1',
       backgroundColorBottom: '#f8f8fa',
       navigationBarBackgroundColor: '#0678c1',
       navigationBarTitleText: '',
       navigationBarTextStyle: 'white'
+    },
+    networkTimeout: {
+      request: 10000,
+      connectSocket: 10000,
+      uploadFile: 10000,
+      downloadFile: 10000
     }
   };
 
@@ -73,7 +79,7 @@ export default class extends wepy.app {
     this.intercept('showLoading', {
       config(p) {
         p.title = p.title || T._('common.loading.title');
-        p.mask = p.mask === false ? false : true;
+        p.mask = p.mask === false ? false : true; // eslint-disable-line
         return p;
       }
     });
