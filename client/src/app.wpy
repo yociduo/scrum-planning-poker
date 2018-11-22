@@ -41,8 +41,23 @@ export default class extends wepy.app {
     this.use('requestfix');
     this.intercept('request', {
       config(p) {
+        if (this.globalData.token) {
+          p.header = p.header || {};
+          p.header['Authorization'] = `Bearer ${this.globalData.token}`;
+        }
         p.url = wepy.$appConfig.apiUrl + p.url;
         return p;
+      },
+      success({ statusCode, data }) {
+        switch (statusCode) {
+          case 200:
+            return data;
+          case 401:
+            wepy.redirectTo({ url: 'welcome' });
+            return null;
+          default:
+            return null;
+        }
       }
     });
 
@@ -72,7 +87,7 @@ export default class extends wepy.app {
     try {
       const { code } = await wepy.login();
       const { iv, encryptedData } = await wepy.getUserInfo();
-      const { data } = await wepy.request({
+      const token = await wepy.request({
         url: '/users/wxLogin',
         method: 'POST',
         data: {
@@ -81,8 +96,8 @@ export default class extends wepy.app {
           iv
         }
       });
-      wepy.setStorageSync(TOKEN_KEY, data);
-      this.globalData.token = data;
+      wepy.setStorageSync(TOKEN_KEY, token);
+      this.globalData.token = token;
     } catch (error) {
       console.error(error);
     }
