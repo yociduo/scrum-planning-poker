@@ -8,6 +8,8 @@ export default {
     'common.button.confirm': 'OK',
     'common.button.cancel': 'Cancel',
     'common.loading.title': 'Loading...',
+    'common.room': 'Room',
+    'common.story': 'Story',
     'index': {
       'title': 'Scrum Planning',
       'create_button': 'Create a new room',
@@ -21,7 +23,12 @@ export default {
       'button': 'Let\'s Go!'
     },
     'create-room': {
-
+      'title': 'Create Room',
+      'room_name': 'Room Name',
+      'story': 'Story',
+      'need_score': 'You will play poker in this room',
+      'is_noymous': 'Votings are visible to other players',
+      'create_button': 'Create'
     }
   },
   'zh_CN': {
@@ -33,6 +40,8 @@ export default {
     'common.button.confirm': '确定',
     'common.button.cancel': '取消',
     'common.loading.title': '加载中...',
+    'common.room': '房间',
+    'common.story': '故事',
     'index': {
       'title': 'Scrum敏捷估算',
       'create_button': '创建新房间',
@@ -46,7 +55,12 @@ export default {
       'button': '开始'
     },
     'create-room': {
-
+      'title': '创建房间',
+      'room_name': '房间名称',
+      'story': '故事',
+      'need_score': '你将参与打分',
+      'is_noymous': '其余成员将能看到彼此的出分',
+      'create_button': '开始打分'
     }
   }
 };

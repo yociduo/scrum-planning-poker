@@ -19,7 +19,9 @@ export class RoomController {
 
   @Authorized()
   @Post()
-  create(@CurrentUser({ required: true }) user: User, @Body() room: Room): Promise<Room> {
+  // TODO: change the request model
+  // tslint:disable-next-line:max-line-length
+  create(@CurrentUser({ required: true }) user: User, @Body({ validate: false }) room: Room): Promise<Room> {
     return this.roomRepository.createWithStory(user, room);
   }
 
