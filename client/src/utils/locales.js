@@ -9,16 +9,19 @@ export default {
     'common.button.cancel': 'Cancel',
     'common.loading.title': 'Loading...',
     'index': {
-      'title': 'Scrum Planning Poker',
+      'title': 'Scrum Planning',
       'create_button': 'Create a new room',
       'history_rooms': 'History rooms',
       'story': 'story',
       'stories': 'stories'
     },
     'welcome': {
-      'title': 'Scrum Planning Poker',
+      'title': 'Scrum Planning',
       'text': 'Scrum Planning Poker makes agile project planning and estimation more accurate, simple, and fun.',
       'button': 'Let\'s Go!'
+    },
+    'create-room': {
+
     }
   },
   'zh_CN': {
@@ -41,6 +44,9 @@ export default {
       'title': 'Scrum敏捷估算',
       'text': 'Scrum扑克让敏捷项目估算更加精确简单并充满乐趣',
       'button': '开始'
+    },
+    'create-room': {
+
     }
   }
 };

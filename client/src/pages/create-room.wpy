@@ -1,0 +1,164 @@
+<style lang="less">
+input,
+textarea {
+  width: 100%;
+  padding: 16rpx 0;
+  font-size: 34rpx;
+}
+
+.textarea-wrp,
+.input-wrp {
+  background-color: #fff;
+  border: 2rpx solid #d8d8d8;
+}
+
+.input-wrp {
+  padding: 0 25rpx;
+}
+
+.textarea-wrp {
+  padding: 0 15rpx;
+}
+
+.switch-wrp {
+  display: flex;
+  margin-bottom: 40rpx;
+  font-size: 34rpx;
+  line-height: 40rpx;
+}
+
+.switch-wrp__bd {
+  flex: 1;
+}
+</style>
+<template>
+  <view class="container">
+    <view class="page-body">
+      <form catchsubmit="formSubmit">
+        <view class="page-section-title">Room Name</view>
+        <view class="page-section">
+          <view class="page-section-spacing">
+            <view class="input-wrp">
+              <input name="room" bindblur="onRoomBlur" value="{{room}}" />
+            </view>
+          </view>
+        </view>
+        <view class="page-section-title">Story</view>
+        <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
+        <view class="page-section">
+          <view class="page-section-spacing">
+            <view class="textarea-wrp">
+              <textarea name="stories" auto-height value="{{stories}}" bindblur="onStoriesBlur" maxlength="-1" />
+            </view>
+          </view>
+        </view>
+        <view class="page-section">
+          <view class="page-section-spacing">
+            <view class="switch-wrp">
+              <view class="switch-wrp__bd">Do you want to enter stories in this room?</view>
+              <view class="switch-wrp__ft">
+                <switch name="needScore" color="#0678C1" checked></switch>
+              </view>
+            </view>
+            <view class="switch-wrp">
+              <view class="switch-wrp__bd">Can players see other's voting?</view>
+              <view class="switch-wrp__ft">
+                <switch name="isNoymous" color="#0678C1"></switch>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="btn-area">
+          <button type="primary" formType="submit" loading="{{submitting}}">Create</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import LocalesMixin from '@/mixins/locales-mixin';
+import LoginMixin from '@/mixins/login-mixin';
+
+const initStories = new Array(3).fill(null).map((n, i) => 'Story ' + (i + 1)).join('\n');
+const initRoom = 'Room';
+
+export default class CreateRoom extends wepy.page {
+  data = {
+    room: initRoom,
+    stories: initStories
+  };
+
+  mixins = [LocalesMixin, LoginMixin];
+
+  watch = {
+    t() {
+      wepy.setNavigationBarTitle({ title: this.t.title });
+    }
+  };
+
+  methods = {
+  //   onRoomBlur(e) {
+  //     const { value } = e.detail;
+  //     if (!value || !/\w+/.test(value)) {
+  //       this.setData({ room: initRoom });
+  //     }
+  //   },
+  //   onStoriesBlur(e) {
+  //     const { value } = e.detail;
+  //     if (!value || !/\w+/.test(value)) {
+  //       this.setData({ stories: initStories });
+  //     }
+  //   },
+  //   formSubmit(e) {
+  //     if (this.data.submitting) return;
+  //     this.setData({ submitting: true });
+
+  //     const { room: name, stories, needScore, isNoymous } = e.detail.value;
+  //     if (name) {
+  //       // // generate id
+  //       // const id = Math.ceil(Math.random() * 10000000).toString();
+
+  //       // // store hosted room id
+  //       // const hosted = wx.getStorageSync('hosted') || [];
+  //       // hosted.push(id);
+  //       // wx.setStorageSync('hosted', hosted);
+
+  //       // app.globalData.socket.emit('create room', {
+  //       //   id,
+  //       //   needScore,
+  //       //   isNoymous,
+  //       //   name: encodeURIComponent(room),
+  //       //   stories: encodeURIComponent(stories),
+  //       // });
+
+  //       wx.request({
+  //         url: `/rooms`,
+  //         method: 'POST',
+  //         data: {
+  //           name,
+  //           stories: stories.trim().split('\n').map(name => name.trim()).filter(n => n).map(name => ({ name })),
+  //           options: {
+  //             needScore,
+  //             isNoymous,
+  //             calcMethod: 0
+  //           }
+  //         },
+  //         header: {
+  //           'Authorization': `Bearer ${wx.getStorageSync('token')}`
+  //         },
+  //         success: ({ data, statusCode }) => {
+  //           if (statusCode === 200) {
+  //             wx.redirectTo({ url: `../room/index?id=${data.id}` });
+  //           }
+  //         },
+  //         complete: () => {
+  //           this.setData({ submitting: false });
+  //         }
+  //       });
+  //     }
+  //   }
+  };
+}
+</script>
