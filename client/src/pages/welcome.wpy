@@ -64,11 +64,11 @@ import wepy from 'wepy';
 import LocalesMixin from '@/mixins/locales-mixin';
 
 export default class Welcome extends wepy.page {
-  mixins = [LocalesMixin];
-
   data = {
     loading: false
   };
+
+  mixins = [LocalesMixin];
 
   watch = {
     t() {

@@ -1,0 +1,93 @@
+<style lang="less">
+.room-list-item {
+  min-height: 68rpx;
+  padding: 10rpx 30rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 34rpx;
+
+  &:active {
+    background-color: #eeeeee;
+  }
+
+  &-hd,
+  &-bd,
+  &-ft {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-hd {
+    text-align: left;
+    font-weight: 500;
+    flex: 2;
+  }
+
+  &-bd {
+    text-align: center;
+    flex: 1;
+  }
+
+  &-ft {
+    margin-right: 40rpx;
+    text-align: right;
+    font-weight: 500;
+    color: #0678c1;
+    flex: 1;
+
+    &:after {
+      content: ' ';
+      display: inline-block;
+      height: 12rpx;
+      width: 12rpx;
+      border-width: 6rpx 6rpx 0 0;
+      border-color: #9b9b9b;
+      border-style: solid;
+      transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+      position: absolute;
+      top: 50%;
+      margin-top: -8rpx;
+      right: 28rpx;
+    }
+  }
+}
+</style>
+<template>
+  <view class="room-list-item" @tap="onRoomTap({{room}})">
+    <view class="room-list-item-hd">
+      {{room.name}}
+    </view>
+    <view class="room-list-item-bd">
+      {{room.storyCount + ' ' + (room.storyCount > 1 ? t.stories : t.store)}}
+    </view>
+    <view class="room-list-item-ft">
+      {{room.scoreSum}}
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import LocalesMixin from '@/mixins/locales-mixin';
+
+export default class RoomListItem extends wepy.component {
+  props = {
+    room: {
+      type: Object
+    }
+  };
+
+  data = {};
+
+  mixins = [LocalesMixin];
+
+  methods = {
+    onRoomTap({ id, finished }) {
+      this.$parent.$navigate(`${finished ? 'room-detail' : 'room'}?id=${id}`);
+    }
+  };
+
+  onLoad() {}
+}
+</script>

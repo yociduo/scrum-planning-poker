@@ -34,8 +34,8 @@ export default {
       'title': 'Scrum敏捷估算',
       'create_button': '创建新房间',
       'history_rooms': '历史房间',
-      'story': '故事',
-      'stories': '故事'
+      'story': '个故事',
+      'stories': '个故事'
     },
     'welcome': {
       'title': 'Scrum敏捷估算',
