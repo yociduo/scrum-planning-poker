@@ -83,8 +83,8 @@ export default class RoomListItem extends wepy.component {
   mixins = [LocalesMixin];
 
   methods = {
-    onRoomTap({ id, finished }) {
-      this.$parent.$navigate(`${finished ? 'room-detail' : 'room'}?id=${id}`);
+    onRoomTap({ id, isCompleted }) {
+      this.$parent.$navigate(`${isCompleted ? 'room-detail' : 'room'}?id=${id}`);
     }
   };
 

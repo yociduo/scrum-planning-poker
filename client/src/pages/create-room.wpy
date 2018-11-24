@@ -127,9 +127,7 @@ export default class CreateRoom extends wepy.page {
           method: 'POST',
           data: {
             name,
-            // TODO: change the request model
             stories: stories
-              .trim()
               .split('\n')
               .map(name => name.trim())
               .filter(n => n)
