@@ -4,7 +4,7 @@
   "description": "A WePY project",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=production wepy build --watch",
+    "dev": "cross-env wepy build --watch",
     "build": "cross-env NODE_ENV=production wepy build --no-cache",
     "dev:web": "wepy build --output web",
     "clean": "find ./dist -maxdepth 1 -not -name 'project.config.json' -not -name 'dist' | xargs rm -rf",

@@ -1,4 +1,12 @@
-import { JsonController, Get, Post, Body, CurrentUser, Authorized } from 'routing-controllers';
+import {
+  JsonController,
+  Get,
+  Post,
+  Body,
+  CurrentUser,
+  Authorized,
+  Param,
+} from 'routing-controllers';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Room, User } from '../../entity';
@@ -13,8 +21,14 @@ export class RoomController {
 
   @Authorized()
   @Get()
-  get(@CurrentUser({ required: true }) user: User): Promise<Room[]> {
+  getList(@CurrentUser({ required: true }) user: User): Promise<Room[]> {
     return this.roomRepository.getByUser(user);
+  }
+
+  @Authorized()
+  @Get('/:id')
+  get(@CurrentUser({ required: true }) user: User, @Param('id') id: number): Promise<Room> {
+    return this.roomRepository.getRoomDetail(id, user);
   }
 
   @Authorized()

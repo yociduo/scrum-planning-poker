@@ -25,25 +25,25 @@
 }
 </style>
 <template>
-<view>
-  <view class="top-stick">
-    <button @tap="onCreateTap">{{t.create_button}}</button>
-  </view>
-  <view class="container">
-    <view class="page-body">
-      <view class="page-section-title">{{t.history_rooms}}</view>
-      <view class="page-section">
-        <view class="page-section-spacing">
-          <view class="room-list" wx:if="{{rooms && rooms.length}}">
-            <repeat for="{{rooms}}" index="id" item="room" key="id">
-              <roomListItem :room="room"></roomListItem>
-            </repeat>
+  <view>
+    <view class="top-stick">
+      <button @tap="onCreateTap">{{t.create_button}}</button>
+    </view>
+    <view class="container">
+      <view class="page-body">
+        <view class="page-section-title">{{t.history_rooms}}</view>
+        <view class="page-section">
+          <view class="page-section-spacing">
+            <view class="room-list" wx:if="{{rooms && rooms.length}}">
+              <repeat for="{{rooms}}" index="id" item="room" key="id">
+                <roomListItem :room="room"></roomListItem>
+              </repeat>
+            </view>
           </view>
         </view>
       </view>
     </view>
   </view>
-</view>
 </template>
 
 <script>
@@ -81,8 +81,10 @@ export default class Index extends wepy.page {
       url: `/rooms`,
       method: 'GET'
     });
-    this.rooms = rooms;
-    this.$apply();
+    if (rooms) {
+      this.rooms = rooms;
+      this.$apply();
+    }
     await wepy.hideLoading();
   }
 }
