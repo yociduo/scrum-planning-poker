@@ -1,36 +1,281 @@
 <style lang="less">
-textarea {
-  width: 100%;
-  padding: 16rpx 0;
+.top-stick {
+  box-sizing: border-box;
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+  display: flex;
+  align-items: center;
   font-size: 34rpx;
 }
 
-.textarea-wrp {
-  background-color: #fff;
-  border: 2rpx solid #d8d8d8;
+.top-stick-hd {
+  flex: 1;
+  margin-right: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.textarea-wrp {
-  padding: 0 15rpx;
+.top-stick-bd {
+  margin-right: 20rpx;
+}
+
+.top-stick-ft button {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  width: 38rpx;
+  height: 38rpx;
+}
+
+.top-stick-ft button:after {
+  border: 0;
+}
+
+.top-stick-ft image {
+  width: 38rpx;
+  height: 38rpx;
+  display: block;
+}
+
+.top-stick-story .top-stick-hd {
+  color: #0678c1;
+  font-weight: 500;
+}
+
+.top-stick-story .top-stick-ft button {
+  width: 90rpx;
+  height: 78rpx;
+  padding: 20rpx;
+  margin-left: -20rpx;
+  margin-right: -20rpx;
+}
+
+.top-stick-story .top-stick-ft image {
+  width: 50rpx;
+}
+
+.top-stick + .container {
+  margin-top: 100rpx;
+}
+
+.player-box, .story-box, .result-box {
+  position: relative;
+  background-color: #fff;
+  border: 2rpx solid #d8d8d8;
+  margin-bottom: 40rpx;
+}
+
+.player, .story, .result {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.player {
+  padding: 20rpx 30rpx;
+}
+
+.player-hd {
+  position: relative;
+  margin-right: 20rpx;
+  height: 92rpx;
+}
+
+.player-bd {
+  flex: 1;
+  font-size: 34rpx;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 20rpx;
+}
+
+.player-ft {
+  position: relative;
+}
+
+.player-value {
+  font-size: 40rpx;
+  font-weight: 500;
+  color: #0678c1;
+}
+
+.player-avatar {
+  width: 93rpx;
+  height: 93rpx;
+  border-radius: 46.5rpx;
+}
+
+.story, .result {
+  height: 88rpx;
+  padding: 10rpx 30rpx;
+}
+
+.story-hd,
+.story-bd,
+.story-ft {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.story-hd {
+  font-weight: 500;
+}
+
+.story-bd {
+  text-align: center;
+}
+
+.story-ft,
+.result-ft {
+  text-align: right;
+  font-weight: 500;
+  color: #0678c1;
+}
+
+.story-box-ft,
+.result-box-ft {
+  height: 132rpx;
+  border-top: 2rpx solid #d8d8d8;
+}
+
+.story-box-ft .story-ft,
+.result-box-ft .result-ft {
+  font-size: 40rpx;
+}
+
+.result:active {
+  background-color: #EEEEEE;
+}
+
+.result-bd {
+  flex: 1;
+  font-weight: 500;
+}
+
+.result-ft {
+  margin-right: 40rpx;
+}
+
+.result-ft:after {
+  content: " ";
+  display: inline-block;
+  height: 12rpx;
+  width: 12rpx;
+  border-width: 6rpx 6rpx 0 0;
+  border-color: #9B9B9B;
+  border-style: solid;
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  position: absolute;
+  top: 50%;
+  margin-top: -8rpx;
+  right: 28rpx;
 }
 </style>
 <template>
-<view class="container">
-  <view class="page-body">
-    <form catchsubmit="formSubmit">
-      <view class="page-section-title">Story</view>
-      <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
-      <view class="page-section">
+<view>
+  <view class="top-stick" wx:if="{{init && isCompleted && isHost}}">
+    <view class="top-stick-hd">Continue with this room & add story!</view>
+    <view class="top-stick-ft">
+      <button bindtap="onAddTap">
+        <image src="{{addStoryIconUrl}}"></image>
+      </button>
+    </view>
+  </view>
+  <view class="top-stick top-stick-story" wx:if="{{init && !isCompleted}}">
+    <view class="top-stick-hd">{{currentStory.name}}</view>
+    <view class="top-stick-bd">{{currentStory.displayTimer}}</view>
+    <view class="top-stick-ft">
+      <button open-type="share">
+        <image src="{{inviteIconUrl}}"></image>
+      </button>
+    </view>
+  </view>
+  <view class="container" wx:if="{{init}}">
+    <view class="page-body">
+      <view class="page-section" wx:if="{{(!isHost || options.needScore) && !isCompleted}}">
         <view class="page-section-spacing">
-          <view class="textarea-wrp">
-            <textarea name="stories" auto-height value="{{stories}}" bindinput="onStoryChange" bindblur="onStoriesBlur" />
+          <view class="card-grids">
+            <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
+              <template is="card" data="{{ card: card, selectedCard: selectedCard }}" />
+            </view>
           </view>
         </view>
       </view>
-      <view class="btn-area">
-        <button type="primary" formType="submit">Add</button>
+      <view class="page-section-title" wx:if="{{!isCompleted}}">Players</view>
+      <view class="page-section" wx:if="{{!isCompleted}}">
+        <view class="page-section-spacing">
+          <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
+            <view class="player" wx:for="{{currentStory.scores}}" wx:for-item="score" wx:key="score.user.avatarUrl">
+              <view class="player-hd">
+                <image class="player-avatar" src="{{score.user.avatarUrl || '../../image/user.png'}}"></image>
+              </view>
+              <view class="player-bd">
+                {{score.user.nickName}}
+              </view>
+              <view class="player-ft">
+                <view class="player-value" wx:if="{{score.displayCard && (isHost || options.isNoymous)}}">{{score.displayCard}}</view>
+                <icon class="icon-small" wx:if="{{score.displayCard && !isHost && !options.isNoymous}}" type="success" size="23" color="#0678C1"></icon>
+              </view>
+            </view>
+          </view>
+        </view>
       </view>
-    </form>
+      <view class="page-section-title" wx:if="{{!isCompleted && isHost}}">Result Calculation</view>
+      <view class="page-section" wx:if="{{!isCompleted && isHost}}">
+        <view class="page-section-spacing">
+          <view class="result-box">
+            <picker bindchange="onCalcMethodChange" value="{{options.calcMethod}}" range="{{calcMethods}}" range-key="key">
+              <view class="result">
+                <view class="result-bd">{{calcMethods[options.calcMethod].key}}</view>
+                <view class="result-ft"></view>
+              </view>
+            </picker>
+            <!-- <picker wx:if="{{calcMethods[calcMethod].sub}}" bindchange="onSubCalcMethodChange" value="{{subCalcMethod}}" range="{{calcMethods[calcMethod].sub}}" range-key="key">
+              <view class="result">
+                <view class="result-bd">{{calcMethods[calcMethod].sub[subCalcMethod].key}}</view>
+                <view class="result-ft"></view>
+              </view>
+            </picker> -->
+            <picker bindchange="onResultChange" value="{{currentScore}}" range="{{results}}">
+              <view class="result result-box-ft">
+                <view class="result-bd">Result</view>
+                <view class="result-ft">{{currentScore || currentScore === 0 ? results[currentScore] : ''}}</view>
+              </view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="btn-area" wx:if="{{!isCompleted && isHost}}">
+        <button type="primary" loading="{{loading}}" bindtap="onSaveTap">Save & Next</button>
+      </view>
+      <view class="page-section-divide" wx:if="{{!isCompleted && isHost}}"></view>
+      <view class="page-section-title" wx:if="{{stories && stories.length}}">All Stories</view>
+      <view class="page-section" wx:if="{{stories && stories.length}}">
+        <view class="page-section-spacing">
+          <view class="story-box">
+            <view class="story" wx:for="{{stories}}" wx:for-item="story" wx:key="story.index">
+              <view class="story-hd">{{story.name}}</view>
+              <view class="story-bd">{{story.displayTimer}}</view>
+              <view class="story-ft">{{story.score || story.score === 0 ? story.score : ''}}</view>
+            </view>
+            <view class="story story-box-ft" wx:if="{{isCompleted}}">
+              <view class="story-hd">{{storyCount + (storyCount > 1 ? ' Stories' : ' Story')}}</view>
+              <view class="story-bd">{{displayTimerSum}}</view>
+              <view class="story-ft">{{scoreSum}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="btn-area" wx:if="{{isCompleted}}">
+        <button type="primary" bindtap="onBackTap">Back</button>
+      </view>
+    </view>
   </view>
 </view>
 </template>
