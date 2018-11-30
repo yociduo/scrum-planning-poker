@@ -1,0 +1,80 @@
+<style lang="less">
+textarea {
+  width: 100%;
+  padding: 16rpx 0;
+  font-size: 34rpx;
+}
+
+.textarea-wrp {
+  background-color: #fff;
+  border: 2rpx solid #d8d8d8;
+}
+
+.textarea-wrp {
+  padding: 0 15rpx;
+}
+</style>
+<template>
+<view class="container">
+  <view class="page-body">
+    <form catchsubmit="formSubmit">
+      <view class="page-section-title">Story</view>
+      <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
+      <view class="page-section">
+        <view class="page-section-spacing">
+          <view class="textarea-wrp">
+            <textarea name="stories" auto-height value="{{stories}}" bindinput="onStoryChange" bindblur="onStoriesBlur" />
+          </view>
+        </view>
+      </view>
+      <view class="btn-area">
+        <button type="primary" formType="submit">Add</button>
+      </view>
+    </form>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import LocalesMixin from '@/mixins/locales-mixin';
+import LoginMixin from '@/mixins/login-mixin';
+
+export default class AddStory extends wepy.page {
+  mixins = [LocalesMixin, LoginMixin];
+
+  methods = {};
+
+  watch = {
+    t() {
+      wepy.setNavigationBarTitle({ title: this.t.title });
+    }
+  };
+}
+
+// const app = getApp();
+// let id, initStories;
+
+// Page({
+//   onLoad(options) {
+//     id = options.id;
+//     // const start = wx.getStorageSync(id).scores.length + 1;
+//     const start = 1;
+//     initStories = new Array(3).fill(null).map((n, i) => 'Story ' + (i + start)).join('\n');
+//     this.setData({ stories: initStories });
+//   },
+//   onStoryChange(e) {
+//     this.setData({ stories: e.detail.value });
+//   },
+//   onStoriesBlur() {
+//     if (!this.data.stories || !/\w+/.test(this.data.stories)) {
+//       this.setData({ stories: initStories });
+//     }
+//   },
+//   formSubmit(e) {
+//     const { stories } = e.detail.value;
+//     app.globalData.socket.emit('add story', { id, stories: stories.trim().split('\n').map(name => name.trim()).filter(n => n).map(name => ({ name })) });
+//     wx.navigateBack({ delta: 1 });
+//   }
+// })
+</script>

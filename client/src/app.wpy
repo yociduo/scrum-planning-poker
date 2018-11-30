@@ -21,7 +21,9 @@ export default class extends wepy.app {
       'pages/index',
       'pages/welcome',
       'pages/create-room',
-      'pages/room-detail'
+      'pages/room',
+      'pages/room-detail',
+      'pages/add-story'
     ],
     window: {
       backgroundTextStyle: 'light',
