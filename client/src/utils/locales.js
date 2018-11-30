@@ -29,6 +29,12 @@ export default {
       'need_score': 'You will play poker in this room',
       'is_noymous': 'Votings are visible to other players',
       'create_button': 'Create'
+    },
+    'room-detail': {
+      'title': 'Room Detail',
+      'room_name': 'Room Name',
+      'all_stories': 'All stories',
+      'back_button': 'Back'
     }
   },
   'zh_CN': {
@@ -61,6 +67,12 @@ export default {
       'need_score': '你将参与打分',
       'is_noymous': '其余成员将能看到彼此的出分',
       'create_button': '开始打分'
+    },
+    'room-detail': {
+      'title': '房间详情',
+      'room_name': '房间名',
+      'all_stories': '所有故事',
+      'back_button': '返回'
     }
   }
 };

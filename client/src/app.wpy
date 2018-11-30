@@ -17,7 +17,12 @@ setStore(store);
 
 export default class extends wepy.app {
   config = {
-    pages: ['pages/index', 'pages/welcome', 'pages/create-room'],
+    pages: [
+      'pages/index',
+      'pages/welcome',
+      'pages/create-room',
+      'pages/room-detail'
+    ],
     window: {
       backgroundTextStyle: 'light',
       backgroundColor: '#f8f8fa',
