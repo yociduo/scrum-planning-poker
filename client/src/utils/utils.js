@@ -25,19 +25,19 @@
 
 export const calcMethods = [
   {
-    key: 'Arithmetic Mean',
+    lang: 'arithmetic_mean',
     value: 0
   },
   {
-    key: 'Truncated Mean',
+    lang: 'truncated_mean',
     value: 1
   },
   {
-    key: 'Median',
+    lang: 'median',
     value: 2
   },
   {
-    key: 'Customized',
+    lang: 'customized',
     value: 3
   }
 ];
@@ -46,81 +46,81 @@ export const cards = [
   {
     key: '0',
     value: 0,
-    icon: '../../image/cards/0.png',
-    corner: '../../image/cards/_0.png'
+    icon: '../images/cards/0.png',
+    corner: '../images/cards/_0.png'
   },
   {
     key: '1/2',
     value: 0.5,
-    icon: '../../image/cards/0.5.png',
-    corner: '../../image/cards/_0.5.png'
+    icon: '../images/cards/0.5.png',
+    corner: '../images/cards/_0.5.png'
   },
   {
     key: '1',
     value: 1,
-    icon: '../../image/cards/1.png',
-    corner: '../../image/cards/_1.png'
+    icon: '../images/cards/1.png',
+    corner: '../images/cards/_1.png'
   },
   {
     key: '2',
     value: 2,
-    icon: '../../image/cards/2.png',
-    corner: '../../image/cards/_2.png'
+    icon: '../images/cards/2.png',
+    corner: '../images/cards/_2.png'
   },
   {
     key: '3',
     value: 3,
-    icon: '../../image/cards/3.png',
-    corner: '../../image/cards/_3.png'
+    icon: '../images/cards/3.png',
+    corner: '../images/cards/_3.png'
   },
   {
     key: '5',
     value: 5,
-    icon: '../../image/cards/5.png',
-    corner: '../../image/cards/_5.png'
+    icon: '../images/cards/5.png',
+    corner: '../images/cards/_5.png'
   },
   {
     key: '8',
     value: 8,
-    icon: '../../image/cards/8.png',
-    corner: '../../image/cards/_8.png'
+    icon: '../images/cards/8.png',
+    corner: '../images/cards/_8.png'
   },
   {
     key: '13',
     value: 13,
-    icon: '../../image/cards/13.png',
-    corner: '../../image/cards/_13.png'
+    icon: '../images/cards/13.png',
+    corner: '../images/cards/_13.png'
   },
   {
     key: '20',
     value: 20,
-    icon: '../../image/cards/20.png',
-    corner: '../../image/cards/_20.png'
+    icon: '../images/cards/20.png',
+    corner: '../images/cards/_20.png'
   },
   {
     key: '40',
     value: 40,
-    icon: '../../image/cards/40.png',
-    corner: '../../image/cards/_40.png'
+    icon: '../images/cards/40.png',
+    corner: '../images/cards/_40.png'
   },
   {
     key: '100',
     value: 100,
-    icon: '../../image/cards/100.png',
-    corner: '../../image/cards/_100.png'
+    icon: '../images/cards/100.png',
+    corner: '../images/cards/_100.png'
   },
   {
     key: '?',
     value: -1,
-    icon: '../../image/cards/Q.png',
-    corner: '../../image/cards/_Q.png'
+    icon: '../images/cards/Q.png',
+    corner: '../images/cards/_Q.png'
   }
   // {
   //   key: 'C',
   //   corner: 'coffee',
   //   value: -2,
-  //   icon: '../../image/cards/C.png',
-  //   corner: '../../image/cards/_C.png',
+  //   icon: '../images/cards/C.png',
+  //   corner: '../images/cards/_C.png',
   // }
 ];
 
@@ -141,7 +141,7 @@ export const formatTimer = timer => {
   const hour = Math.floor(timer / 3600);
   const minute = Math.floor((timer % 3600) / 60);
   const second = timer % 60;
-  return `${formatNumber(hour)}:${formatNumber(minute)}:${formatNumber(second)}`
+  return `${formatNumber(hour)}:${formatNumber(minute)}:${formatNumber(second)}`;
 };
 
 export const formatDate = date => {

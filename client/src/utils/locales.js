@@ -10,6 +10,10 @@ export default {
     'common.loading.title': 'Loading...',
     'common.room': 'Room',
     'common.story': 'Story',
+    'common.calc_method.arithmetic_mean': 'Arithmetic mean',
+    'common.calc_method.truncated_mean': 'Truncated mean',
+    'common.calc_method.median': 'Median',
+    'common.calc_method.customized': 'Customized',
     'index': {
       'title': 'Scrum Planning',
       'create_button': 'Create a new room',
@@ -31,7 +35,13 @@ export default {
       'create_button': 'Create'
     },
     'room': {
-      'continue_msg': 'Continue with this room & Add story!'
+      'players': 'Players',
+      'result_calc': 'Result calculation',
+      'result': 'Restul',
+      'all_stories': 'All stories',
+      'continue_msg': 'Continue with this room & Add story!',
+      'save_next_button': 'Save & Next',
+      'finish_button': 'Finish'
     },
     'room-detail': {
       'title': 'Room Detail',
@@ -51,6 +61,10 @@ export default {
     'common.loading.title': '加载中...',
     'common.room': '房间',
     'common.story': '故事',
+    'common.calc_method.arithmetic_mean': '算术平均数',
+    'common.calc_method.truncated_mean': '切尾平均数',
+    'common.calc_method.median': '中位数',
+    'common.calc_method.customized': '自定义',
     'index': {
       'title': 'Scrum敏捷估算',
       'create_button': '创建新房间',
@@ -72,7 +86,13 @@ export default {
       'create_button': '开始打分'
     },
     'room': {
-      'continue_msg': '在该房间继续添加故事！'
+      'players': '群成员',
+      'result_calc': '计算方法',
+      'result': '分数',
+      'all_stories': '所有故事',
+      'continue_msg': '在该房间继续添加故事！',
+      'save_next_button': '保存并继续',
+      'finish_button': '结束打分'
     },
     'room-detail': {
       'title': '房间详情',

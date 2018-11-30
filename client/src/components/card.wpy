@@ -1,0 +1,37 @@
+<style lang="less">
+</style>
+<template>
+  <view class="card {{selectedCard === card.value ? 'selected' : ''}}" @tap="onCardTap({{card}})">
+    <view class="card-left-corner">
+      <image src="{{card.corner}}"></image>
+    </view>
+    <view class="card-right-corner">
+      <image src="{{card.corner}}"></image>
+    </view>
+    <view class="card-center">
+      <image src="{{card.icon}}"></image>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+
+export default class Card extends wepy.component {
+  props = {
+    card: {
+      type: Object
+    },
+    selectedCard: {
+      type: Number
+    }
+  };
+
+  data = {};
+
+  methods = {
+    onCardTap(card) {
+      this.$emit('card-tap', card);
+    }
+  };
+}
+</script>

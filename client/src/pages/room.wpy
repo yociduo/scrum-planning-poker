@@ -176,6 +176,75 @@
   margin-top: -8rpx;
   right: 28rpx;
 }
+
+.card-grids {
+  position: relative;
+  overflow: hidden;
+  margin-left: -5rpx;
+  margin-right: -5rpx;
+  margin-top: 25rpx;
+}
+
+.card-grid {
+  position: relative;
+  float: left;
+  width: 25%;
+  box-sizing: border-box;
+}
+
+.card {
+  border-radius: 10rpx;
+  margin: 5rpx;
+  padding: 5rpx 8rpx;
+  height: 200rpx;
+  position: relative;
+  border: 2rpx solid #979797;
+  background-color: #fff;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.card-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 30rpx;
+  bottom: 30rpx;
+  right: 20rpx;
+  left: 20rpx;
+  border: 2rpx solid #D8D8D8;
+  background-color: #fff;
+}
+
+.card-center image {
+  width: 72rpx;
+  height: 72rpx;
+}
+
+.card.selected {
+  border-color: #0678c1;
+  box-shadow: 0 0 10rpx rgba(6, 120, 193, 1);
+}
+
+.card-left-corner, .card-right-corner {
+  height: 23rpx;
+  position: absolute;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-left-corner image,
+.card-right-corner image {
+  width: 25rpx;
+  height: 25rpx;
+}
+
+.card-right-corner {
+  right: 8rpx;
+  bottom: 5rpx;
+  transform: rotate(-180deg);
+}
 </style>
 <template>
 <view>
@@ -183,7 +252,7 @@
     <view class="top-stick-hd">Continue with this room & add story!</view>
     <view class="top-stick-ft">
       <button bindtap="onAddTap">
-        <image src="{{addStoryIconUrl}}"></image>
+        <image src="/images/plus.png"></image>
       </button>
     </view>
   </view>
@@ -192,7 +261,7 @@
     <view class="top-stick-bd">{{currentStory.displayTimer}}</view>
     <view class="top-stick-ft">
       <button open-type="share">
-        <image src="{{inviteIconUrl}}"></image>
+        <image src="/images/user-plus.png"></image>
       </button>
     </view>
   </view>
@@ -201,19 +270,21 @@
       <view class="page-section" wx:if="{{(!isHost || options.needScore) && !isCompleted}}">
         <view class="page-section-spacing">
           <view class="card-grids">
-            <!-- <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
-              <template is="card" data="{{ card: card, selectedCard: selectedCard }}" />
-            </view> -->
+            <repeat class="card-grid" for="{{cards}}" index="key" item="card" key="key">
+              <view class="card-grid">
+                <card :card="card" :selectedCard="selectedCard"></card>
+              </view>
+            </repeat>
           </view>
         </view>
       </view>
-      <view class="page-section-title" wx:if="{{!isCompleted}}">Players</view>
+      <view class="page-section-title" wx:if="{{!isCompleted}}">{{t.players}}</view>
       <view class="page-section" wx:if="{{!isCompleted}}">
         <view class="page-section-spacing">
           <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
             <view class="player" wx:for="{{currentStory.scores}}" wx:for-item="score" wx:key="score.user.avatarUrl">
               <view class="player-hd">
-                <image class="player-avatar" src="{{score.user.avatarUrl || '../../image/user.png'}}"></image>
+                <image class="player-avatar" src="{{score.user.avatarUrl || '/images/user.png'}}"></image>
               </view>
               <view class="player-bd">
                 {{score.user.nickName}}
@@ -226,25 +297,19 @@
           </view>
         </view>
       </view>
-      <view class="page-section-title" wx:if="{{!isCompleted && isHost}}">Result Calculation</view>
+      <view class="page-section-title" wx:if="{{!isCompleted && isHost}}">{{t.result_calc}}</view>
       <view class="page-section" wx:if="{{!isCompleted && isHost}}">
         <view class="page-section-spacing">
           <view class="result-box">
-            <picker bindchange="onCalcMethodChange" value="{{options.calcMethod}}" range="{{calcMethods}}" range-key="key">
+            <picker @change="onCalcMethodChange" value="{{options.calcMethod}}" range="{{calcMethods}}" range-key="key">
               <view class="result">
                 <view class="result-bd">{{calcMethods[options.calcMethod].key}}</view>
                 <view class="result-ft"></view>
               </view>
             </picker>
-            <!-- <picker wx:if="{{calcMethods[calcMethod].sub}}" bindchange="onSubCalcMethodChange" value="{{subCalcMethod}}" range="{{calcMethods[calcMethod].sub}}" range-key="key">
-              <view class="result">
-                <view class="result-bd">{{calcMethods[calcMethod].sub[subCalcMethod].key}}</view>
-                <view class="result-ft"></view>
-              </view>
-            </picker> -->
             <picker bindchange="onResultChange" value="{{currentScore}}" range="{{results}}">
               <view class="result result-box-ft">
-                <view class="result-bd">Result</view>
+                <view class="result-bd">{{t.result}}</view>
                 <view class="result-ft">{{currentScore || currentScore === 0 ? results[currentScore] : ''}}</view>
               </view>
             </picker>
@@ -252,10 +317,10 @@
         </view>
       </view>
       <view class="btn-area" wx:if="{{!isCompleted && isHost}}">
-        <button type="primary" loading="{{loading}}" bindtap="onSaveTap">Save & Next</button>
+        <button type="primary" loading="{{loading}}" @tap="onSaveTap">{{t.save_next_button}}</button>
       </view>
       <view class="page-section-divide" wx:if="{{!isCompleted && isHost}}"></view>
-      <view class="page-section-title" wx:if="{{stories && stories.length}}">All Stories</view>
+      <view class="page-section-title" wx:if="{{stories && stories.length}}">{{t.all_stories}}</view>
       <view class="page-section" wx:if="{{stories && stories.length}}">
         <view class="page-section-spacing">
           <view class="story-box">
@@ -273,7 +338,7 @@
         </view>
       </view>
       <view class="btn-area" wx:if="{{isCompleted}}">
-        <button type="primary" bindtap="onBackTap">Back</button>
+        <button type="primary" bindtap="onBackTap">{{t.finish_button}}</button>
       </view>
     </view>
   </view>
@@ -282,34 +347,84 @@
 
 <script>
 import wepy from 'wepy';
+import io from 'weapp.socket.io';
+import Card from '@/components/card';
 import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';
+import T from '@/utils/i18n';
 import { calcMethods, cards, formatTimer, initResults } from '@/utils/utils';
-import io from 'weapp.socket.io';
 
 export default class Room extends wepy.page {
   data = {
     init: false,
     cards,
     calcMethods,
-    result: initResults,
+    results: initResults,
+    stories: null,
+    currentScore: null,
     currentStory: null,
-    inviteIconUrl: '/images/user-plus.png',
-    addStoryIconUrl: '/images/plus.png',
-    shareImageUrl: ''
+    selectedCard: null,
+    options: null,
+    loading: false,
+    isHost: false,
+    isCompleted: false
+  };
+
+  components = {
+    card: Card
   };
 
   mixins = [LocalesMixin, LoginMixin];
 
   methods = {
-    onBackTap() {
-      console.log('object');
+//   onAddTap() {
+//     wx.navigateTo({ url: `../add-story/index?id=${this.data.id}` });
+//   },
+    onSaveTap() {
+      if (this.loading) return;
+      this.loading = true;
+      this.socket.emit('next story', this.id);
+    },
+    onCalcMethodChange(e) {
+      const calcMethod = parseInt(e.detail.value);
+      this.socket.emit('calc method', { id: this.data.id, calcMethod });
+    },
+    onResultChange(e) {
+      const currentScore = parseInt(e.detail.value);
+      this.socket.emit('current score', { id: this.data.id, currentScore });
+    }
+//   onBackTap() {
+//     if (getCurrentPages().length > 1) {
+//       wx.navigateBack({ delta: 1 });
+//     } else {
+//       wx.redirectTo({ url: `../index/index` });
+//     }
+//   }
+  };
+
+  watch = {
+    t() {
+      this.calcMethods.forEach(calc => {
+        calc.key = T._(`common.calc_method.${calc.lang}`);
+      });
+      this.$apply();
+    }
+  }
+
+  events = {
+    'card-tap': (card) => {
+      this.selectedCard = card.value === this.selectedCard ? null : card.value;
+      this.socket.emit('select card', { id: this.id, card: this.selectedCard });
     }
   };
 
   socket = null;
 
   interval = null;
+
+  onShareAppMessage() {
+    return { title: this.name };
+  }
 
   onLoad(options) {
     this.id = Number(options.id);
@@ -357,7 +472,7 @@ export default class Room extends wepy.page {
     });
 
     this.socket.on('action', ({ id, ...payload }) => {
-      if (id !== this.data.id) return;
+      if (id !== this.id) return;
       if (payload.stories && payload.stories.length) {
         payload.stories = payload.stories.filter(s => s.isCompleted && !s.isDeleted);
       }
@@ -419,58 +534,5 @@ export default class Room extends wepy.page {
     }
   }
 }
-
-// Page({
-//   onLoad(options) {
-
-//     app.globalData.socket.on('error', (content) => wx.showModal({
-//       title: 'Error',
-//       content,
-//       showCancel: false,
-//       confirmText: 'OK',
-//       confirmColor: '#0678C1',
-//       success: () => this.onBackTap(),
-//     }));
-//   },
-//   onShareAppMessage() {
-//     return { title: this.data.name, imageUrl: this.data.shareImageUrl };
-//   },
-//   onAddTap() {
-//     wx.navigateTo({ url: `../add-story/index?id=${this.data.id}` });
-//   },
-//   onCardTap(e) {
-//     const { id, selectedCard } = this.data;
-//     const { card } = e.currentTarget.dataset;
-//     const value = card.value === selectedCard ? null : card.value;
-//     this.setData({ selectedCard: value });
-//     app.globalData.socket.emit('select card', { id, card: value });
-//   },
-//   onSaveTap() {
-//     const { id, loading } = this.data;
-//     if (loading) return;
-//     app.globalData.socket.emit('next story', id);
-//     this.setData({ loading: true });
-//   },
-//   onCalcMethodChange(e) {
-//     const calcMethod = parseInt(e.detail.value);
-//     app.globalData.socket.emit('calc method', { id: this.data.id, calcMethod });
-//   },
-//   // onSubCalcMethodChange(e) {
-//   //   const subCalcMethod = parseInt(e.detail.value);
-//   //   this.setData({ subCalcMethod });
-//   //   app.globalData.socket.emit('calc method', { id: this.data.id, subCalcMethod });
-//   // },
-//   onResultChange(e) {
-//     const currentScore = parseFloat(e.detail.value);
-//     app.globalData.socket.emit('current score', { id: this.data.id, currentScore });
-//   },
-//   onBackTap() {
-//     if (getCurrentPages().length > 1) {
-//       wx.navigateBack({ delta: 1 });
-//     } else {
-//       wx.redirectTo({ url: `../index/index` });
-//     }
-//   }
-// });
 
 </script>

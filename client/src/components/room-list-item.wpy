@@ -87,7 +87,5 @@ export default class RoomListItem extends wepy.component {
       this.$parent.$navigate(`${isCompleted ? 'room-detail' : 'room'}?id=${id}`);
     }
   };
-
-  onLoad() {}
 }
 </script>
