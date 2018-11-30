@@ -201,9 +201,9 @@
       <view class="page-section" wx:if="{{(!isHost || options.needScore) && !isCompleted}}">
         <view class="page-section-spacing">
           <view class="card-grids">
-            <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
+            <!-- <view class="card-grid" wx:for="{{cards}}" wx:for-item="card" wx:key="card.key">
               <template is="card" data="{{ card: card, selectedCard: selectedCard }}" />
-            </view>
+            </view> -->
           </view>
         </view>
       </view>
@@ -284,102 +284,144 @@
 import wepy from 'wepy';
 import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';
+import { calcMethods, cards, formatTimer, initResults } from '@/utils/utils';
+import io from 'weapp.socket.io';
 
 export default class Room extends wepy.page {
+  data = {
+    init: false,
+    cards,
+    calcMethods,
+    result: initResults,
+    currentStory: null,
+    inviteIconUrl: '/images/user-plus.png',
+    addStoryIconUrl: '/images/plus.png',
+    shareImageUrl: ''
+  };
+
   mixins = [LocalesMixin, LoginMixin];
 
-  methods = {};
+  methods = {
+    onBackTap() {
+      console.log('object');
+    }
+  };
+
+  socket = null;
+
+  interval = null;
+
+  onLoad(options) {
+    this.id = Number(options.id);
+
+    const { socketUrl, socketPath } = wepy.$appConfig;
+
+    this.socket = io(socketUrl, {
+      path: socketPath,
+      transparent: ['websocket'],
+      query: 'token=' + this.$parent.globalData.token
+    });
+
+    this.socket.on('init', ({ id, ...payload }) => {
+      if (id !== this.id) return;
+      if (payload.stories && payload.stories.length) {
+        payload.stories = payload.stories.filter(s => s.isCompleted && !s.isDeleted);
+      }
+
+      if (payload.currentStory) {
+        const title = payload.name;
+        wepy.setNavigationBarTitle({ title });
+        this.init = true;
+        for (const key in payload) {
+          if (payload.hasOwnProperty(key)) {
+            this[key] = payload[key];
+          }
+        }
+        this.$apply();
+
+        if (!this.interval) {
+          this.interval = setInterval(() => {
+            if (this.currentStory) {
+              this.currentStory.timer++;
+              this.currentStory.displayTimer = formatTimer(this.currentStory.timer);
+              this.$apply();
+            } else {
+              clearInterval(this.interval);
+              this.interval = null;
+            }
+          }, 1000);
+        }
+      } else {
+        this.$redirect(`room-detail?id=${id}`);
+      }
+    });
+
+    this.socket.on('action', ({ id, ...payload }) => {
+      if (id !== this.data.id) return;
+      if (payload.stories && payload.stories.length) {
+        payload.stories = payload.stories.filter(s => s.isCompleted && !s.isDeleted);
+      }
+
+      for (const key in payload) {
+        if (payload.hasOwnProperty(key)) {
+          this[key] = payload[key];
+        }
+      }
+      this.$apply();
+
+      if (payload.closed) {
+        this.$redirect(`room-detail?id=${id}`);
+      }
+
+      if (!this.interval && payload.currentStory) {
+        this.interval = setInterval(() => {
+          if (this.currentStory) {
+            this.currentStory.timer++;
+            this.currentStory.displayTimer = formatTimer(this.currentStory.timer);
+            this.$apply();
+          } else {
+            clearInterval(this.interval);
+            this.interval = null;
+          }
+        }, 1000);
+      }
+    });
+
+    this.socket.on('error', (content) => wepy.showModal({
+      title: 'Error',
+      content,
+      showCancel: false,
+      success: () => this.onBackTap()
+    }));
+  }
+
+  onShow() {
+    this.joinRoom();
+  }
+
+  onUnload() {
+    this.leaveRoom();
+  }
+
+  onHide() {
+    this.leaveRoom();
+  }
+
+  joinRoom() {
+    this.socket.emit('join room', this.id);
+  }
+
+  leaveRoom() {
+    this.socket.emit('leave room', this.id);
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+  }
 }
 
-// import { calcMethods, cards, formatTimer, initResults } from '../../utils/util';
-// const app = getApp();
-
 // Page({
-//   data: {
-//     init: false,
-//     cards,
-//     calcMethods,
-//     results: initResults,
-//     inviteIconUrl: '../../image/user-plus.png',
-//     addStoryIconUrl: '../../image/plus.png',
-//     shareImageUrl: '',
-//   },
 //   onLoad(options) {
-//     this.setData({ id: Number(options.id) });
-
-//     app.globalData.socket.on('init', ({ id, ...payload }) => {
-//       if (id !== this.data.id) return;
-//       if (payload.stories && payload.stories.length) {
-//         payload.stories = payload.stories.filter(s => s.isCompleted && !s.isDeleted);
-//       }
-
-//       if (payload.currentStory) {
-//         const title = payload.name;
-//         wx.setNavigationBarTitle({ title });
-//         this.setData({ init: true, ...payload });
-
-//         if (!this.interval) {
-//           this.interval = setInterval(() => {
-//             const { currentStory } = this.data;
-//             if (currentStory) {
-//               currentStory.timer++;
-//               currentStory.displayTimer = formatTimer(currentStory.timer);
-//               this.setData({ currentStory });
-//             } else {
-//               clearInterval(this.interval);
-//               this.interval = undefined;
-//             }
-//           }, 1000);
-//         }
-//       } else {
-//         app.globalData.room = payload;
-//         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
-//       }
-//     });
-
-//     app.globalData.socket.on('action', ({ id, ...payload }) => {
-//       if (id !== this.data.id) return;
-//       if (payload.stories && payload.stories.length) {
-//         payload.stories = payload.stories.filter(s => s.isCompleted && !s.isDeleted);
-//       }
-//       // const refresh = {};
-//       this.setData(payload);
-
-//       // if (payload.scores) {
-//       //   refresh.scores = payload.scores;
-//       //   refresh.count = payload.count;
-//       //   refresh.time = payload.time;
-//       //   refresh.total = payload.total;
-//       // }
-
-//       // if (payload.finished !== null && payload.finished !== undefined) {
-//       //   refresh.finished = payload.finished;
-//       // }
-
-//       // if (Object.keys(refresh).length > 0) {
-//       //   const cache = wx.getStorageSync(id) || {};
-//       //   wx.setStorageSync(id, { ...cache, ...refresh });
-//       // }
-
-//       if (payload.closed) {
-//         wx.redirectTo({ url: `../room-detail/index?id=${id}` });
-//       }
-
-//       if (!this.interval && payload.currentStory) {
-//         this.interval = setInterval(() => {
-//           const { currentStory } = this.data;
-//           if (currentStory) {
-//             currentStory.timer++;
-//             currentStory.displayTimer = formatTimer(currentStory.timer);
-//             this.setData({ currentStory });
-//           } else {
-//             clearInterval(this.interval);
-//             this.interval = undefined;
-//           }
-//         }, 1000);
-//       }
-
-//     });
 
 //     app.globalData.socket.on('error', (content) => wx.showModal({
 //       title: 'Error',
@@ -389,19 +431,6 @@ export default class Room extends wepy.page {
 //       confirmColor: '#0678C1',
 //       success: () => this.onBackTap(),
 //     }));
-//   },
-//   onUnload() {
-//     app.globalData.socket.emit('leave room', this.data.id);
-//     clearInterval(this.interval);
-//     this.interval = undefined;
-//   },
-//   onShow() {
-//     app.globalData.socket.emit('join room', this.data.id);
-//   },
-//   onHide() {
-//     app.globalData.socket.emit('leave room', this.data.id);
-//     clearInterval(this.interval);
-//     this.interval = undefined;
 //   },
 //   onShareAppMessage() {
 //     return { title: this.data.name, imageUrl: this.data.shareImageUrl };

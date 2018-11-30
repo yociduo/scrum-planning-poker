@@ -30,6 +30,9 @@ export default {
       'is_noymous': 'Votings are visible to other players',
       'create_button': 'Create'
     },
+    'room': {
+      'continue_msg': 'Continue with this room & Add story!'
+    },
     'room-detail': {
       'title': 'Room Detail',
       'room_name': 'Room Name',
@@ -67,6 +70,9 @@ export default {
       'need_score': '你将参与打分',
       'is_noymous': '其余成员将能看到彼此的出分',
       'create_button': '开始打分'
+    },
+    'room': {
+      'continue_msg': '在该房间继续添加故事！'
     },
     'room-detail': {
       'title': '房间详情',
