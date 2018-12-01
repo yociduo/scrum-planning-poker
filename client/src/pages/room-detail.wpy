@@ -130,18 +130,21 @@ input {
     <view class="page-body">
       <view class="page-section-title">{{t.room_name}}</view>
       <view class="page-section">
-        <view class="page-section-spacing">{{name}}</view>
+        <view class="page-section-spacing">{{room.name}}</view>
       </view>
-      <view class="page-section-title" wx:if="{{stories && stories.length}}">{{t.all_stories}}</view>
-      <view class="page-section" wx:if="{{stories && stories.length}}">
+      <view
+        class="page-section-title"
+        wx:if="{{room.stories && room.stories.length}}"
+      >{{t.all_stories}}</view>
+      <view class="page-section" wx:if="{{room.stories && room.stories.length}}">
         <view class="page-section-spacing">
           <view class="kind-list">
-            <block wx:for-items="{{stories}}" wx:key="{{item.id}}">
+            <block wx:for-items="{{room.stories}}" wx:key="{{item.id}}">
               <view class="kind-list-item">
                 <view
                   id="{{item.id}}"
                   class="kind-list-item-hd {{item.open ? 'kind-list-item-hd-show' : ''}}"
-                  bindtap="kindToggle"
+                  @tap="kindToggle({{item.id}})"
                 >
                   <view class="kind-list-text">{{item.name}}</view>
                   <view class="kind-list-time">{{item.displayTimer}}</view>
@@ -169,15 +172,17 @@ input {
               </view>
             </block>
             <view class="kind-list-ft">
-              <view class="kind-list-text">{{storyCount + (storyCount > 1 ? ' Stories' : ' Story')}}</view>
-              <view class="kind-list-time">{{displayTimerSum}}</view>
-              <view class="kind-list-value">{{scoreSum}}</view>
+              <view
+                class="kind-list-text"
+              >{{room.storyCount + ' ' + (room.storyCount > 1 ? t.stories : t.story)}}</view>
+              <view class="kind-list-time">{{room.displayTimerSum}}</view>
+              <view class="kind-list-value">{{room.scoreSum}}</view>
             </view>
           </view>
         </view>
       </view>
       <view class="btn-area">
-        <button type="primary" bindtap="onBackTap">{{t.back_button}}</button>
+        <button type="primary" @tap="onBackTap">{{t.back_button}}</button>
       </view>
     </view>
   </view>
@@ -195,7 +200,21 @@ export default class RoomDetail extends wepy.page {
 
   mixins = [LocalesMixin, LoginMixin];
 
-  methods = {};
+  methods = {
+    kindToggle(id) {
+      const { stories } = this.room;
+      stories.forEach(story => {
+        story.open = story.id === id && !story.open;
+      });
+    },
+    onBackTap() {
+      if (getCurrentPages().length > 1) { // eslint-disable-line
+        wepy.navigateBack({ delta: 1 });
+      } else {
+        this.$redirect('index');
+      }
+    }
+  };
 
   watch = {
     t() {
@@ -203,44 +222,8 @@ export default class RoomDetail extends wepy.page {
     }
   };
 
-  async onLoad() {
-    await wepy.showLoading();
-    const room = await wepy.request({
-      url: '/rooms',
-      method: 'Get'
-    });
-    this.room = room;
-    this.$apply();
-    await wepy.hideLoading();
+  onLoad(options) {
+    this.room = this.$parent.globalData.room;
   }
 }
-// Page({
-//   onLoad(options) {
-//     this.setData({ ...app.globalData.room })
-//   },
-//   onRoomChange(e) {
-//     this.setData({ name: e.detail.value });
-//     const room = wx.getStorageSync(this.data.id);
-//     room.name = e.detail.value;
-//     wx.setStorageSync(this.data.id, room);
-//   },
-//   kindToggle: function (e) {
-//     const id = e.currentTarget.id, stories = this.data.stories;
-//     for (let i = 0, len = stories.length; i < len; ++i) {
-//       if (stories[i].id == id) {
-//         stories[i].open = !stories[i].open
-//       } else {
-//         stories[i].open = false
-//       }
-//     }
-//     this.setData({ stories });
-//   },
-//   onBackTap: function (e) {
-//     if (getCurrentPages().length > 1) {
-//       wx.navigateBack({ delta: 1 });
-//     } else {
-//       wx.redirectTo({ url: `../index/index` });
-//     }
-//   }
-// });
 </script>

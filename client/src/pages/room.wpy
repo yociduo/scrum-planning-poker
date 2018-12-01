@@ -434,11 +434,15 @@ export default class Room extends wepy.page {
 
     const { socketUrl, socketPath } = wepy.$appConfig;
 
-    this.socket = io(socketUrl, {
-      path: socketPath,
-      transparent: ['websocket'],
-      query: 'token=' + this.$parent.globalData.token
-    });
+    if (!this.$parent.globalData.socket) {
+      this.$parent.globalData.socket = io(socketUrl, {
+        path: socketPath,
+        transparent: ['websocket'],
+        query: 'token=' + this.$parent.globalData.token
+      });
+    }
+
+    this.socket = this.$parent.globalData.socket;
 
     this.socket.on('init', ({ id, ...payload }) => {
       if (id !== this.id) return;
@@ -470,6 +474,7 @@ export default class Room extends wepy.page {
           }, 1000);
         }
       } else {
+        this.$parent.globalData.room = payload;
         this.$redirect(`room-detail?id=${id}`);
       }
     });

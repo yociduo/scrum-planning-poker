@@ -49,6 +49,8 @@ export default {
       'title': 'Room Detail',
       'room_name': 'Room Name',
       'all_stories': 'All stories',
+      'story': 'story',
+      'stories': 'stories',
       'back_button': 'Back'
     }
   },
@@ -102,6 +104,8 @@ export default {
       'title': '房间详情',
       'room_name': '房间名',
       'all_stories': '所有故事',
+      'story': '个故事',
+      'stories': '个故事',
       'back_button': '返回'
     }
   }

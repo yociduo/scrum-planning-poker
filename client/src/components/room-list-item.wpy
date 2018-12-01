@@ -84,7 +84,9 @@ export default class RoomListItem extends wepy.component {
 
   methods = {
     onRoomTap({ id, isCompleted }) {
-      this.$parent.$navigate(`${isCompleted ? 'room-detail' : 'room'}?id=${id}`);
+      // TODO: goto room detail page directly
+      // this.$parent.$navigate(isCompleted ? 'room-detail' : 'room', { id });
+      this.$parent.$navigate(isCompleted ? 'room' : 'room', { id });
     }
   };
 }
