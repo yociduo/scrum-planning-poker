@@ -76,6 +76,7 @@ export default class Index extends wepy.page {
   };
 
   async onShow() {
+    if (!this.$parent.globalData.token) return;
     await wepy.showLoading();
     const rooms = await wepy.request({
       url: `/rooms`,

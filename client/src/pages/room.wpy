@@ -434,7 +434,7 @@ export default class Room extends wepy.page {
 
     const { socketUrl, socketPath } = wepy.$appConfig;
 
-    if (!this.$parent.globalData.socket) {
+    if (!this.$parent.globalData.socket && this.$parent.globalData.token) {
       this.$parent.globalData.socket = io(socketUrl, {
         path: socketPath,
         transparent: ['websocket'],
