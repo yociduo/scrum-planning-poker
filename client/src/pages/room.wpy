@@ -56,7 +56,7 @@
 }
 
 .top-stick + .container {
-  margin-top: 100rpx;
+  padding-top: 100rpx;
 }
 
 .player-box, .story-box, .result-box {
@@ -249,9 +249,9 @@
 <template>
 <view>
   <view class="top-stick" wx:if="{{init && isCompleted && isHost}}">
-    <view class="top-stick-hd">Continue with this room & add story!</view>
+    <view class="top-stick-hd">{{t.continue_msg}}</view>
     <view class="top-stick-ft">
-      <button bindtap="onAddTap">
+      <button @tap="onAddTap">
         <image src="/images/plus.png"></image>
       </button>
     </view>
@@ -307,7 +307,7 @@
                 <view class="result-ft"></view>
               </view>
             </picker>
-            <picker bindchange="onResultChange" value="{{currentScore}}" range="{{results}}">
+            <picker @change="onResultChange" value="{{currentScore}}" range="{{results}}">
               <view class="result result-box-ft">
                 <view class="result-bd">{{t.result}}</view>
                 <view class="result-ft">{{currentScore || currentScore === 0 ? results[currentScore] : ''}}</view>
@@ -330,7 +330,7 @@
               <view class="story-ft">{{story.score || story.score === 0 ? story.score : ''}}</view>
             </view>
             <view class="story story-box-ft" wx:if="{{isCompleted}}">
-              <view class="story-hd">{{storyCount + (storyCount > 1 ? ' Stories' : ' Story')}}</view>
+              <view class="story-hd">{{storyCount + ' ' + (storyCount > 1 ? t.stories : t.story)}}</view>
               <view class="story-bd">{{displayTimerSum}}</view>
               <view class="story-ft">{{scoreSum}}</view>
             </view>
@@ -338,7 +338,7 @@
         </view>
       </view>
       <view class="btn-area" wx:if="{{isCompleted}}">
-        <button type="primary" bindtap="onBackTap">{{t.finish_button}}</button>
+        <button type="primary" @tap="onBackTap">{{t.finish_button}}</button>
       </view>
     </view>
   </view>
@@ -367,7 +367,10 @@ export default class Room extends wepy.page {
     options: null,
     loading: false,
     isHost: false,
-    isCompleted: false
+    isCompleted: false,
+    storyCount: 0,
+    displayTimerSum: 0,
+    scoreSum: 0
   };
 
   components = {
@@ -377,9 +380,9 @@ export default class Room extends wepy.page {
   mixins = [LocalesMixin, LoginMixin];
 
   methods = {
-//   onAddTap() {
-//     wx.navigateTo({ url: `../add-story/index?id=${this.data.id}` });
-//   },
+    onAddTap() {
+      this.$navigate(`add-story?id=${this.id}`);
+    },
     onSaveTap() {
       if (this.loading) return;
       this.loading = true;
@@ -387,19 +390,19 @@ export default class Room extends wepy.page {
     },
     onCalcMethodChange(e) {
       const calcMethod = parseInt(e.detail.value);
-      this.socket.emit('calc method', { id: this.data.id, calcMethod });
+      this.socket.emit('calc method', { id: this.id, calcMethod });
     },
     onResultChange(e) {
       const currentScore = parseInt(e.detail.value);
-      this.socket.emit('current score', { id: this.data.id, currentScore });
+      this.socket.emit('current score', { id: this.id, currentScore });
+    },
+    onBackTap() {
+      if (getCurrentPages().length > 1) { // eslint-disable-line
+        wepy.navigateBack({ delta: 1 });
+      } else {
+        this.$redirect('index');
+      }
     }
-//   onBackTap() {
-//     if (getCurrentPages().length > 1) {
-//       wx.navigateBack({ delta: 1 });
-//     } else {
-//       wx.redirectTo({ url: `../index/index` });
-//     }
-//   }
   };
 
   watch = {

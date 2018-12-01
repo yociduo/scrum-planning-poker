@@ -39,6 +39,8 @@ export default {
       'result_calc': 'Result calculation',
       'result': 'Restul',
       'all_stories': 'All stories',
+      'story': 'story',
+      'stories': 'stories',
       'continue_msg': 'Continue with this room & Add story!',
       'save_next_button': 'Save & Next',
       'finish_button': 'Finish'
@@ -90,6 +92,8 @@ export default {
       'result_calc': '计算方法',
       'result': '分数',
       'all_stories': '所有故事',
+      'story': '个故事',
+      'stories': '个故事',
       'continue_msg': '在该房间继续添加故事！',
       'save_next_button': '保存并继续',
       'finish_button': '结束打分'
