@@ -60,7 +60,7 @@
       {{room.name}}
     </view>
     <view class="room-list-item-bd">
-      {{room.storyCount + ' ' + (room.storyCount > 1 ? t.stories : t.store)}}
+      {{room.storyCount + ' ' + (room.storyCount > 1 ? t.stories : t.story)}}
     </view>
     <view class="room-list-item-ft">
       {{room.scoreSum}}
