@@ -347,7 +347,7 @@
 
 <script>
 import wepy from 'wepy';
-import io from 'weapp.socket.io';
+import io from '@/vendors/socket.io-mp-client/socket.io-mp';
 import Card from '@/components/card';
 import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';

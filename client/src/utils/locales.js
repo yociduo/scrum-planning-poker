@@ -95,7 +95,7 @@ export default {
       'create_button': '开始打分'
     },
     'room': {
-      'players': '群成员',
+      'players': '成员',
       'result_calc': '计算方法',
       'result': '分数',
       'all_stories': '所有故事',
