@@ -52,6 +52,11 @@ export default {
       'story': 'story',
       'stories': 'stories',
       'back_button': 'Back'
+    },
+    'add-story': {
+      'title': 'Add Story',
+      'story': 'Story',
+      'add_button': 'Add'
     }
   },
   'zh_CN': {
@@ -107,6 +112,11 @@ export default {
       'story': '个故事',
       'stories': '个故事',
       'back_button': '返回'
+    },
+    'add-story': {
+      'title': '添加故事',
+      'story': '故事',
+      'add_button': '添加故事'
     }
   }
 };
