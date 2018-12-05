@@ -4,12 +4,13 @@
   "description": "",
   "main": "dist/src/app.js",
   "scripts": {
+    "build": "webpack",
+    "build:watch": "webpack --watch",
     "watch": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
     "build-ts": "tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "serve": "node dist/app.js",
-    "build": "npm run tslint && npm run build-ts",
-    "start": "npm run serve"
+    "start": "node dist/main.js"
   },
   "engines": {
     "node": "8.x.x",
@@ -17,6 +18,7 @@
   },
   "author": "",
   "dependencies": {
+    "awesome-typescript-loader": "^5.2.1",
     "axios": "^0.18.0",
     "class-validator": "^0.8.1",
     "crypto": "^1.0.1",
@@ -35,7 +37,10 @@
     "typedi": "^0.8.0",
     "typeorm": "^0.2.7",
     "typeorm-routing-controllers-extensions": "^0.2.0",
-    "typeorm-typedi-extensions": "^0.2.1"
+    "typeorm-typedi-extensions": "^0.2.1",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
     "@types/dotenv": "^4.0.3",
@@ -48,9 +53,10 @@
     "@types/shelljs": "^0.8.0",
     "@types/socket.io": "^1.4.38",
     "nodemon": "^1.18.4",
+    "ts-loader": "^5.3.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
-    "typescript": "^3.1.1"
+    "typescript": "^3.1.6"
   }
 }
