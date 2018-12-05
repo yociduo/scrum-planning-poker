@@ -9,7 +9,8 @@
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "serve": "node dist/app.js",
     "build": "npm run tslint && npm run build-ts",
-    "start": "npm run serve"
+    "start": "npm run serve",
+    "watch": "npm run dev"
   },
   "engines": {
     "node": "8.x.x",
