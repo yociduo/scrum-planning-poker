@@ -3,7 +3,7 @@ import { Middleware, MiddlewareInterface } from 'socket-controllers';
 import { getManager } from 'typeorm';
 import { config } from '../../config';
 import { User } from '../../entity';
-import { Socket } from '../../socket';
+import { Socket } from '../../util';
 
 @Middleware()
 export class AuthenitificationMiddleware implements MiddlewareInterface {

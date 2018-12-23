@@ -29,13 +29,16 @@ createConnection({
   logging: false,
   bigNumberStrings: false,
   entities: [
-    'src/entity/**/*.ts',
+    `${__dirname}/entity/**/*.js`,
+    `${__dirname}/entity/**/*.ts`,
   ],
   migrations: [
-    'src/migration/**/*.ts',
+    `${__dirname}/migration/**/*.js`,
+    `${__dirname}/migration/**/*.ts`,
   ],
   subscribers: [
-    'src/subscriber/**/*.ts',
+    `${__dirname}/subscriber/**/*.js`,
+    `${__dirname}/subscriber/**/*.ts`,
   ],
   cli: {
     entitiesDir: 'src/entity',
@@ -52,15 +55,24 @@ createConnection({
      * We can add options about how routing-controllers should configure itself.
      * Here we specify what controllers should be registered in our express server.
      */
-    controllers: [`${__dirname}/controller/api/*.ts`],
-    middlewares: [`${__dirname}/middleware/api/*.ts`],
+    controllers: [
+      `${__dirname}/controller/api/*.js`,
+      `${__dirname}/controller/api/*.ts`,
+    ],
+    middlewares: [
+      `${__dirname}/middleware/api/*.js`,
+      `${__dirname}/middleware/api/*.ts`,
+    ],
     routePrefix: config.routePrefix,
     cors: true,
     ...decorators,
   });
 
   createSocketServer(config.socketPort, {
-    controllers: [`${__dirname}/controller/socket/*.ts`],
+    controllers: [
+      `${__dirname}/controller/socket/*.js`,
+      `${__dirname}/controller/socket/*.ts`,
+    ],
   });
 
   /**

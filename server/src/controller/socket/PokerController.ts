@@ -11,7 +11,7 @@ import {
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Room, Story } from '../../entity';
 import { RoomRepository } from '../../repository';
-import { Socket, formatRoomId } from '../../socket';
+import { Socket, formatRoomId } from '../../util';
 
 @SocketController()
 export class PokerController {

@@ -2,7 +2,7 @@
   "name": "scrum-planning-poker",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/src/app.js",
+  "main": "dist/app.js",
   "scripts": {
     "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
     "build-ts": "tsc",
