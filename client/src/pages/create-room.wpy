@@ -22,7 +22,7 @@ textarea {
 
 .switch-wrp {
   display: flex;
-  margin-bottom: 40rpx;
+  margin-bottom: 20rpx;
   font-size: 34rpx;
   line-height: 40rpx;
   align-items: center;
@@ -30,6 +30,12 @@ textarea {
 
 .switch-wrp__bd {
   flex: 1;
+}
+
+.page-section-title-desc {
+  color: #757475;
+  font-size: 24rpx;
+  display: inline-block;
 }
 </style>
 <template>
@@ -44,7 +50,10 @@ textarea {
             </view>
           </view>
         </view>
-        <view class="page-section-title">{{t.story}}</view>
+        <view class="page-section-title">
+          {{t.story}}
+          <view class="page-section-title-desc">*{{t.story_desc}}</view>
+        </view>
         <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
         <view class="page-section">
           <view class="page-section-spacing">
@@ -82,8 +91,16 @@ import wepy from 'wepy';
 import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';
 import T from '@/utils/i18n';
+import { formatNumber } from '@/utils/utils';
 
-const initRoom = T._('common.room');
+const now = new Date();
+const year = now.getFullYear();
+const month = now.getMonth() + 1;
+const day = now.getDate();
+const initRoom = `${T._('common.room')} ${[year, month, day]
+  .map(formatNumber)
+  .join('.')}`;
+
 const initStories = new Array(3)
   .fill(null)
   .map((n, i) => `${T._('common.story')} 0${i + 1}`)

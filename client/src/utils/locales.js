@@ -30,6 +30,7 @@ export default {
       'title': 'Create Room',
       'room_name': 'Room Name',
       'story': 'Story',
+      'story_desc': 'Feel free to add more stories below.',
       'need_score': 'You will play poker in this room',
       'is_noymous': 'Votings are visible to other players',
       'create_button': 'Create'
@@ -90,6 +91,7 @@ export default {
       'title': '创建房间',
       'room_name': '房间名称',
       'story': '故事',
+      'story_desc': '可以在下方加入更多的故事。',
       'need_score': '你将参与打分',
       'is_noymous': '其余成员将能看到彼此的出分',
       'create_button': '开始打分'
