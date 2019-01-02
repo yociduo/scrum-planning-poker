@@ -37,6 +37,14 @@ textarea {
   font-size: 24rpx;
   display: inline-block;
 }
+
+.textarea-add-story {
+  color: #0678c1;
+  font-size: 24rpx;
+  line-height: 68rpx;
+  text-decoration: underline;
+  display: inline-block;
+}
 </style>
 <template>
   <view class="container">
@@ -59,6 +67,9 @@ textarea {
           <view class="page-section-spacing">
             <view class="textarea-wrp">
               <textarea name="stories" auto-height value="{{stories}}" @blur="onStoriesBlur" maxlength="-1" />
+            </view>
+            <view class="textarea-add-story" @tap="onAddStoryTap">
+              {{t.add_story}}
             </view>
           </view>
         </view>
@@ -103,7 +114,7 @@ const initRoom = `${T._('common.room')} ${[year, month, day]
 
 const initStories = new Array(3)
   .fill(null)
-  .map((n, i) => `${T._('common.story')} 0${i + 1}`)
+  .map((n, i) => `${T._('common.story')} ${formatNumber(i + 1)}`)
   .join('\n');
 
 export default class CreateRoom extends wepy.page {
@@ -133,6 +144,10 @@ export default class CreateRoom extends wepy.page {
       if (!value || !value.trim()) {
         this.setData({ stories: initStories });
       }
+    },
+    onAddStoryTap() {
+      const { length } = this.stories.split('\n');
+      this.stories += `\n${T._('common.story')} ${formatNumber(length + 1)}`;
     },
     async formSubmit(e) {
       if (this.submitting) return;
