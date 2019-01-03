@@ -136,7 +136,8 @@ export default class CreateRoom extends wepy.page {
     onRoomBlur(e) {
       const { value } = e.detail;
       if (!value || !value.trim()) {
-        this.room = initRoom;
+        this.setData({ room: initRoom });
+        // this.room = initRoom;
       } else {
         this.room = value;
       }
@@ -144,7 +145,8 @@ export default class CreateRoom extends wepy.page {
     onStoriesBlur(e) {
       const { value } = e.detail;
       if (!value || !value.trim()) {
-        this.stories = initStories;
+        this.setData({ stories: initStories });
+        // this.stories = initStories;
       } else {
         this.stories = value;
       }
