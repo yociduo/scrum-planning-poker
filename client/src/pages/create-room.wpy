@@ -49,7 +49,7 @@ textarea {
 <template>
   <view class="container">
     <view class="page-body">
-      <form catchsubmit="formSubmit">
+      <form @submit="formSubmit">
         <view class="page-section-title">{{t.room_name}}</view>
         <view class="page-section">
           <view class="page-section-spacing">
@@ -136,13 +136,17 @@ export default class CreateRoom extends wepy.page {
     onRoomBlur(e) {
       const { value } = e.detail;
       if (!value || !value.trim()) {
-        this.setData({ room: initRoom });
+        this.room = initRoom;
+      } else {
+        this.room = value;
       }
     },
     onStoriesBlur(e) {
       const { value } = e.detail;
       if (!value || !value.trim()) {
-        this.setData({ stories: initStories });
+        this.stories = initStories;
+      } else {
+        this.stories = value;
       }
     },
     onAddStoryTap() {
