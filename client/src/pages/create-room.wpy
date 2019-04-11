@@ -107,13 +107,13 @@ export default class CreateRoom extends wepy.page {
   methods = {
     onRoomBlur(e) {
       const { value } = e.detail;
-      if (!value || !/\w+/.test(value)) {
+      if (!value || !value.trim()) {
         this.setData({ room: initRoom });
       }
     },
     onStoriesBlur(e) {
       const { value } = e.detail;
-      if (!value || !/\w+/.test(value)) {
+      if (!value || !value.trim()) {
         this.setData({ stories: initStories });
       }
     },

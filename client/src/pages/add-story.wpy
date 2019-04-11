@@ -55,7 +55,7 @@ export default class AddStory extends wepy.page {
       this.stories = e.detail.value;
     },
     onStoriesBlur() {
-      if (!this.stories || !/\w+/.test(this.stories)) {
+      if (!this.stories || !this.stories.trim()) {
         this.stories = initStories;
       }
     },
