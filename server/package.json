@@ -4,12 +4,12 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
+    "start": "npm run dev",
     "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
     "build-ts": "tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "serve": "node dist/app.js",
+    "serve": "cross-env NODE_ENV=production node dist/app.js",
     "build": "npm run tslint && npm run build-ts",
-    "start": "npm run serve",
     "watch": "npm run dev"
   },
   "engines": {
@@ -28,6 +28,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.11",
+    "log4js": "^4.1.0",
     "multer": "^1.4.0",
     "mysql": "^2.16.0",
     "reflect-metadata": "^0.1.12",
@@ -48,6 +49,7 @@
     "@types/node": "^10.11.3",
     "@types/shelljs": "^0.8.0",
     "@types/socket.io": "^1.4.38",
+    "cross-env": "^5.2.0",
     "nodemon": "^1.18.4",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",

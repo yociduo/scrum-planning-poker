@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import * as dotenv from 'dotenv';
+import { getLogger } from 'log4js';
 import { createKoaServer, useContainer as routingUseContainer } from 'routing-controllers';
 import { createSocketServer, useContainer as socketUseContainer } from 'socket-controllers';
 import { Container } from 'typedi';
@@ -8,8 +8,7 @@ import { config } from './config';
 import { decorators } from './decorator';
 import './middleware/socket/AuthenitificationMiddleware';
 
-// Load environment variables from .env file, where API keys and passwords are configured
-dotenv.config({ path: '.env' });
+const logger = getLogger('startup');
 
 /**
  * Setup routing-controllers typeorm and socket-controllers to use typedi container.
@@ -80,6 +79,6 @@ createConnection({
    */
   koaApp.listen(config.apiPort);
 
-  console.log(`Server is up and running at port ${config.apiPort}`);
+  logger.info(`Server is up and running at port ${config.apiPort}`);
 
-}).catch(error => console.error('TypeORM connection error: ', error));
+}).catch(error => logger.error('TypeORM connection error: ', error));
