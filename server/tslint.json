@@ -1,5 +1,6 @@
 {
   "extends": "tslint-config-airbnb",
   "rules": {
+    "no-console": true
   }
 }
