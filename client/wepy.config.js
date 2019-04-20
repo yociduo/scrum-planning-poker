@@ -24,9 +24,9 @@ module.exports = {
     less: {
       compress: prod
     },
-    /*sass: {
-      outputStyle: 'compressed'
-    },*/
+    // sass: {
+    //   outputStyle: 'compressed'
+    // },
     babel: {
       sourceMap: true,
       presets: [
@@ -36,7 +36,7 @@ module.exports = {
         'transform-class-properties',
         'transform-decorators-legacy',
         'transform-object-rest-spread',
-        'transform-export-extensions',
+        'transform-export-extensions'
       ]
     }
   },
@@ -44,14 +44,13 @@ module.exports = {
   },
   appConfig: {
     noPromiseAPI: ['createSelectorQuery'],
-    apiUrl: prod ? 'https://www.peajs.top/sp/api' : 'http://localhost:3000/api',
-    socketUrl: prod ? 'wss://www.peajs.top' : 'ws://localhost:3001',
-    socketPath: prod ? '/sp/socket.io' : '/socket.io',
+    apiUrl: prod ? 'https://www.scrumplanning.cn/sp/api' : 'http://localhost:3000/api',
+    socketUrl: prod ? 'wss://www.scrumplanning.cn' : 'ws://localhost:3001',
+    socketPath: prod ? '/sp/socket.io' : '/socket.io'
   }
-}
+};
 
 if (prod) {
-
   // 压缩sass
   // module.exports.compilers['sass'] = {outputStyle: 'compressed'}
 
@@ -73,5 +72,5 @@ if (prod) {
         }
       }
     }
-  }
+  };
 }
