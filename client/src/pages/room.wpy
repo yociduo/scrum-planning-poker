@@ -247,103 +247,103 @@
 }
 </style>
 <template>
-  <view class="page">
-    <view class="top-stick" wx:if="{{init && isCompleted && isHost}}">
-      <view class="top-stick-hd">{{t.continue_msg}}</view>
-      <view class="top-stick-ft">
-        <button @tap="onAddTap">
-          <image src="/images/plus.png"></image>
-        </button>
-      </view>
-    </view>
-    <view class="top-stick top-stick-story" wx:if="{{init && !isCompleted}}">
-      <view class="top-stick-hd">{{currentStory.name}}</view>
-      <view class="top-stick-bd">{{currentStory.displayTimer}}</view>
-      <view class="top-stick-ft">
-        <button open-type="share">
-          <image src="/images/user-plus.png"></image>
-        </button>
-      </view>
-    </view>
-    <view class="container" wx:if="{{init}}">
-      <view class="page-body">
-        <view class="page-section" wx:if="{{(!isHost || options.needScore) && !isCompleted}}">
-          <view class="page-section-spacing">
-            <view class="card-grids">
-              <repeat class="card-grid" for="{{cards}}" index="key" item="card" key="key">
-                <view class="card-grid">
-                  <card :card="card" :selectedCard="selectedCard"></card>
-                </view>
-              </repeat>
-            </view>
-          </view>
-        </view>
-        <view class="page-section-title" wx:if="{{!isCompleted}}">{{t.players}}</view>
-        <view class="page-section" wx:if="{{!isCompleted}}">
-          <view class="page-section-spacing">
-            <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
-              <view class="player" wx:for="{{currentStory.scores}}" wx:for-item="score" wx:key="score.user.avatarUrl">
-                <view class="player-hd">
-                  <image class="player-avatar" src="{{score.user.avatarUrl || '/images/user.png'}}"></image>
-                </view>
-                <view class="player-bd">
-                  {{score.user.nickName}}
-                </view>
-                <view class="player-ft">
-                  <view class="player-value" wx:if="{{score.displayCard && (isHost || options.isNoymous)}}">{{score.displayCard}}</view>
-                  <icon class="icon-small" wx:if="{{score.displayCard && !isHost && !options.isNoymous}}" type="success" size="23" color="#0678C1"></icon>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-        <view class="page-section-title" wx:if="{{!isCompleted && isHost}}">{{t.result_calc}}</view>
-        <view class="page-section" wx:if="{{!isCompleted && isHost}}">
-          <view class="page-section-spacing">
-            <view class="result-box">
-              <picker @change="onCalcMethodChange" value="{{options.calcMethod}}" range="{{calcMethods}}" range-key="key">
-                <view class="result">
-                  <view class="result-bd">{{calcMethods[options.calcMethod].key}}</view>
-                  <view class="result-ft"></view>
-                </view>
-              </picker>
-              <picker @change="onResultChange" value="{{currentScore}}" range="{{results}}">
-                <view class="result result-box-ft">
-                  <view class="result-bd">{{t.result}}</view>
-                  <view class="result-ft">{{currentScore || currentScore === 0 ? results[currentScore] : ''}}</view>
-                </view>
-              </picker>
-            </view>
-          </view>
-        </view>
-        <view class="btn-area" wx:if="{{!isCompleted && isHost}}">
-          <button type="primary" loading="{{loading}}" @tap="onSaveTap">{{t.save_next_button}}</button>
-        </view>
-        <view class="page-section-divide" wx:if="{{!isCompleted && isHost}}"></view>
-        <view class="page-section-title" wx:if="{{stories && stories.length}}">{{t.all_stories}}</view>
-        <view class="page-section" wx:if="{{stories && stories.length}}">
-          <view class="page-section-spacing">
-            <view class="story-box">
-              <view class="story" wx:for="{{stories}}" wx:for-item="story" wx:key="story.index">
-                <view class="story-hd">{{story.name}}</view>
-                <view class="story-bd">{{story.displayTimer}}</view>
-                <view class="story-ft">{{story.score || story.score === 0 ? story.score : ''}}</view>
-              </view>
-              <view class="story story-box-ft" wx:if="{{isCompleted}}">
-                <view class="story-hd">{{storyCount + ' ' + (storyCount > 1 ? t.stories : t.story)}}</view>
-                <view class="story-bd">{{displayTimerSum}}</view>
-                <view class="story-ft">{{scoreSum}}</view>
-              </view>
-            </view>
-          </view>
-        </view>
-        <view class="btn-area" wx:if="{{isCompleted}}">
-          <button type="primary" @tap="onBackTap">{{t.finish_button}}</button>
-        </view>
-      </view>
-      <feedback></feedback>
+<view class="page">
+  <view class="top-stick" wx:if="{{init && isCompleted && isHost}}">
+    <view class="top-stick-hd">{{t.continue_msg}}</view>
+    <view class="top-stick-ft">
+      <button @tap="onAddTap">
+        <image src="/images/plus.png"></image>
+      </button>
     </view>
   </view>
+  <view class="top-stick top-stick-story" wx:if="{{init && !isCompleted}}">
+    <view class="top-stick-hd">{{currentStory.name}}</view>
+    <view class="top-stick-bd">{{currentStory.displayTimer}}</view>
+    <view class="top-stick-ft">
+      <button open-type="share">
+        <image src="/images/user-plus.png"></image>
+      </button>
+    </view>
+  </view>
+  <view class="container" wx:if="{{init}}">
+    <view class="page-body">
+      <view class="page-section" wx:if="{{(!isHost || options.needScore) && !isCompleted}}">
+        <view class="page-section-spacing">
+          <view class="card-grids">
+            <repeat class="card-grid" for="{{cards}}" index="key" item="card" key="key">
+              <view class="card-grid">
+                <card :card="card" :selectedCard="selectedCard"></card>
+              </view>
+            </repeat>
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title" wx:if="{{!isCompleted}}">{{t.players}}</view>
+      <view class="page-section" wx:if="{{!isCompleted}}">
+        <view class="page-section-spacing">
+          <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
+            <view class="player" wx:for="{{currentStory.scores}}" wx:for-item="score" wx:key="score.user.avatarUrl">
+              <view class="player-hd">
+                <image class="player-avatar" src="{{score.user.avatarUrl || '/images/user.png'}}"></image>
+              </view>
+              <view class="player-bd">
+                {{score.user.nickName}}
+              </view>
+              <view class="player-ft">
+                <view class="player-value" wx:if="{{score.displayCard && (isHost || options.isNoymous)}}">{{score.displayCard}}</view>
+                <icon class="icon-small" wx:if="{{score.displayCard && !isHost && !options.isNoymous}}" type="success" size="23" color="#0678C1"></icon>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title" wx:if="{{!isCompleted && isHost}}">{{t.result_calc}}</view>
+      <view class="page-section" wx:if="{{!isCompleted && isHost}}">
+        <view class="page-section-spacing">
+          <view class="result-box">
+            <picker @change="onCalcMethodChange" value="{{options.calcMethod}}" range="{{calcMethods}}" range-key="key">
+              <view class="result">
+                <view class="result-bd">{{calcMethods[options.calcMethod].key}}</view>
+                <view class="result-ft"></view>
+              </view>
+            </picker>
+            <picker @change="onResultChange" value="{{currentScore}}" range="{{results}}">
+              <view class="result result-box-ft">
+                <view class="result-bd">{{t.result}}</view>
+                <view class="result-ft">{{currentScore || currentScore === 0 ? results[currentScore] : ''}}</view>
+              </view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="btn-area" wx:if="{{!isCompleted && isHost}}">
+        <button type="primary" loading="{{loading}}" @tap="onSaveTap">{{t.save_next_button}}</button>
+      </view>
+      <view class="page-section-divide" wx:if="{{!isCompleted && isHost}}"></view>
+      <view class="page-section-title" wx:if="{{stories && stories.length}}">{{t.all_stories}}</view>
+      <view class="page-section" wx:if="{{stories && stories.length}}">
+        <view class="page-section-spacing">
+          <view class="story-box">
+            <view class="story" wx:for="{{stories}}" wx:for-item="story" wx:key="story.index">
+              <view class="story-hd">{{story.name}}</view>
+              <view class="story-bd">{{story.displayTimer}}</view>
+              <view class="story-ft">{{story.score || story.score === 0 ? story.score : ''}}</view>
+            </view>
+            <view class="story story-box-ft" wx:if="{{isCompleted}}">
+              <view class="story-hd">{{storyCount + ' ' + (storyCount > 1 ? t.stories : t.story)}}</view>
+              <view class="story-bd">{{displayTimerSum}}</view>
+              <view class="story-ft">{{scoreSum}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="btn-area" wx:if="{{isCompleted}}">
+        <button type="primary" @tap="onBackTap">{{t.finish_button}}</button>
+      </view>
+    </view>
+    <feedback></feedback>
+  </view>
+</view>
 </template>
 
 <script>

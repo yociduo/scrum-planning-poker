@@ -126,69 +126,69 @@ input {
 }
 </style>
 <template>
-  <view class="page">
-    <view class="container">
-      <view class="page-body">
-        <view class="page-section-title">{{t.room_name}}</view>
-        <view class="page-section">
-          <view class="page-section-spacing">{{room.name}}</view>
-        </view>
-        <view
-          class="page-section-title"
-          wx:if="{{room.stories && room.stories.length}}"
-        >{{t.all_stories}}</view>
-        <view class="page-section" wx:if="{{room.stories && room.stories.length}}">
-          <view class="page-section-spacing">
-            <view class="kind-list">
-              <block wx:for-items="{{room.stories}}" wx:key="{{item.id}}">
-                <view class="kind-list-item">
-                  <view
-                    id="{{item.id}}"
-                    class="kind-list-item-hd {{item.open ? 'kind-list-item-hd-show' : ''}}"
-                    @tap="kindToggle({{item.id}})"
-                  >
-                    <view class="kind-list-text">{{item.name}}</view>
-                    <view class="kind-list-time">{{item.displayTimer}}</view>
-                    <view class="kind-list-value">{{item.score || item.score === 0 ? item.score : ''}}</view>
-                  </view>
-                  <view class="kind-list-item-bd {{item.open ? 'kind-list-item-bd-show' : ''}}">
-                    <view class="navigator-box {{item.open ? 'navigator-box-show' : ''}}">
+<view class="page">
+  <view class="container">
+    <view class="page-body">
+      <view class="page-section-title">{{t.room_name}}</view>
+      <view class="page-section">
+        <view class="page-section-spacing">{{room.name}}</view>
+      </view>
+      <view
+        class="page-section-title"
+        wx:if="{{room.stories && room.stories.length}}"
+      >{{t.all_stories}}</view>
+      <view class="page-section" wx:if="{{room.stories && room.stories.length}}">
+        <view class="page-section-spacing">
+          <view class="kind-list">
+            <block wx:for-items="{{room.stories}}" wx:key="{{item.id}}">
+              <view class="kind-list-item">
+                <view
+                  id="{{item.id}}"
+                  class="kind-list-item-hd {{item.open ? 'kind-list-item-hd-show' : ''}}"
+                  @tap="kindToggle({{item.id}})"
+                >
+                  <view class="kind-list-text">{{item.name}}</view>
+                  <view class="kind-list-time">{{item.displayTimer}}</view>
+                  <view class="kind-list-value">{{item.score || item.score === 0 ? item.score : ''}}</view>
+                </view>
+                <view class="kind-list-item-bd {{item.open ? 'kind-list-item-bd-show' : ''}}">
+                  <view class="navigator-box {{item.open ? 'navigator-box-show' : ''}}">
+                    <view
+                      class="navigator"
+                      wx:for-items="{{item.scores}}"
+                      wx:for-item="user"
+                      wx:key="*item"
+                    >
                       <view
-                        class="navigator"
-                        wx:for-items="{{item.scores}}"
-                        wx:for-item="user"
-                        wx:key="*item"
-                      >
-                        <view
-                          class="kind-list-text"
-                          style="flex: 2; font-weight: 400;"
-                        >{{user.user.nickName}}</view>
-                        <view
-                          class="kind-list-value"
-                          style="color: #4a4a4a;"
-                        >{{user.card || user.card === 0 ? (user.card === -1 ? '?' : user.card ) : ''}}</view>
-                      </view>
+                        class="kind-list-text"
+                        style="flex: 2; font-weight: 400;"
+                      >{{user.user.nickName}}</view>
+                      <view
+                        class="kind-list-value"
+                        style="color: #4a4a4a;"
+                      >{{user.card || user.card === 0 ? (user.card === -1 ? '?' : user.card ) : ''}}</view>
                     </view>
                   </view>
                 </view>
-              </block>
-              <view class="kind-list-ft">
-                <view
-                  class="kind-list-text"
-                >{{room.storyCount + ' ' + (room.storyCount > 1 ? t.stories : t.story)}}</view>
-                <view class="kind-list-time">{{room.displayTimerSum}}</view>
-                <view class="kind-list-value">{{room.scoreSum}}</view>
               </view>
+            </block>
+            <view class="kind-list-ft">
+              <view
+                class="kind-list-text"
+              >{{room.storyCount + ' ' + (room.storyCount > 1 ? t.stories : t.story)}}</view>
+              <view class="kind-list-time">{{room.displayTimerSum}}</view>
+              <view class="kind-list-value">{{room.scoreSum}}</view>
             </view>
           </view>
         </view>
-        <view class="btn-area">
-          <button type="primary" @tap="onBackTap">{{t.back_button}}</button>
-        </view>
       </view>
-      <feedback></feedback>
+      <view class="btn-area">
+        <button type="primary" @tap="onBackTap">{{t.back_button}}</button>
+      </view>
     </view>
+    <feedback></feedback>
   </view>
+</view>
 </template>
 
 <script>

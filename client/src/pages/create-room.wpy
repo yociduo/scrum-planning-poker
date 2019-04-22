@@ -47,57 +47,57 @@ textarea {
 }
 </style>
 <template>
-  <view class="page">
-    <view class="container">
-      <view class="page-body">
-        <form @submit="formSubmit">
-          <view class="page-section-title">{{t.room_name}}</view>
-          <view class="page-section">
-            <view class="page-section-spacing">
-              <view class="input-wrp">
-                <input name="room" @blur="onRoomBlur" value="{{room}}" />
+<view class="page">
+  <view class="container">
+    <view class="page-body">
+      <form @submit="formSubmit">
+        <view class="page-section-title">{{t.room_name}}</view>
+        <view class="page-section">
+          <view class="page-section-spacing">
+            <view class="input-wrp">
+              <input name="room" @blur="onRoomBlur" value="{{room}}" />
+            </view>
+          </view>
+        </view>
+        <view class="page-section-title">
+          {{t.story}}
+          <view class="page-section-title-desc">*{{t.story_desc}}</view>
+        </view>
+        <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
+        <view class="page-section">
+          <view class="page-section-spacing">
+            <view class="textarea-wrp">
+              <textarea name="stories" auto-height value="{{stories}}" @blur="onStoriesBlur" maxlength="-1" />
+            </view>
+            <view class="textarea-add-story" @tap="onAddStoryTap">
+              {{t.add_story}}
+            </view>
+          </view>
+        </view>
+        <view class="page-section">
+          <view class="page-section-spacing">
+            <view class="switch-wrp">
+              <view class="switch-wrp__bd">{{t.need_score}}</view>
+              <view class="switch-wrp__ft">
+                <switch name="needScore" color="#0678C1" checked></switch>
+              </view>
+            </view>
+            <view class="switch-wrp">
+              <view class="switch-wrp__bd">{{t.is_noymous}}</view>
+              <view class="switch-wrp__ft">
+                <switch name="isNoymous" color="#0678C1"></switch>
               </view>
             </view>
           </view>
-          <view class="page-section-title">
-            {{t.story}}
-            <view class="page-section-title-desc">*{{t.story_desc}}</view>
-          </view>
-          <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
-          <view class="page-section">
-            <view class="page-section-spacing">
-              <view class="textarea-wrp">
-                <textarea name="stories" auto-height value="{{stories}}" @blur="onStoriesBlur" maxlength="-1" />
-              </view>
-              <view class="textarea-add-story" @tap="onAddStoryTap">
-                {{t.add_story}}
-              </view>
-            </view>
-          </view>
-          <view class="page-section">
-            <view class="page-section-spacing">
-              <view class="switch-wrp">
-                <view class="switch-wrp__bd">{{t.need_score}}</view>
-                <view class="switch-wrp__ft">
-                  <switch name="needScore" color="#0678C1" checked></switch>
-                </view>
-              </view>
-              <view class="switch-wrp">
-                <view class="switch-wrp__bd">{{t.is_noymous}}</view>
-                <view class="switch-wrp__ft">
-                  <switch name="isNoymous" color="#0678C1"></switch>
-                </view>
-              </view>
-            </view>
-          </view>
-          <view class="btn-area">
-            <button type="primary" formType="submit" loading="{{submitting}}">{{t.create_button}}</button>
-          </view>
-        </form>
-      </view>
-      <feedback></feedback>
+        </view>
+        <view class="btn-area">
+          <button type="primary" formType="submit" loading="{{submitting}}">{{t.create_button}}</button>
+        </view>
+      </form>
     </view>
+    <feedback></feedback>
   </view>
+</view>
 </template>
 
 <script>
