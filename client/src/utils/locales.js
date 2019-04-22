@@ -14,6 +14,7 @@ export default {
     'common.calc_method.truncated_mean': 'Truncated mean',
     'common.calc_method.median': 'Median',
     'common.calc_method.customized': 'Customized',
+    'common.feedback': 'Feedback',
     'index': {
       'title': 'Scrum Planning',
       'create_button': 'Create a new room',
@@ -76,6 +77,7 @@ export default {
     'common.calc_method.truncated_mean': '切尾平均数',
     'common.calc_method.median': '中位数',
     'common.calc_method.customized': '自定义',
+    'common.feedback': '吐个槽',
     'index': {
       'title': 'Scrum敏捷估算',
       'create_button': '创建新房间',

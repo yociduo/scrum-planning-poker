@@ -1,0 +1,27 @@
+<style lang="less">
+</style>
+<template>
+  <view class="page-footer">
+    <button open-type="contact">
+      {{text}}
+    </button>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import T from '@/utils/i18n';
+
+export default class Feedback extends wepy.component {
+  props = {};
+
+  data = {
+    text: T._('common.feedback')
+  };
+
+  methods = {};
+
+  onLoad(options) {
+    this.text = T._('common.feedback');
+  }
+}
+</script>
