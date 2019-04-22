@@ -1,8 +1,20 @@
 <style lang="less">
+  .feedback-btn {
+    color: #757475;
+    font-size: 24rpx;
+    text-decoration: underline;
+    background: none;
+    line-height: 30rpx;
+    margin-top: 10rpx;
+    margin-bottom: 10rpx;
+  }
+  .feedback-btn:after {
+    border: none;
+  }
 </style>
 <template>
   <view class="page-footer">
-    <button open-type="contact">
+    <button class="feedback-btn" open-type="contact">
       {{text}}
     </button>
   </view>
