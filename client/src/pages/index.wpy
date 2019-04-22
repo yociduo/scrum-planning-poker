@@ -25,7 +25,7 @@
 }
 </style>
 <template>
-  <view>
+  <view class="page">
     <view class="top-stick">
       <button @tap="onCreateTap">{{t.create_button}}</button>
     </view>
@@ -42,12 +42,14 @@
           </view>
         </view>
       </view>
+      <feedback></feedback>
     </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import Feedback from '@/components/feedback';
 import RoomListItem from '@/components/room-list-item';
 import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';
@@ -58,7 +60,8 @@ export default class Index extends wepy.page {
   };
 
   components = {
-    roomListItem: RoomListItem
+    roomListItem: RoomListItem,
+    feedback: Feedback
   };
 
   mixins = [LocalesMixin, LoginMixin];

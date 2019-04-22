@@ -15,28 +15,32 @@ textarea {
 }
 </style>
 <template>
-<view class="container">
-  <view class="page-body">
-    <form catchsubmit="formSubmit">
-      <view class="page-section-title">{{t.story}}</view>
-      <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
-      <view class="page-section">
-        <view class="page-section-spacing">
-          <view class="textarea-wrp">
-            <textarea name="stories" auto-height value="{{stories}}" @input="onStoryChange" @blur="onStoriesBlur" />
+  <view class="page">
+    <view class="container">
+      <view class="page-body">
+        <form catchsubmit="formSubmit">
+          <view class="page-section-title">{{t.story}}</view>
+          <!-- <view class="page-section-title">Put your stories text here. Each line contains new story.</view> -->
+          <view class="page-section">
+            <view class="page-section-spacing">
+              <view class="textarea-wrp">
+                <textarea name="stories" auto-height value="{{stories}}" @input="onStoryChange" @blur="onStoriesBlur" />
+              </view>
+            </view>
           </view>
-        </view>
+          <view class="btn-area">
+            <button type="primary" formType="submit">{{t.add_button}}</button>
+          </view>
+        </form>
       </view>
-      <view class="btn-area">
-        <button type="primary" formType="submit">{{t.add_button}}</button>
-      </view>
-    </form>
+      <feedback></feedback>
+    </view>
   </view>
-</view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import Feedback from '@/components/feedback';
 import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';
 import T from '@/utils/i18n';
@@ -46,6 +50,10 @@ let initStories;
 export default class AddStory extends wepy.page {
   data = {
     stories: ''
+  };
+
+  components = {
+    feedback: Feedback
   };
 
   mixins = [LocalesMixin, LoginMixin];
