@@ -45,7 +45,8 @@ export default class extends wepy.app {
   globalData = {
     userInfo: null,
     token: null,
-    lang: defaultLang
+    lang: defaultLang,
+    isIpx: false
   };
 
   constructor() {
@@ -98,6 +99,10 @@ export default class extends wepy.app {
     setTimeout(() => {
       this.checkForUpdates();
     }, 1000);
+    const { model } = wepy.getSystemInfoSync();
+    if (model.search('iPhone X') !== -1) {
+      this.globalData.isIpx = true;
+    }
   }
 
   onShow() {

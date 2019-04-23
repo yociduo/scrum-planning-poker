@@ -14,7 +14,7 @@
 </style>
 <template>
   <view class="page-footer">
-    <button class="feedback-btn" open-type="contact">
+    <button class="feedback-btn" open-type="contact" style="margin-bottom: {{btnBottom}}">
       {{text}}
     </button>
   </view>
@@ -27,13 +27,16 @@ export default class Feedback extends wepy.component {
   props = {};
 
   data = {
-    text: T._('common.feedback')
+    text: T._('common.feedback'),
+    btnBottom: '10rpx'
   };
 
   methods = {};
 
   onLoad(options) {
     this.text = T._('common.feedback');
+    this.btnBottom = this.$parent.$parent.globalData.isIpx ? '68rpx' : '10rpx';
+    this.$apply();
   }
 }
 </script>
