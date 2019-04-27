@@ -44,11 +44,12 @@
 }
 
 .top-stick-story .top-stick-ft button {
-  width: 90rpx;
+  width: 78rpx;
   height: 78rpx;
   padding: 20rpx;
-  margin-left: -20rpx;
-  margin-right: -20rpx;
+  margin-left: -14rpx;
+  margin-right: -14rpx;
+  border-radius: 39rpx;
 }
 
 .top-stick-story .top-stick-ft image {
@@ -245,6 +246,42 @@
   bottom: 5rpx;
   transform: rotate(-180deg);
 }
+
+.instruction-cover {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, .65);
+  z-index: 1000;
+}
+
+.instruction-cover .top-stick {
+  background-color: transparent;
+}
+
+.instruction-cover .top-stick-story .top-stick-ft button {
+  background-color: #fff;
+}
+
+.instruction-cover .page-section-empty {
+  color: #fff;
+  margin-top: 286rpx;
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 500;
+  line-height: 56rpx;
+}
+
+.instruction-scribble {
+  width: 111rpx;
+  height: 163rpx;
+  position: absolute;
+  top: 125rpx;
+  right: 118rpx;
+}
+
 </style>
 <template>
 <view class="page">
@@ -343,6 +380,24 @@
     </view>
     <feedback></feedback>
   </view>
+  <view class="instruction-cover" wx:if="{{init && !isCompleted && showInstruction}}" @tap="onShowInstruction">
+    <view class="top-stick top-stick-story">
+      <view class="top-stick-hd"></view>
+      <view class="top-stick-bd"></view>
+      <view class="top-stick-ft">
+        <button open-type="share" @tap="onShowInstruction">
+          <image src="/images/user-plus.png"></image>
+        </button>
+      </view>
+      <image class="instruction-scribble" src="/images/scribble.png"></image>
+    </view>
+    <view class="page-section">
+      <view class="page-section-spacing page-section-empty">
+        <view>{{t.instruction_line_1}}</view>
+        <view>{{t.instruction_line_2}}</view>
+      </view>
+    </view>
+  </view>
 </view>
 </template>
 
@@ -354,7 +409,7 @@ import Feedback from '@/components/feedback';
 import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';
 import T from '@/utils/i18n';
-import { calcMethods, cards, formatTimer, initResults } from '@/utils/utils';
+import { calcMethods, cards, formatTimer, initResults, INSTRUCTION_KEY } from '@/utils/utils';
 
 export default class Room extends wepy.page {
   data = {
@@ -372,7 +427,8 @@ export default class Room extends wepy.page {
     isCompleted: false,
     storyCount: 0,
     displayTimerSum: 0,
-    scoreSum: 0
+    scoreSum: 0,
+    showInstruction: false
   };
 
   components = {
@@ -405,6 +461,10 @@ export default class Room extends wepy.page {
       } else {
         this.$redirect('index');
       }
+    },
+    onShowInstruction() {
+      this.showInstruction = false;
+      wepy.setStorageSync(INSTRUCTION_KEY, true);
     }
   };
 
@@ -434,6 +494,8 @@ export default class Room extends wepy.page {
 
   onLoad(options) {
     this.id = Number(options.id);
+
+    this.showInstruction = !wepy.getStorageSync(INSTRUCTION_KEY);
 
     const { socketUrl, socketPath } = wepy.$appConfig;
 

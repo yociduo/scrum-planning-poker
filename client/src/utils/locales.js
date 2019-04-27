@@ -48,7 +48,9 @@ export default {
       'stories': 'stories',
       'continue_msg': 'Continue with this room & Add story!',
       'save_next_button': 'Save & Next',
-      'finish_button': 'Finish'
+      'finish_button': 'Finish',
+      'instruction_line_1': 'The room has been created.',
+      'instruction_line_2': 'Let\'s invite members to join in the room!'
     },
     'room-detail': {
       'title': 'Room Detail',
@@ -113,7 +115,9 @@ export default {
       'stories': '个故事',
       'continue_msg': '在该房间继续添加故事！',
       'save_next_button': '保存并继续',
-      'finish_button': '结束打分'
+      'finish_button': '结束打分',
+      'instruction_line_1': '房间已创建。',
+      'instruction_line_2': '快去邀请成员进房间估算吧！'
     },
     'room-detail': {
       'title': '房间详情',
