@@ -40,7 +40,6 @@
 
 .welcome-btn-area {
   position: absolute;
-  bottom: 60rpx;
 }
 </style>
 <template>
@@ -52,7 +51,7 @@
         <cover-image src="../images/cover.png"></cover-image>
         <view class="welcome-bg-circle"></view>
       </view>
-      <view class="welcome-btn-area btn-area">
+      <view class="welcome-btn-area btn-area" style="bottom: {{btnBottom}}">
         <button type="primary" open-type="getUserInfo" loading="{{loading}}" @getuserinfo="onGotUserInfo">{{t.button}}</button>
       </view>
     </view>
@@ -68,7 +67,8 @@ import LocalesMixin from '@/mixins/locales-mixin';
 
 export default class Welcome extends wepy.page {
   data = {
-    loading: false
+    loading: false,
+    btnBottom: '60rpx'
   };
 
   components = {
@@ -98,6 +98,7 @@ export default class Welcome extends wepy.page {
 
   onLoad(options, { from }) {
     this.from = from;
+    this.btnBottom = this.$parent.globalData.isIpx ? '118rpx' : '60rpx';
   }
 
   redirect() {
