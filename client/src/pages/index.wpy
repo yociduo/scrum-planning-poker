@@ -74,7 +74,7 @@ import LoginMixin from '@/mixins/login-mixin';
 export default class Index extends wepy.page {
   data = {
     rooms: [],
-    loading: false,
+    loading: false
   };
 
   components = {
