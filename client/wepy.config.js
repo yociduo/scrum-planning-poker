@@ -44,9 +44,8 @@ module.exports = {
   },
   appConfig: {
     noPromiseAPI: ['createSelectorQuery'],
-    apiUrl: prod ? 'https://www.scrumplanning.cn/sp/api' : 'http://localhost:3000/api',
-    socketUrl: prod ? 'wss://www.scrumplanning.cn' : 'ws://localhost:3001',
-    socketPath: prod ? '/sp/socket.io' : '/socket.io'
+    apiUrl: prod ? 'https://www.scrumplanning.cn/api' : 'http://localhost:3000/api',
+    socketUrl: prod ? 'wss://www.scrumplanning.cn' : 'ws://localhost:3001'
   }
 };
 
