@@ -12,10 +12,11 @@ export class MessageController {
     @QueryParam('signature') signature: string,
     @QueryParam('timestamp') timestamp: string,
     @QueryParam('nonce') nonce: string,
+    @QueryParam('echostr') echostr: string,
   ) {
     const sha1 = md.sha1.create();
     sha1.update([config.jwtSecret, timestamp, nonce].sort().join(''));
-    return sha1.digest().toHex() === signature;
+    return sha1.digest().toHex() === signature ? echostr : null;
   }
 
 }
