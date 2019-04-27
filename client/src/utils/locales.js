@@ -20,7 +20,9 @@ export default {
       'create_button': 'Create a new room',
       'history_rooms': 'History rooms',
       'story': 'story',
-      'stories': 'stories'
+      'stories': 'stories',
+      'empty_line_1': 'You have not created any room.',
+      'empty_line_2': 'Please create a new room and invite team members to play pokers together.'
     },
     'welcome': {
       'title': 'Scrum Planning',
@@ -83,7 +85,9 @@ export default {
       'create_button': '创建新房间',
       'history_rooms': '历史房间',
       'story': '个故事',
-      'stories': '个故事'
+      'stories': '个故事',
+      'empty_line_1': '你还没有创建任何房间哦',
+      'empty_line_2': '赶紧创建房间来邀请团队一起打分吧'
     },
     'welcome': {
       'title': 'Scrum敏捷估算',

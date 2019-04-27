@@ -23,6 +23,13 @@
   border: 2rpx solid #d8d8d8;
   margin-bottom: 40rpx;
 }
+
+.page-section-empty {
+  margin-top: 89rpx;
+  text-align: center;
+  font-size: 35rpx;
+  line-height: 39rpx;
+}
 </style>
 <template>
 <view class="page">
@@ -31,16 +38,26 @@
   </view>
   <view class="container">
     <view class="page-body">
-      <view class="page-section-title">{{t.history_rooms}}</view>
-      <view class="page-section">
-        <view class="page-section-spacing">
-          <view class="room-list" wx:if="{{rooms && rooms.length}}">
-            <repeat for="{{rooms}}" index="id" item="room" key="id">
-              <roomListItem :room="room"></roomListItem>
-            </repeat>
+      <block wx:if="{{rooms && rooms.length}}">
+        <view class="page-section-title">{{t.history_rooms}}</view>
+        <view class="page-section">
+          <view class="page-section-spacing">
+            <view class="room-list">
+              <repeat for="{{rooms}}" index="id" item="room" key="id">
+                <roomListItem :room="room"></roomListItem>
+              </repeat>
+            </view>
           </view>
         </view>
-      </view>
+      </block>
+      <block wx:elif="{{!loading}}">
+        <view class="page-section">
+          <view class="page-section-spacing page-section-empty">
+            <view>{{t.empty_line_1}}</view>
+            <view>{{t.empty_line_2}}</view>
+          </view>
+        </view>
+      </block>
     </view>
     <feedback></feedback>
   </view>
@@ -56,7 +73,8 @@ import LoginMixin from '@/mixins/login-mixin';
 
 export default class Index extends wepy.page {
   data = {
-    rooms: []
+    rooms: [],
+    loading: false,
   };
 
   components = {
@@ -80,6 +98,7 @@ export default class Index extends wepy.page {
 
   async onShow() {
     if (!this.$parent.globalData.token) return;
+    this.loading = true;
     await wepy.showLoading();
     const rooms = await wepy.request({
       url: `/rooms`,
@@ -87,6 +106,7 @@ export default class Index extends wepy.page {
     });
     if (rooms) {
       this.rooms = rooms;
+      this.loading = false;
       this.$apply();
     }
     await wepy.hideLoading();
