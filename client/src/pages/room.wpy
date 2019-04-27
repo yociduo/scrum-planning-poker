@@ -43,7 +43,7 @@
   display: block;
 }
 
-.top-stick-story .top-stick-bd {
+.top-stick-story .top-stick-hd {
   color: #0678c1;
   font-weight: 500;
 }
