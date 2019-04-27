@@ -42,7 +42,7 @@ export default {
     'room': {
       'players': 'Players',
       'result_calc': 'Result calculation',
-      'result': 'Restul',
+      'result': 'Result',
       'all_stories': 'All stories',
       'story': 'story',
       'stories': 'stories',
