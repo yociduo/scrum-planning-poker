@@ -24,8 +24,12 @@
   margin: 0;
   padding: 0;
   background-color: transparent;
-  width: 38rpx;
-  height: 38rpx;
+  width: 78rpx;
+  height: 78rpx;
+  border-radius: 39rpx;
+  margin-left: -20rpx;
+  margin-right: -20rpx;
+  background-color: #fff;
 }
 
 .top-stick-ft button:after {
@@ -33,27 +37,26 @@
 }
 
 .top-stick-ft image {
+  margin: 20rpx;
   width: 38rpx;
   height: 38rpx;
   display: block;
 }
 
-.top-stick-story .top-stick-hd {
+.top-stick-story .top-stick-bd {
   color: #0678c1;
   font-weight: 500;
 }
 
 .top-stick-story .top-stick-ft button {
-  width: 78rpx;
-  height: 78rpx;
-  padding: 20rpx;
-  margin-left: -14rpx;
-  margin-right: -14rpx;
-  border-radius: 39rpx;
+  margin-left: -15rpx;
+  margin-right: -13rpx;
 }
 
 .top-stick-story .top-stick-ft image {
   width: 50rpx;
+  margin-left: 15rpx;
+  margin-right: 13rpx;
 }
 
 .top-stick + .container {
@@ -261,10 +264,6 @@
   background-color: transparent;
 }
 
-.instruction-cover .top-stick-story .top-stick-ft button {
-  background-color: #fff;
-}
-
 .instruction-cover .page-section-empty {
   color: #fff;
   margin-top: 286rpx;
@@ -281,7 +280,6 @@
   top: 125rpx;
   right: 118rpx;
 }
-
 </style>
 <template>
 <view class="page">
