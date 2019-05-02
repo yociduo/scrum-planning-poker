@@ -65,3 +65,6 @@ project.config.json
 
 # archieve
 .archieve
+
+# nohup
+nohup.out
