@@ -1,7 +1,7 @@
 {
   "name": "scrum-planning-poker",
   "version": "0.0.1",
-  "description": "",
+  "description": "scrum-planning-poker server",
   "main": "dist/app.js",
   "scripts": {
     "start": "npm run dev",
@@ -16,6 +16,15 @@
     "node": "8.x.x",
     "npm": "5.x.x"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yociduo/scrum-planning-poker.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yociduo/scrum-planning-poker/issues"
+  },
+  "homepage": "https://www.scrumplanning.cn",
   "author": "",
   "dependencies": {
     "axios": "^0.18.0",
@@ -28,7 +37,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.11",
-    "log4js": "^4.1.0",
+    "log4js": "^3.0.6",
     "multer": "^1.4.0",
     "mysql": "^2.16.0",
     "node-forge": "^0.8.2",
