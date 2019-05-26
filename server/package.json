@@ -41,11 +41,12 @@
     "multer": "^1.4.0",
     "mysql": "^2.16.0",
     "node-forge": "^0.8.2",
+    "pg": "^7.11.0",
     "reflect-metadata": "^0.1.12",
     "routing-controllers": "^0.7.7",
     "socket-controllers": "0.0.3",
     "typedi": "^0.8.0",
-    "typeorm": "^0.2.7",
+    "typeorm": "^0.2.17",
     "typeorm-routing-controllers-extensions": "^0.2.0",
     "typeorm-typedi-extensions": "^0.2.1"
   },
@@ -65,6 +66,6 @@
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
-    "typescript": "^3.1.1"
+    "typescript": "^3.4.5"
   }
 }

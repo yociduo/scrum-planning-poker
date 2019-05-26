@@ -30,7 +30,7 @@ export class User {
   avatarUrl: string;
 
   @IsInt()
-  @Column('tinyint', { nullable: true })
+  @Column('smallint', { nullable: true })
   gender?: number;
 
   @Length(255)
