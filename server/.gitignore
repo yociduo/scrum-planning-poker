@@ -28,3 +28,4 @@ $RECYCLE.BIN/
 
 # Optional npm cache directory
 .npm
+db/
