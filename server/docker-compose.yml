@@ -24,9 +24,9 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - "./db:/var/lib/mysql"
-      - "./conf/my.cnf:/etc/my.cnf"
-      - "./init:/docker-entrypoint-initdb.d/"
+      - "../mysql/data:/var/lib/mysql"
+      - "../mysql/my.cnf:/etc/mysql/my.cnf:ro"
+      - "../mysql/init:/docker-entrypoint-initdb.d/:ro"
     networks:
       - scrumpoker
 
