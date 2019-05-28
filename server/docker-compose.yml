@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
-      - 3001:3001
+      - $API_PORT:$API_PORT
+      - $SOCKET_PORT:$SOCKET_PORT
     env_file:
       - .env
     restart: unless-stopped
@@ -17,13 +17,10 @@ services:
 
   db:
     image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: scrumpoker
-      MYSQL_DATABASE: scrumpoker
-      MYSQL_USER: scrumpoker
-      MYSQL_PASSWORD: scrumpoker
+    env_file:
+      - .env
     ports:
-      - 3306:3306
+      - 3306
     volumes:
       - ../mysql/data:/var/lib/mysql
       - ../mysql/my.cnf:/etc/mysql/my.cnf:ro
