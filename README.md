@@ -6,7 +6,7 @@ Scrum扑克让敏捷项目估算更加精确简单并充满乐趣！
 ---------------------
 打开微信扫一扫
 
-![image](https://github.com/yociduo/scrum-planning-poker/blob/develop/img/minipcode_258.jpg)
+![image](https://github.com/yociduo/scrum-planning-poker/blob/develop/img/小程序搜一搜.jpg)
 
 产品优势
 -----------------
@@ -32,4 +32,4 @@ Have a Try
 --------
 Open Wechat and scan the Mini Program code below:
 
-![image](https://github.com/yociduo/scrum-planning-poker/blob/develop/img/minipcode_258.jpg)
+![image](https://github.com/yociduo/scrum-planning-poker/blob/develop/img/小程序搜一搜.png)
