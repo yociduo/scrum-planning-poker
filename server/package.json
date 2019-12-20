@@ -6,11 +6,12 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
-    "build-ts": "tsc",
+    "build-ts": "tsc -p tsconfig.build.json",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "serve": "cross-env NODE_ENV=production node dist/app.js",
     "build": "npm run tslint && npm run build-ts",
-    "watch": "npm run dev"
+    "watch": "npm run dev",
+    "test": "jest --env=node --colors --coverage --detectOpenHandles tests"
   },
   "engines": {
     "node": "8.x.x",
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@types/dotenv": "^4.0.3",
+    "@types/jest": "^24.0.24",
     "@types/jsonwebtoken": "^7.2.8",
     "@types/koa": "^2.0.48",
     "@types/koa-bodyparser": "^5.0.1",
@@ -62,7 +64,9 @@
     "@types/shelljs": "^0.8.0",
     "@types/socket.io": "^1.4.38",
     "cross-env": "^5.2.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.18.4",
+    "ts-jest": "^24.2.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
