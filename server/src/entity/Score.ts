@@ -19,10 +19,16 @@ export class Score {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.scores, { nullable: false })
+  @Column({ nullable: false })
+  userId: number;
+
+  @ManyToOne(() => User, user => user.scores)
   user: User;
 
-  @ManyToOne(() => Story, story => story.scores, { nullable: false })
+  @Column({ nullable: false })
+  storyId: number;
+
+  @ManyToOne(() => Story, story => story.scores)
   story: Story;
 
   @IsHexadecimal()

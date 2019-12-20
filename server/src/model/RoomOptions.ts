@@ -1,5 +1,7 @@
+import { CalcMethod } from './CalcMethod';
+
 export class RoomOptions {
   needScore: boolean;
   isNoymous: boolean;
-  calcMethod: number;
+  calcMethod: CalcMethod;
 }

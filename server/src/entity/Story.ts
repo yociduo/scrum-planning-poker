@@ -30,7 +30,10 @@ export class Story {
   @Column('text', { nullable: true })
   description?: string;
 
-  @ManyToOne(() => Room, room => room.stories, { nullable: false })
+  @Column({ nullable: false })
+  roomId: number;
+
+  @ManyToOne(() => Room, room => room.stories)
   room: Room;
 
   @OneToMany(() => Score, score => score.story)
@@ -48,13 +51,19 @@ export class Story {
   @Column('smallint', { nullable: true })
   meanType?: number;
 
-  @ManyToOne(() => User, user => user.createdStories, { nullable: false })
+  @Column({ nullable: false })
+  creatorId: number;
+
+  @ManyToOne(() => User, user => user.createdStories)
   creator: User;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => User, user => user.updatedStories, { nullable: false })
+  @Column({ nullable: false })
+  updaterId: number;
+
+  @ManyToOne(() => User, user => user.updatedStories)
   updater: User;
 
   @UpdateDateColumn()

@@ -18,10 +18,16 @@ export class UserRoom {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.visitedRooms, { nullable: false })
+  @Column({ nullable: false })
+  userId: number;
+
+  @ManyToOne(() => User, user => user.visitedRooms)
   user: User;
 
-  @ManyToOne(() => Room, room => room.userRooms, { nullable: false })
+  @Column({ nullable: false })
+  roomId: number;
+
+  @ManyToOne(() => Room, room => room.userRooms)
   room: Room;
 
   @CreateDateColumn()

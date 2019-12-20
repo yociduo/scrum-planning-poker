@@ -32,13 +32,19 @@ export class Room {
   @OneToMany(() => Story, story => story.room)
   stories: Story[];
 
-  @ManyToOne(() => User, user => user.createdRooms, { nullable: false })
+  @Column({ nullable: false })
+  creatorId: number;
+
+  @ManyToOne(() => User, user => user.createdRooms)
   creator: User;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => User, user => user.updatedRooms, { nullable: false })
+  @Column({ nullable: false })
+  updaterId: number;
+
+  @ManyToOne(() => User, user => user.updatedRooms)
   updater: User;
 
   @UpdateDateColumn()
