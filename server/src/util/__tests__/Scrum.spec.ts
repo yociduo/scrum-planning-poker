@@ -38,6 +38,9 @@ describe('Scrum', () => {
         await transactionalEntityManager.insert(User, user);
       }
 
+      // tslint:disable-next-line: max-line-length
+      [host, ...players] = await transactionalEntityManager.find(User, { take: 4, order: { id: 'DESC' } });
+
       room = new Room();
       room.name = '[Jest] Test Room';
       room.options = {
@@ -59,7 +62,6 @@ describe('Scrum', () => {
       }
     });
 
-    [host, ...players] = await getManager().find(User, { take: 4, order: { id: 'DESC' } });
 
     room = await Scrum.getRoom(room.id);
     scrum = new Scrum(room, onDestory);
