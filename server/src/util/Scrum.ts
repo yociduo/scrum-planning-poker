@@ -4,23 +4,31 @@ import { CalcMethod } from '../model';
 
 export class Scrum {
 
+  public static readonly runningScrums: { [key: number]: Scrum } = {};
+
   public static readonly initResults = Array(31)
     .fill(null)
     .map((v, i) => i)
     .concat([0.5, 40, 55, 89, 100])
     .sort((i, j) => i - j);
 
-  public static async getRoom(id: number): Promise<Room> {
-    return await getManager().findOneOrFail(Room, {
-      relations: [
-        'userRooms',
-        'stories',
-        'stories.scores',
-      ],
-      where: {
-        id,
-      },
-    });
+  public static async getRoom(id: number, force: boolean = false): Promise<Room> {
+    if (!Scrum.runningScrums.hasOwnProperty(id) || force) {
+      const room = await getManager().findOneOrFail(Room, {
+        relations: [
+          'userRooms',
+          'stories',
+          'stories.scores',
+        ],
+        where: {
+          id,
+        },
+      });
+
+      Scrum.runningScrums[id] = new Scrum(room);
+    }
+
+    return this.runningScrums[id].room;
   }
 
   private timer?: NodeJS.Timer;
@@ -117,6 +125,7 @@ export class Scrum {
       this.currentScore = null;
       if (this.onDestory) {
         this.onDestory(this);
+        delete Scrum.runningScrums[this.room.id];
       }
     } else {
       const needScore = this.room.options.needScore || !userRoom.isHost;

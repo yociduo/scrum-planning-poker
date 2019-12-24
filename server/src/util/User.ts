@@ -21,7 +21,6 @@ export function decryptData(encryptedData: string, iv: string, sessionKey: strin
     throw new Error('Illegal Buffer');
   }
 
-
   // 解密后的用户数据中会有一个watermark属性，这个属性中包含这个小程序的appid和时间戳，下面是校验appid
   if (decoded.watermark.appid !== config.wxAppid) {
     throw new Error('Illegal Buffer');

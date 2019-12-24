@@ -34,7 +34,7 @@ describe('Scrum', () => {
     await getManager().transaction(async (transactionalEntityManager) => {
       for (let i = 3; i >= 0; i -= 1) {
         const user = new User();
-        user.nickName = i === 0 ? '[Jest] Test Host' : `[Jest] Test Player ${3 - i}`;
+        user.nickName = i === 0 ? '[Jest] Test Host' : `[Jest] Test Player ${i}`;
         await transactionalEntityManager.insert(User, user);
       }
 
@@ -62,9 +62,17 @@ describe('Scrum', () => {
       }
     });
 
-
     room = await Scrum.getRoom(room.id);
     scrum = new Scrum(room, onDestory);
+  });
+
+  it('get room', async () => {
+    const room = await Scrum.getRoom(scrum.room.id);
+    expect(room.id).toBe(scrum.room.id);
+    const roomCached = await Scrum.getRoom(scrum.room.id);
+    expect(roomCached.id).toBe(scrum.room.id);
+    const roomForce = await Scrum.getRoom(scrum.room.id, true);
+    expect(roomForce.id).toBe(scrum.room.id);
   });
 
   it('host join room', async () => {
