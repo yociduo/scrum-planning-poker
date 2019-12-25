@@ -2,9 +2,11 @@ import { getManager } from 'typeorm';
 import { Room, Story, User, UserRoom, Score } from '../entity';
 import { CalcMethod } from '../model';
 
-export class Scrum {
+export type PokerOnDestory = (poker?: Poker) => void;
 
-  public static readonly runningScrums: { [key: number]: Scrum } = {};
+export class Poker {
+
+  public static readonly runningPokers: { [key: number]: Poker } = {};
 
   public static readonly initResults = Array(31)
     .fill(null)
@@ -12,8 +14,8 @@ export class Scrum {
     .concat([0.5, 40, 55, 89, 100])
     .sort((i, j) => i - j);
 
-  public static async getRoom(id: number, force: boolean = false): Promise<Room> {
-    if (!Scrum.runningScrums.hasOwnProperty(id) || force) {
+  public static async getPoker(id: number, force: boolean = false, onDestory?: PokerOnDestory): Promise<Poker> {
+    if (!Poker.runningPokers.hasOwnProperty(id) || force) {
       const room = await getManager().findOneOrFail(Room, {
         relations: [
           'userRooms',
@@ -25,15 +27,19 @@ export class Scrum {
         },
       });
 
-      Scrum.runningScrums[id] = new Scrum(room);
+      Poker.runningPokers[id] = new Poker(room, onDestory);
     }
 
-    return this.runningScrums[id].room;
+    return Poker.runningPokers[id];
   }
 
   private timer?: NodeJS.Timer;
 
-  private onDestory?: (scrum?: Scrum) => void;
+  private onDestory?: PokerOnDestory;
+
+  get id(): number {
+    return this.room.id;
+  }
 
   public room: Room;
 
@@ -41,10 +47,23 @@ export class Scrum {
 
   public currentScore: number = null;
 
-  constructor(room: Room, onDestory?: (scrum?: Scrum) => void) {
+  constructor(room: Room, onDestory?: PokerOnDestory) {
     this.room = room;
     this.onDestory = onDestory;
   }
+
+  // public async getRoom(user: User): Promise<Room> {
+  //   const isHost = this.room.userRooms.find(ur => ur.userId === user.id).isHost;
+  //   const isCreator = this.room.creatorId === user.id;
+  //   let selectedCard: number;
+
+  //   if (this.room.currentStory) {
+  //     const score = this.room.currentStory.scores.find(s => s.userId === user.id);
+  //     selectedCard = score ? score.card : null;
+  //   }
+
+  //   return { ...this.room, isHost, isCreator, selectedCard };
+  // }
 
   public async join(user: User): Promise<void> {
     const userRoom = await this.createUserRoom(user, false);
@@ -73,7 +92,7 @@ export class Scrum {
 
   public async nextStory(): Promise<void> {
     if (this.currentStory) {
-      this.currentStory.score = Scrum.initResults[this.currentScore];
+      this.currentStory.score = Poker.initResults[this.currentScore];
       this.currentStory.isCompleted = true;
       await getManager().save(Story, this.currentStory);
     }
@@ -125,7 +144,7 @@ export class Scrum {
       this.currentScore = null;
       if (this.onDestory) {
         this.onDestory(this);
-        delete Scrum.runningScrums[this.room.id];
+        delete Poker.runningPokers[this.room.id];
       }
     } else {
       const needScore = this.room.options.needScore || !userRoom.isHost;
@@ -225,7 +244,7 @@ export class Scrum {
         Math.round((scores[length / 2] + scores[length / 2 - 1]) / 2) : scores[(length - 1) / 2];
     }
 
-    this.currentScore = Scrum.initResults.map((value, index) => ({
+    this.currentScore = Poker.initResults.map((value, index) => ({
       value,
       index,
       abs: Math.abs(value - result),

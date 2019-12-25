@@ -1,6 +1,7 @@
 {
   "extends": "tslint-config-airbnb",
   "rules": {
-    "no-console": true
+    "no-console": true,
+    "max-line-length": 140
   }
 }

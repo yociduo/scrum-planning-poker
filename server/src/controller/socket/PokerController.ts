@@ -55,11 +55,7 @@ export class PokerController {
   }
 
   @OnMessage('select card')
-  async selectCard(
-    @ConnectedSocket() socket: Socket,
-    @SocketIO() io: Socket,
-    @MessageBody() { id, card }: { id: number, card: number },
-  ) {
+  async selectCard(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() { id, card }: { id: number, card: number }) {
     logger.info(`User ${socket.user.id} selected card ${card}`);
     const room = await this.roomRepository.selectCard(id, socket.user, card);
     if (room) {
@@ -69,10 +65,7 @@ export class PokerController {
   }
 
   @OnMessage('calc method')
-  async calcMethod(
-    @ConnectedSocket() socket: Socket,
-    @MessageBody() { id, calcMethod }: { id: number, calcMethod: number },
-  ) {
+  async calcMethod(@ConnectedSocket() socket: Socket, @MessageBody() { id, calcMethod }: { id: number, calcMethod: number }) {
     logger.info(`User ${socket.user.id} changed calc method ${JSON.stringify(calcMethod)}`);
     const room = await this.roomRepository.calcMethod(id, calcMethod);
     if (room) {
@@ -82,10 +75,7 @@ export class PokerController {
   }
 
   @OnMessage('current score')
-  async changeCurrentScore(
-    @ConnectedSocket() socket: Socket,
-    @MessageBody() { id, currentScore }: { id: number, currentScore: number },
-  ) {
+  async changeCurrentScore(@ConnectedSocket() socket: Socket, @MessageBody() { id, currentScore }: { id: number, currentScore: number }) {
     logger.info(`User ${socket.user.id} change current score to ${currentScore}`);
     const room = await this.roomRepository.changeCurrentScore(id, currentScore);
     if (room) {
@@ -95,11 +85,7 @@ export class PokerController {
   }
 
   @OnMessage('next story')
-  async nextStory(
-    @ConnectedSocket() socket: Socket,
-    @SocketIO() io: Socket,
-    @MessageBody() roomId: number,
-  ) {
+  async nextStory(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() roomId: number) {
     logger.info(`User ${socket.user.id} next story for room ${roomId}`);
     const room = await this.roomRepository.nextStory(roomId);
     if (room) {
@@ -130,11 +116,7 @@ export class PokerController {
   }
 
   @OnMessage('add story')
-  async addStory(
-    @ConnectedSocket() socket: Socket,
-    @SocketIO() io: Socket,
-    @MessageBody() { id, stories }: { id: number, stories: Story[] },
-  ) {
+  async addStory(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() { id, stories }: { id: number, stories: Story[] }) {
     logger.info(`User ${socket.user.id} add story ${stories} for room ${id}`);
     const room = await this.roomRepository.addStory(id, stories, socket.user);
     if (room) {

@@ -2,13 +2,13 @@ import { createConnection, getManager, getConnectionOptions } from 'typeorm';
 import { config } from '../../config';
 import { Room, Score, Story, User, UserRoom } from '../../entity';
 import { CalcMethod } from '../../model';
-import { Scrum } from '../Scrum';
+import { Poker } from '../Poker';
 
-describe('Scrum', () => {
+describe('Poker', () => {
   let host: User;
   let players: User[];
   let room: Room;
-  let scrum: Scrum;
+  let poker: Poker;
   const onDestory = jest.fn();
 
   beforeAll(async () => {
@@ -62,139 +62,137 @@ describe('Scrum', () => {
       }
     });
 
-    room = await Scrum.getRoom(room.id);
-    scrum = new Scrum(room, onDestory);
+    poker = await Poker.getPoker(room.id, false, onDestory);
   });
 
-  it('get room', async () => {
-    const room = await Scrum.getRoom(scrum.room.id);
-    expect(room.id).toBe(scrum.room.id);
-    const roomCached = await Scrum.getRoom(scrum.room.id);
-    expect(roomCached.id).toBe(scrum.room.id);
-    const roomForce = await Scrum.getRoom(scrum.room.id, true);
-    expect(roomForce.id).toBe(scrum.room.id);
+  it('get poker', async () => {
+    expect(poker.room.id).toBe(room.id);
+    const pokerCached = await Poker.getPoker(room.id);
+    expect(pokerCached.id).toBe(poker.room.id);
+    const pokerForce = await Poker.getPoker(room.id, true);
+    expect(pokerForce.id).toBe(poker.room.id);
   });
 
   it('host join room', async () => {
-    await scrum.join(host);
-    const userRoom = scrum.room.userRooms.find(us => us.userId === host.id);
+    await poker.join(host);
+    const userRoom = poker.room.userRooms.find(us => us.userId === host.id);
     expect(userRoom).not.toBeNull();
     expect(userRoom.isLeft).toBeFalsy();
   });
 
   it('host leave room', async () => {
-    await scrum.leave(host);
+    await poker.leave(host);
     expect(onDestory).toBeCalled();
-    const userRoom = scrum.room.userRooms.find(us => us.userId === host.id);
+    const userRoom = poker.room.userRooms.find(us => us.userId === host.id);
     expect(userRoom).not.toBeNull();
     expect(userRoom.isLeft).toBeTruthy();
   });
 
   it('on destory', async () => {
-    await scrum.join(host);
-    await scrum.leave(host);
+    await poker.join(host);
+    await poker.leave(host);
     const times = onDestory.mock.calls.length;
 
-    await scrum.join(host);
-    await scrum.join(players[0]);
-    await scrum.leave(host);
+    await poker.join(host);
+    await poker.join(players[0]);
+    await poker.leave(host);
     expect(onDestory).toBeCalledTimes(times);
-    await scrum.leave(players[0]);
+    await poker.leave(players[0]);
     expect(onDestory).toBeCalledTimes(times + 1);
   });
 
   it('select card', async () => {
-    await scrum.join(host);
-    const score = scrum.currentStory.scores.find(s => s.userId === host.id);
+    await poker.join(host);
+    const score = poker.currentStory.scores.find(s => s.userId === host.id);
     expect(score).not.toBeNull();
 
-    await scrum.selectCard(host, 1);
+    await poker.selectCard(host, 1);
     expect(score.card).toBe(1);
-    expect(scrum.currentScore).toBe(2);
+    expect(poker.currentScore).toBe(2);
 
-    await scrum.selectCard(host, 2);
+    await poker.selectCard(host, 2);
     expect(score.card).toBe(2);
-    expect(scrum.currentScore).toBe(3);
+    expect(poker.currentScore).toBe(3);
 
-    await scrum.leave(host);
+    await poker.leave(host);
   });
 
   it('change current score', async () => {
-    await scrum.join(host);
-    await scrum.changeCurrentScore(1);
-    expect(scrum.currentScore).toBe(1);
-    expect(scrum.room.options.calcMethod).toBe(CalcMethod.Customized);
-    await scrum.leave(host);
+    await poker.join(host);
+    await poker.changeCurrentScore(1);
+    expect(poker.currentScore).toBe(1);
+    expect(poker.room.options.calcMethod).toBe(CalcMethod.Customized);
+    await poker.leave(host);
   });
 
   it('change calc method', async () => {
-    await scrum.join(host);
-    await scrum.join(players[0]);
-    await scrum.join(players[1]);
-    await scrum.join(players[2]);
+    await poker.join(host);
+    await poker.join(players[0]);
+    await poker.join(players[1]);
+    await poker.join(players[2]);
 
-    await scrum.selectCard(host, 1);
-    await scrum.selectCard(players[0], 2);
-    await scrum.selectCard(players[1], 10);
+    await poker.selectCard(host, 1);
+    await poker.selectCard(players[0], 2);
+    await poker.selectCard(players[1], 10);
 
-    await scrum.calcMethod(CalcMethod.ArithmeticMean);
-    expect(scrum.room.options.calcMethod).toBe(CalcMethod.ArithmeticMean);
-    expect(scrum.currentScore).toBe(5); // [1, 2, 10] ArithmeticMean -> 4
+    await poker.calcMethod(CalcMethod.ArithmeticMean);
+    expect(poker.room.options.calcMethod).toBe(CalcMethod.ArithmeticMean);
+    expect(poker.currentScore).toBe(5); // [1, 2, 10] ArithmeticMean -> 4
 
-    await scrum.calcMethod(CalcMethod.TruncatedMean);
-    expect(scrum.room.options.calcMethod).toBe(CalcMethod.TruncatedMean);
-    expect(scrum.currentScore).toBe(3); // [1, 2, 10] TruncatedMean -> 2
+    await poker.calcMethod(CalcMethod.TruncatedMean);
+    expect(poker.room.options.calcMethod).toBe(CalcMethod.TruncatedMean);
+    expect(poker.currentScore).toBe(3); // [1, 2, 10] TruncatedMean -> 2
 
-    await scrum.calcMethod(CalcMethod.Median);
-    expect(scrum.room.options.calcMethod).toBe(CalcMethod.Median);
-    expect(scrum.currentScore).toBe(3); // [1, 2, 10] Median -> 2
-    await scrum.selectCard(players[2], 4);
-    expect(scrum.currentScore).toBe(4); // [1, 2, 4, 10] Median -> 3
+    await poker.calcMethod(CalcMethod.Median);
+    expect(poker.room.options.calcMethod).toBe(CalcMethod.Median);
+    expect(poker.currentScore).toBe(3); // [1, 2, 10] Median -> 2
+    await poker.selectCard(players[2], 4);
+    expect(poker.currentScore).toBe(4); // [1, 2, 4, 10] Median -> 3
 
-    await scrum.calcMethod(CalcMethod.Customized);
-    expect(scrum.room.options.calcMethod).toBe(CalcMethod.Customized);
-    expect(scrum.currentScore).toBe(4); // [1, 2, 4, 10] Customized -> 3
+    await poker.calcMethod(CalcMethod.Customized);
+    expect(poker.room.options.calcMethod).toBe(CalcMethod.Customized);
+    expect(poker.currentScore).toBe(4); // [1, 2, 4, 10] Customized -> 3
 
-    await scrum.leave(host);
-    await scrum.leave(players[0]);
-    await scrum.leave(players[1]);
-    await scrum.leave(players[2]);
+    await poker.leave(host);
+    await poker.leave(players[0]);
+    await poker.leave(players[1]);
+    await poker.leave(players[2]);
   });
 
   it('time changes', async () => {
-    await scrum.join(host);
-    const { timer } = scrum.currentStory;
+    await poker.join(host);
+    const { timer } = poker.currentStory;
     await new Promise(resolve => setTimeout(resolve, 1050));
-    expect(scrum.currentStory.timer).toBe(timer + 1);
-    await scrum.leave(host);
+    expect(poker.currentStory.timer).toBe(timer + 1);
+    await poker.leave(host);
   });
 
   it('next story', async () => {
-    await scrum.join(host);
-    while (scrum.currentStory) {
-      const { currentStory } = scrum;
-      await scrum.nextStory();
+    await poker.join(host);
+    while (poker.currentStory) {
+      const { currentStory } = poker;
+      await poker.nextStory();
       expect(currentStory.isCompleted).toBeTruthy();
     }
-    expect(scrum.currentStory).toBeUndefined();
-    await scrum.selectCard(host, 1);
-    await scrum.nextStory();
-    await scrum.leave(host);
+    expect(poker.currentStory).toBeUndefined();
+    await poker.selectCard(host, 1);
+    await poker.nextStory();
+    await poker.leave(host);
   });
 
   it('add stories', async () => {
-    await scrum.join(host);
-    while (scrum.currentStory) {
-      await scrum.nextStory();
+    await poker.join(host);
+    while (poker.currentStory) {
+      await poker.nextStory();
     }
-    await scrum.addStories(['[Jest] Test Add Story 1'], host);
-    expect(scrum.currentStory).toBeDefined();
-    expect(scrum.currentStory.name).toBe('[Jest] Test Add Story 1');
+    await poker.addStories(['[Jest] Test Add Story 1'], host);
+    expect(poker.currentStory).toBeDefined();
+    expect(poker.currentStory.name).toBe('[Jest] Test Add Story 1');
 
-    await scrum.addStories(['[Jest] Test Add Story 2'], host);
-    expect(scrum.currentStory.name).toBe('[Jest] Test Add Story 1');
+    await poker.addStories(['[Jest] Test Add Story 2'], host);
+    expect(poker.currentStory.name).toBe('[Jest] Test Add Story 1');
 
-    await scrum.leave(host);
+    await poker.leave(host);
   });
 
   it('host not score', async () => {
@@ -237,25 +235,25 @@ describe('Scrum', () => {
       },
     });
 
-    const scrum2 = new Scrum(room2);
-    await scrum2.join(players[0]);
-    await scrum2.join(host);
+    const poker2 = new Poker(room2);
+    await poker2.join(players[0]);
+    await poker2.join(host);
 
-    await scrum2.leave(players[0]);
-    await scrum2.leave(host);
+    await poker2.leave(players[0]);
+    await poker2.leave(host);
 
-    await scrum2.join(host);
-    await scrum2.join(players[0]);
+    await poker2.join(host);
+    await poker2.join(players[0]);
 
-    while (scrum2.currentStory) {
-      const { currentStory } = scrum2;
-      await scrum2.nextStory();
+    while (poker2.currentStory) {
+      const { currentStory } = poker2;
+      await poker2.nextStory();
       expect(currentStory.isCompleted).toBeTruthy();
     }
-    expect(scrum2.currentStory).toBeUndefined();
+    expect(poker2.currentStory).toBeUndefined();
 
-    await scrum2.leave(players[0]);
-    await scrum2.leave(host);
+    await poker2.leave(players[0]);
+    await poker2.leave(host);
 
     room2.isDeleted = true;
     await getManager().save(Room, room2);

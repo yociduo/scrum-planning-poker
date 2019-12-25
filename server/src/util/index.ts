@@ -1,4 +1,4 @@
-export * from './Scrum';
+export * from './Poker';
 
 export * from './Socket';
 
