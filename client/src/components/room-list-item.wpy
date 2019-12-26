@@ -83,10 +83,12 @@ export default class RoomListItem extends wepy.component {
   mixins = [LocalesMixin];
 
   methods = {
-    onRoomTap({ id, isCompleted }) {
-      // TODO: goto room detail page directly
-      // this.$parent.$navigate(isCompleted ? 'room-detail' : 'room', { id });
-      this.$parent.$navigate(isCompleted ? 'room' : 'room', { id });
+    async onRoomTap({ id }) {
+      const isCompleted = await wepy.request({
+        url: `/rooms/${id}/check`,
+        method: 'GET'
+      });
+      this.$parent.$navigate(isCompleted ? 'room-detail' : 'room', { id });
     }
   };
 }

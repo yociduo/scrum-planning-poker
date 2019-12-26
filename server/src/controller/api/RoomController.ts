@@ -32,6 +32,12 @@ export class RoomController {
   }
 
   @Authorized()
+  @Get('/:id/check')
+  check(@Param('id') id: number): Promise<boolean> {
+    return this.roomRepository.check(id);
+  }
+
+  @Authorized()
   @Post()
   // TODO: change the request model
   // tslint:disable-next-line:max-line-length

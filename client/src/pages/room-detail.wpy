@@ -230,8 +230,12 @@ export default class RoomDetail extends wepy.page {
     }
   };
 
-  onLoad(options) {
-    this.room = this.$parent.globalData.room;
+  async onLoad(options) {
+    this.room = await wepy.request({
+      url: `/rooms/${options.id}`,
+      method: 'GET'
+    });
+    this.$apply();
   }
 }
 </script>

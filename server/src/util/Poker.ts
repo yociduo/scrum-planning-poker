@@ -20,6 +20,7 @@ export class Poker {
       const room = await getManager().findOneOrFail(Room, {
         relations: [
           'userRooms',
+          'userRooms.user',
           'stories',
           'stories.scores',
           'stories.scores.user',

@@ -53,6 +53,15 @@ export class RoomRepository extends Repository<Room> {
     //   .map(ur => ur.room);
   }
 
+  async check(id: number): Promise<boolean> {
+    return (await getManager()
+      .createQueryBuilder(Story, 'story')
+      .where('story.roomId = :id', { id })
+      .andWhere('story.isDeleted = false')
+      .andWhere('story.isCompleted = false')
+      .getCount()) === 0;
+  }
+
   async createWithStory(user: User, room: Room): Promise<Room> {
     const newRoom = new Room();
     await getManager().transaction(async (transactionalEntityManager) => {
