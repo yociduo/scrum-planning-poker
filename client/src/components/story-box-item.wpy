@@ -1,0 +1,27 @@
+<style lang="less">
+</style>
+<template>
+<view class="story">
+  <view class="story-hd">{{story.name}}</view>
+  <view class="story-bd">{{displayTimer}}</view>
+  <view class="story-ft">{{story.score || story.score === 0 ? story.score : ''}}</view>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+import { formatTimer } from '@/utils/utils';
+
+export default class PlayerBoxItem extends wepy.component {
+  props = {
+    story: {
+      type: Object
+    }
+  };
+
+  computed = {
+    displayTimer() {
+      return this.story ? formatTimer(this.story.timer || 0) : '';
+    }
+  };
+}
+</script>

@@ -25,9 +25,6 @@ describe('Poker', () => {
         UserRoom,
       ],
     });
-    if (connectionOptions.type === 'mysql') {
-      Object.assign(connectionOptions, { bigNumberStrings: true });
-    }
 
     await createConnection(connectionOptions);
 

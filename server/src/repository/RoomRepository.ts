@@ -2,6 +2,7 @@
 import { Service } from 'typedi';
 import { Repository, EntityRepository, getManager } from 'typeorm';
 import { Room, User, Story, UserRoom, Score } from '../entity';
+import { formatTimer } from '../util';
 
 const initResults = new Array(31).fill(null).map((v, i) => i).concat([0.5, 40, 55, 89, 100]).sort((i, j) => i - j);
 
@@ -142,7 +143,7 @@ export class RoomRepository extends Repository<Room> {
       await getManager().save(Story, currentStory);
       cached.room.scoreSum += currentStory.score;
       cached.room.timerSum += currentStory.timer;
-      cached.room.displayTimerSum = this.formatTimer(cached.room.timerSum);
+      cached.room.displayTimerSum = formatTimer(cached.room.timerSum);
     }
 
     const users = userRooms.filter(ur => !ur.isLeft && (!ur.isHost || options.needScore)).map(ur => ur.user);
@@ -184,7 +185,7 @@ export class RoomRepository extends Repository<Room> {
       room.scoreSum = 0;
       room.timerSum = 0;
       room.stories.forEach(story => {
-        story.displayTimer = this.formatTimer(story.timer);
+        story.displayTimer = formatTimer(story.timer);
         if (!story.isDeleted) {
           if (story.isCompleted !== null) {
             room.scoreSum += story.score;
@@ -195,7 +196,7 @@ export class RoomRepository extends Repository<Room> {
           room.storyCount++;
         }
       });
-      room.displayTimerSum = this.formatTimer(room.timerSum);
+      room.displayTimerSum = formatTimer(room.timerSum);
 
       this.runningRooms[id] = { room };
     }
@@ -209,11 +210,11 @@ export class RoomRepository extends Repository<Room> {
     cached.room.selectedCard = null;
     if (cached.room.currentStory) {
       cached.room.isCompleted = false;
-      cached.room.currentStory.displayTimer = this.formatTimer(cached.room.currentStory.timer);
+      cached.room.currentStory.displayTimer = formatTimer(cached.room.currentStory.timer);
       if (!cached.timer) {
         cached.timer = setInterval(() => {
           cached.room.currentStory.timer++;
-          cached.room.currentStory.displayTimer = this.formatTimer(cached.room.currentStory.timer);
+          cached.room.currentStory.displayTimer = formatTimer(cached.room.currentStory.timer);
         }, 1000);
       }
 
@@ -310,18 +311,6 @@ export class RoomRepository extends Repository<Room> {
         }
       })[0].index;
     }
-  }
-
-  private formatTimer(timer: number): string {
-    const hour = Math.floor(timer / 3600);
-    const minute = Math.floor((timer % 3600) / 60);
-    const second = timer % 60;
-    return `${this.formatNumber(hour)}:${this.formatNumber(minute)}:${this.formatNumber(second)}`;
-  }
-
-  private formatNumber(n: number): string {
-    const ns = n.toString()
-    return ns[1] ? ns : '0' + ns;
   }
 
   private convertScore = (score: Score) => {

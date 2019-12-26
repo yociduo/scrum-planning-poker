@@ -156,6 +156,16 @@ export const formatNumber = n => {
   return n[1] ? n : '0' + n;
 };
 
+export const convertScore = card => {
+  switch (card) {
+    case -1: return '?';
+    case -2: return 'C';
+    case null:
+    case undefined: return null;
+    default: return card.toString();
+  }
+}
+
 export const defaultLang = 'zh_CN';
 
 export const LANG_KEY = 'lang';

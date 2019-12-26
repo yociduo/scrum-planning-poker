@@ -1,6 +1,7 @@
 import { getManager } from 'typeorm';
 import { Room, Story, User, UserRoom, Score } from '../entity';
 import { CalcMethod } from '../model';
+import { formatRoomId } from './Format';
 
 export type PokerOnDestory = (poker?: Poker) => void;
 
@@ -21,6 +22,7 @@ export class Poker {
           'userRooms',
           'stories',
           'stories.scores',
+          'stories.scores.user',
         ],
         where: {
           id,
@@ -41,6 +43,10 @@ export class Poker {
     return this.room.id;
   }
 
+  get roomId(): string {
+    return formatRoomId(this.id);
+  }
+
   public room: Room;
 
   public currentStory: Story = null;
@@ -52,18 +58,18 @@ export class Poker {
     this.onDestory = onDestory;
   }
 
-  // public async getRoom(user: User): Promise<Room> {
-  //   const isHost = this.room.userRooms.find(ur => ur.userId === user.id).isHost;
-  //   const isCreator = this.room.creatorId === user.id;
-  //   let selectedCard: number;
+  public getRoom(user: User): any {
+    const isHost = this.room.userRooms.find(ur => ur.userId === user.id).isHost;
+    const isCreator = this.room.creatorId === user.id;
+    let selectedCard: number;
 
-  //   if (this.room.currentStory) {
-  //     const score = this.room.currentStory.scores.find(s => s.userId === user.id);
-  //     selectedCard = score ? score.card : null;
-  //   }
+    if (this.currentStory) {
+      const score = this.currentStory.scores.find(s => s.userId === user.id);
+      selectedCard = score ? score.card : null;
+    }
 
-  //   return { ...this.room, isHost, isCreator, selectedCard };
-  // }
+    return { ...this.room, currentStory: this.currentStory, isHost, isCreator, selectedCard };
+  }
 
   public async join(user: User): Promise<void> {
     const userRoom = await this.createUserRoom(user, false);
@@ -163,10 +169,7 @@ export class Poker {
     this.currentStory = this.room.stories.find(s => !s.isDeleted && !s.isCompleted);
     if (this.currentStory) {
       if (!this.timer) {
-        this.timer = setInterval(
-          () => this.currentStory.timer += 1,
-          1000,
-        );
+        this.timer = setInterval(() => this.currentStory.timer += 1, 1000);
       }
 
       for (let i = 0; i < userIds.length; i += 1) {

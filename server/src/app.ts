@@ -24,6 +24,7 @@ async function createServer() {
 
     // do something with connectionOptions,
     Object.assign(connectionOptions, {
+      bigNumberStrings: false,
       entities: [
         `${__dirname}/entity/**/*.js`,
         `${__dirname}/entity/**/*.ts`,
@@ -42,9 +43,6 @@ async function createServer() {
         subscribersDir: 'src/subscriber',
       },
     });
-    if (connectionOptions.type === 'mysql') {
-      Object.assign(connectionOptions, { bigNumberStrings: true });
-    }
 
     // create a connection using modified connection options
     await createConnection(connectionOptions);
