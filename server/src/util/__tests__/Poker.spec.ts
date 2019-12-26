@@ -171,7 +171,7 @@ describe('Poker', () => {
       await poker.nextStory();
       expect(currentStory.isCompleted).toBeTruthy();
     }
-    expect(poker.currentStory).toBeUndefined();
+    expect(poker.currentStory).toBeNull();
     await poker.selectCard(host, 1);
     await poker.nextStory();
     await poker.leave(host);
@@ -247,7 +247,7 @@ describe('Poker', () => {
       await poker2.nextStory();
       expect(currentStory.isCompleted).toBeTruthy();
     }
-    expect(poker2.currentStory).toBeUndefined();
+    expect(poker2.currentStory).toBeNull();
 
     await poker2.leave(players[0]);
     await poker2.leave(host);
