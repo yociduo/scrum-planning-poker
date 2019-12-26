@@ -45,6 +45,7 @@ export class Score {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  // TODO: remove in next release
   displayCard?: string;
 
 }

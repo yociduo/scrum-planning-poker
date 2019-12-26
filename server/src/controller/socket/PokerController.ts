@@ -93,8 +93,8 @@ export class PokerController {
       logger.info(`User ${socket.user.id} change current score to ${currentScore}`);
       const poker = await Poker.getPoker(id);
       await poker.changeCurrentScore(currentScore);
-      const { roomId, currentStory, room: { options } } = poker;
-      io.to(roomId).emit('[Poker] action', { id, currentScore, currentStory, options });
+      const { roomId, room: { options } } = poker;
+      io.to(roomId).emit('[Poker] action', { id, currentScore, options });
     } catch (error) {
       logger.error('[Poker] current score', error);
     }
@@ -106,8 +106,8 @@ export class PokerController {
       logger.info(`User ${socket.user.id} next story for room ${id}`);
       const poker = await Poker.getPoker(id);
       await poker.nextStory();
-      const { roomId, currentStory, currentScore, room: { options, stories } } = poker;
-      io.to(roomId).emit('[Poker] action', { id, stories, currentScore, currentStory, options, selectCard: null, loading: false });
+      const { roomId, currentStory, currentScore, room: { stories } } = poker;
+      io.to(roomId).emit('[Poker] action', { id, stories, currentScore, currentStory, selectedCard: null, loading: false });
     } catch (error) {
       logger.error('[Poker] next story', error);
     }
@@ -119,8 +119,8 @@ export class PokerController {
       logger.info(`User ${socket.user.id} add story ${storyNames.join()} for room ${id}`);
       const poker = await Poker.getPoker(id);
       await poker.addStories(storyNames, socket.user);
-      const { roomId, currentStory, currentScore, room: { options, stories } } = poker;
-      io.to(roomId).emit('[Poker] action', { id, stories, currentScore, currentStory, options, selectCard: null, loading: false });
+      const { roomId, currentStory, currentScore, room: { stories } } = poker;
+      io.to(roomId).emit('[Poker] action', { id, stories, currentScore, currentStory, selectedCard: null, loading: false });
     } catch (error) {
       logger.error('[Poker] add story', error);
     }

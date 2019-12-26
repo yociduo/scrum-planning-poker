@@ -10,6 +10,6 @@ export function formatTimer(timer: number): string {
 }
 
 export function formatNumber(n: number): string {
-  const ns = n.toString()
-  return ns[1] ? ns : '0' + ns;
+  const ns = n.toString();
+  return ns[1] ? ns : (`0${ns}`);
 }

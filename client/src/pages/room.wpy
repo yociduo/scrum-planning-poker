@@ -143,13 +143,25 @@ export default class Room extends wepy.page {
       return this.currentStory ? formatTimer(this.currentStory.timer || 0) : '';
     },
     storyCount() {
-      return 2;
+      return this.stories ? this.stories.length : 0;
     },
     displayTimerSum() {
-      return '10:10:10';
+      let timerSum = 0;
+      if (this.stories) {
+        this.stories.forEach(story => {
+          timerSum += story.timer;
+        });
+      }
+      return formatTimer(timerSum);
     },
     scoreSum() {
-      return 1;
+      let scoreSum = 0;
+      if (this.stories) {
+        this.stories.forEach(story => {
+          scoreSum += story.score;
+        });
+      }
+      return scoreSum;
     }
   }
 

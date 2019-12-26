@@ -57,26 +57,37 @@ export class Room {
   @Column('simple-json', { nullable: true })
   options?: RoomOptions;
 
+  // TODO: remove in next release
   currentStory?: Story;
 
+  // TODO: remove in next release
   currentScore?: number;
 
+  // TODO: remove in next release
   selectedCard?: number;
 
+  // TODO: remove in next release
   loading?: boolean;
 
+  // TODO: remove in next release
   isHost?: boolean;
 
+  // TODO: remove in next release
   isCreator?: boolean;
 
+  // TODO: remove in next release
   isCompleted?: boolean;
 
+  // TODO: remove in next release
   storyCount?: number;
 
+  // TODO: remove in next release
   scoreSum?: number;
 
+  // TODO: remove in next release
   timerSum?: number;
 
+  // TODO: remove in next release
   displayTimerSum?: string;
 
 }

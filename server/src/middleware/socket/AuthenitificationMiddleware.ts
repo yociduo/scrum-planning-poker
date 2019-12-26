@@ -1,9 +1,12 @@
 import * as jwt from 'jsonwebtoken';
+import { getLogger } from 'log4js';
 import { Middleware, MiddlewareInterface } from 'socket-controllers';
 import { getManager } from 'typeorm';
 import { config } from '../../config';
 import { User } from '../../entity';
 import { Socket } from '../../util';
+
+const logger = getLogger('logging');
 
 @Middleware()
 export class AuthenitificationMiddleware implements MiddlewareInterface {
@@ -13,9 +16,11 @@ export class AuthenitificationMiddleware implements MiddlewareInterface {
     try {
       const userId = Number(jwt.verify(token, config.jwtSecret));
       socket.user = await getManager().getRepository(User).findOne(userId);
-    } catch { }
-
-    next();
+      next();
+    } catch (error) {
+      logger.error('', error);
+      next(error);
+    }
   }
 
 }

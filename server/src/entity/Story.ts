@@ -77,6 +77,7 @@ export class Story {
   @Column({ default: false })
   isCompleted: boolean;
 
+  // TODO: remove in next release
   displayTimer?: string;
 
 }
