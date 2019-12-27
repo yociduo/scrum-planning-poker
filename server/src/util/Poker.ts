@@ -1,7 +1,7 @@
 import { getManager } from 'typeorm';
 import { Room, Story, User, UserRoom, Score } from '../entity';
 import { CalcMethod } from '../model';
-import { formatRoomId } from './Format';
+import { formatRoomId, convertScore, formatTimer } from './Format';
 
 export type PokerOnDestory = (poker?: Poker) => void;
 
@@ -30,6 +30,7 @@ export class Poker {
         },
       });
 
+      room.stories.forEach(story => story.displayTimer = formatTimer(story.timer));
       Poker.runningPokers[id] = new Poker(room, onDestory);
     }
 
@@ -90,6 +91,7 @@ export class Poker {
     score.card = card;
     score.timer = this.currentStory.timer;
     await getManager().save(Score, score);
+    score.displayCard = convertScore(card);
     this.calculator();
   }
 
@@ -109,6 +111,7 @@ export class Poker {
     if (this.currentStory) {
       this.currentStory.score = Poker.initResults[this.currentScore];
       this.currentStory.isCompleted = true;
+      this.currentStory.displayTimer = formatTimer(this.currentStory.timer);
       await getManager().save(Story, this.currentStory);
     }
 
@@ -174,6 +177,8 @@ export class Poker {
       if (!this.timer) {
         this.timer = setInterval(() => this.currentStory.timer += 1, 1000);
       }
+
+      this.currentStory.scores.forEach(s => s.displayCard = convertScore(s.card));
 
       for (let i = 0; i < users.length; i += 1) {
         await this.createScore(users[i]);

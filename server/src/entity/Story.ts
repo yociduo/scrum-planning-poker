@@ -77,7 +77,7 @@ export class Story {
   @Column({ default: false })
   isCompleted: boolean;
 
-  // TODO: remove in next release
+  // TODO: handle wepy repeat issue
   displayTimer?: string;
 
 }

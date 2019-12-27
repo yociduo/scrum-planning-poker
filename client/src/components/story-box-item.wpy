@@ -3,7 +3,7 @@
 <template>
 <view class="story">
   <view class="story-hd">{{story.name}}</view>
-  <view class="story-bd">{{displayTimer}}</view>
+  <view class="story-bd">{{story.displayTimer}}</view>
   <view class="story-ft">{{story.score || story.score === 0 ? story.score : ''}}</view>
 </view>
 </template>
@@ -15,12 +15,6 @@ export default class PlayerBoxItem extends wepy.component {
   props = {
     story: {
       type: Object
-    }
-  };
-
-  computed = {
-    displayTimer() {
-      return this.story ? formatTimer(this.story.timer || 0) : '';
     }
   };
 }

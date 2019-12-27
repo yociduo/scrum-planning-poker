@@ -2,7 +2,7 @@
 import { Service } from 'typedi';
 import { Repository, EntityRepository, getManager } from 'typeorm';
 import { Room, User, Story, UserRoom, Score } from '../entity';
-import { formatTimer } from '../util';
+import { formatTimer, convertScore } from '../util';
 
 const initResults = new Array(31).fill(null).map((v, i) => i).concat([0.5, 40, 55, 89, 100]).sort((i, j) => i - j);
 
@@ -127,7 +127,7 @@ export class RoomRepository extends Repository<Room> {
       score.card = card;
       score.timer = cached.room.currentStory.timer;
       await getManager().save(Score, score);
-      this.convertScore(score);
+      score.displayCard = convertScore(score.card);
       this.calculator(cached.room);
       return cached.room;
     }
@@ -227,7 +227,7 @@ export class RoomRepository extends Repository<Room> {
         }, 1000);
       }
 
-      cached.room.currentStory.scores.forEach(this.convertScore);
+      cached.room.currentStory.scores.forEach(s => s.displayCard = convertScore(s.card));
 
       for (let i = 0; i < users.length; i++) {
         await this.createScore(cached, users[i]);
@@ -319,16 +319,6 @@ export class RoomRepository extends Repository<Room> {
           return j.value - i.value;
         }
       })[0].index;
-    }
-  }
-
-  private convertScore = (score: Score) => {
-    switch (score.card) {
-      case -1: score.displayCard = '?'; break;
-      case -2: score.displayCard = 'C'; break;
-      case null:
-      case undefined: score.displayCard = null; break;
-      default: score.displayCard = score.card.toString(); break;
     }
   }
 

@@ -13,3 +13,13 @@ export function formatNumber(n: number): string {
   const ns = n.toString();
   return ns[1] ? ns : (`0${ns}`);
 }
+
+export function convertScore(card: number): string {
+  switch (card) {
+    case -1: return '?';
+    case -2: return 'C';
+    case null:
+    case undefined: return null;
+    default: return card.toString();
+  }
+}

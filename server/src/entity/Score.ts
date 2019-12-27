@@ -45,7 +45,7 @@ export class Score {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // TODO: remove in next release
+  // TODO: handle wepy repeat issue
   displayCard?: string;
 
 }

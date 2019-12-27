@@ -9,8 +9,8 @@
     {{score.user.nickName}}
   </view>
   <view class="player-ft">
-    <view class="player-value" wx:if="{{hasScore && showScore}}">{{displayCard}}</view>
-    <icon class="icon-small" wx:if="{{hasScore && !showScore}}" type="success" size="23" color="#0678C1"></icon>
+    <view class="player-value" wx:if="{{score.displayCard && (isHost || options.isNoymous)}}">{{score.displayCard}}</view>
+    <icon class="icon-small" wx:if="{{score.displayCard && !isHost && !options.isNoymous}}" type="success" size="23" color="#0678C1"></icon>
   </view>
 </view>
 </template>
@@ -28,18 +28,6 @@ export default class PlayerBoxItem extends wepy.component {
     },
     isNoymous: {
       type: Boolean
-    }
-  };
-
-  computed = {
-    hasScore() {
-      return this.score && (this.score.card || this.score.card === 0);
-    },
-    showScore() {
-      return this.isHost || this.isNoymous;
-    },
-    displayCard() {
-      return convertScore(this.score && this.score.card);
     }
   };
 }
