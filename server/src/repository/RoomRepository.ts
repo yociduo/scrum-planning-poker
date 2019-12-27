@@ -15,7 +15,7 @@ export interface ICachedRoom {
 @EntityRepository(Room)
 export class RoomRepository extends Repository<Room> {
 
-  private runningRooms: { [key: number]: ICachedRoom } = {};
+  public runningRooms: { [key: number]: ICachedRoom } = {};
 
   async getByUser(user: User): Promise<Room[]> {
     return await getManager().query(`
