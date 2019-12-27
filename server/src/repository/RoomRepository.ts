@@ -15,7 +15,7 @@ export interface ICachedRoom {
 @EntityRepository(Room)
 export class RoomRepository extends Repository<Room> {
 
-  public runningRooms: { [key: number]: ICachedRoom } = {};
+  public static runningRooms: { [key: number]: ICachedRoom } = {};
 
   async getByUser(user: User): Promise<Room[]> {
     return await getManager().query(`
@@ -95,7 +95,7 @@ export class RoomRepository extends Repository<Room> {
       if (timer) {
         clearInterval(timer);
       }
-      delete this.runningRooms[id];
+      delete RoomRepository.runningRooms[id];
     } else {
       if (room.currentStory) {
         if (room.options.needScore || !userRoom.isHost) {
@@ -185,7 +185,7 @@ export class RoomRepository extends Repository<Room> {
   }
 
   private async getCachedRoom(id: number, force: boolean = false): Promise<ICachedRoom> {
-    if (!this.runningRooms.hasOwnProperty(id) || force) {
+    if (!RoomRepository.runningRooms.hasOwnProperty(id) || force) {
       const room = await this.findOneOrFail(id, {
         relations: ['userRooms', 'userRooms.user', 'stories', 'stories.scores', 'stories.scores.user', 'creator', 'updater'],
       });
@@ -207,10 +207,10 @@ export class RoomRepository extends Repository<Room> {
       });
       room.displayTimerSum = formatTimer(room.timerSum);
 
-      this.runningRooms[id] = { room };
+      RoomRepository.runningRooms[id] = { room };
     }
 
-    return this.runningRooms[id];
+    return RoomRepository.runningRooms[id];
   }
 
   private async startNextStory(cached: ICachedRoom, users: User[]) {

@@ -153,8 +153,8 @@ export class Poker {
       this.currentScore = null;
       if (this.onDestory) {
         this.onDestory(this);
-        delete Poker.runningPokers[this.room.id];
       }
+      delete Poker.runningPokers[this.id];
     } else {
       const needScore = this.room.options.needScore || !userRoom.isHost;
       if (this.currentStory) {

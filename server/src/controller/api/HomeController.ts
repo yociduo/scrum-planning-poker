@@ -23,8 +23,8 @@ export class HomeController {
   @Get('/room-health')
   roomHealth() {
     return {
-      repository: Object.keys(this.roomRepository.runningRooms).map((key) => {
-        return this.roomRepository.runningRooms[key].room;
+      repository: Object.keys(RoomRepository.runningRooms).map((key) => {
+        return RoomRepository.runningRooms[key].room;
       }),
       poker: Object.keys(Poker.runningPokers).map((key) => {
         return Poker.runningPokers[key].room;
