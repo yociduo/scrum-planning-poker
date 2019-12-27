@@ -1,7 +1,6 @@
 import { JsonController, Get, QueryParam } from 'routing-controllers';
 import { Service } from 'typedi';
-import { md } from 'node-forge';
-import { config } from '../../config';
+import { checkSignature } from '../../util';
 
 @Service()
 @JsonController('/messages')
@@ -14,9 +13,7 @@ export class MessageController {
     @QueryParam('nonce') nonce: string,
     @QueryParam('echostr') echostr: string,
   ) {
-    const sha1 = md.sha1.create();
-    sha1.update([config.jwtSecret, timestamp, nonce].sort().join(''));
-    return sha1.digest().toHex() === signature ? echostr : null;
+    return checkSignature(signature, timestamp, nonce) ? echostr : null;
   }
 
 }

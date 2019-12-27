@@ -9,7 +9,6 @@
 </template>
 <script>
 import wepy from 'wepy';
-import { formatTimer } from '@/utils/utils';
 
 export default class PlayerBoxItem extends wepy.component {
   props = {
