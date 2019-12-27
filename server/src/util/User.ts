@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+import { cipher, util } from 'node-forge';
 import { config } from '../config';
 
 export function decryptData(encryptedData: string, iv: string, sessionKey: string) {
@@ -9,13 +9,13 @@ export function decryptData(encryptedData: string, iv: string, sessionKey: strin
 
   let decoded;
   try {
+
     // 解密，使用的算法是aes-128-cbc
-    const decipher = crypto.createDecipheriv('aes-128-cbc', sessionKeyNew, ivNew);
-    // 设置自动 padding 为 true，删除填充补位
-    decipher.setAutoPadding(true);
-    decoded = decipher.update(encryptedDataNew, 'binary', 'utf8');
-    decoded += decipher.final('utf8');
-    decoded = JSON.parse(decoded);
+    const decipher = cipher.createDecipher('AES-CBC', new util.ByteStringBuffer(sessionKeyNew));
+    decipher.start({ iv: new util.ByteStringBuffer(ivNew) });
+    decipher.update(new util.ByteStringBuffer(encryptedDataNew));
+    decipher.finish();
+    decoded = JSON.parse(decipher.output.toString());
     // decoded是解密后的用户信息
   } catch (err) {
     throw new Error('Illegal Buffer');
