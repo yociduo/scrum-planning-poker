@@ -5,10 +5,8 @@ export class WxLogin {
   @IsNotEmpty()
   code: string;
 
-  @IsNotEmpty()
-  encryptedData: string;
+  encryptedData?: string;
 
-  @IsNotEmpty()
-  iv: string;
+  iv?: string;
 
 }

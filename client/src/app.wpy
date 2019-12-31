@@ -93,7 +93,7 @@ export default class extends wepy.app {
     });
   }
 
-  onLaunch() {
+  async onLaunch() {
     this.registerLocales();
     this.globalData.token = wepy.getStorageSync(TOKEN_KEY);
     setTimeout(() => {
@@ -103,6 +103,9 @@ export default class extends wepy.app {
     if (model.search('iPhone X') !== -1) {
       this.globalData.isIpx = true;
     }
+    if (!this.globalData.token) {
+      await this.login();
+    }
   }
 
   onShow() {
@@ -110,23 +113,24 @@ export default class extends wepy.app {
   }
 
   async login() {
-    try {
-      const { code } = await wepy.login();
+    const data = {};
+    const { code } = await wepy.login();
+    data.code = code;
+    const { authSettings } = await wepy.getSetting();
+    if (authSettings && authSettings['scope.userInfo']) {
       const { iv, encryptedData } = await wepy.getUserInfo();
-      const token = await wepy.request({
-        url: '/users/wxLogin',
-        method: 'POST',
-        data: {
-          code,
-          encryptedData,
-          iv
-        }
-      });
-      wepy.setStorageSync(TOKEN_KEY, token);
-      this.globalData.token = token;
-    } catch (error) {
-      console.error(error);
+      data.iv = iv;
+      data.encryptedData = encryptedData;
     }
+
+    const token = await wepy.request({
+      url: '/users/wxLogin',
+      method: 'POST',
+      data
+    });
+    console.warn('token');
+    wepy.setStorageSync(TOKEN_KEY, token);
+    this.globalData.token = token;
   }
 
   registerLocales() {

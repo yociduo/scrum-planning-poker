@@ -33,19 +33,20 @@ export class UserRepository extends Repository<User> {
       user = new User();
     }
 
-    const userInfo = decryptData(data.encryptedData, data.iv, sessionKey);
-    user.nickName = userInfo.nickName;
-    user.avatarUrl = userInfo.avatarUrl;
-    user.gender = userInfo.gender;
-    user.language = userInfo.language;
-    user.city = userInfo.city;
-    user.country = userInfo.country;
-    user.province = userInfo.province;
-    user.openId = userInfo.openId;
-    user.language = userInfo.language;
+    if (data.encryptedData && data.iv) {
+      const userInfo = decryptData(data.encryptedData, data.iv, sessionKey);
+      user.nickName = userInfo.nickName;
+      user.avatarUrl = userInfo.avatarUrl;
+      user.gender = userInfo.gender;
+      user.language = userInfo.language;
+      user.city = userInfo.city;
+      user.country = userInfo.country;
+      user.province = userInfo.province;
+      user.language = userInfo.language;
+    }
+    user.openId = openId;
     user.sessionKey = sessionKey;
     await this.save(user);
-
     const token = this.sign(user);
     return Promise.resolve(token);
   }
