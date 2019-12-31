@@ -162,7 +162,7 @@ input {
                       <view
                         class="kind-list-text"
                         style="flex: 2; font-weight: 400;"
-                      >{{user.user.nickName}}</view>
+                      >{{user.user.nickName || ('user' + user.user.id)}}</view>
                       <view
                         class="kind-list-value"
                         style="color: #4a4a4a;"
