@@ -1,7 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { cipher, util } from 'node-forge';
 import { config } from '../config';
-import { User } from '../entity';
 
 export function decryptData(encryptedData: string, iv: string, sessionKey: string) {
   // base64 decode
@@ -32,9 +31,9 @@ export function decryptData(encryptedData: string, iv: string, sessionKey: strin
   return decoded;
 }
 
-export function sign({ id, nickName }: User): string {
+export function sign(id: number, isGuest: boolean = true): string {
   const options: jwt.SignOptions = {};
-  if (!nickName) {
+  if (isGuest) {
     options.expiresIn = '1d';
   }
   return jwt.sign({ id }, config.jwtSecret, options);

@@ -46,7 +46,7 @@ export class UserRepository extends Repository<User> {
     user.openId = openId;
     user.sessionKey = sessionKey;
     await this.save(user);
-    const token = sign(user);
+    const token = sign(user.id, !user.nickName);
     return Promise.resolve(token);
   }
 

@@ -1,5 +1,5 @@
 // tslint:disable: max-line-length
-import { decryptData } from '../User';
+import { decryptData, sign, verify } from '../User';
 
 describe('User', () => {
   it('decrypt user', () => {
@@ -11,5 +11,18 @@ describe('User', () => {
 
     expect(data).not.toBeNull();
     expect(data.openId).toBe('ont9F43zPDRoyV6LYi_OnkOh4WNY');
+  });
+
+  it('jsonwebtoken', () => {
+    const token = sign(1, false);
+    expect(verify(token)).toBe(1);
+    expect(verify(`Bearer ${token}`)).toBe(1);
+
+    const token2 = sign(2);
+    expect(verify(token2)).toBe(2);
+    expect(verify(`Bearer ${token2}`)).toBe(2);
+
+    const token3 = 'eyJhbGciOiJIUzI1NiJ9.MQ.fGaUARI99DDadCuNm4ZUhaB6Bpx8KiJsnCLTisJ0bp4';
+    expect(verify(token3)).toBe(1);
   });
 });
