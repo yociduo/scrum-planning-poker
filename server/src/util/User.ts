@@ -33,9 +33,11 @@ export function decryptData(encryptedData: string, iv: string, sessionKey: strin
 }
 
 export function sign({ id, nickName }: User): string {
-  return jwt.sign({ id }, config.jwtSecret, {
-    expiresIn: nickName ? null : '1d',
-  });
+  const options: jwt.SignOptions = {};
+  if (!nickName) {
+    options.expiresIn = '1d';
+  }
+  return jwt.sign({ id }, config.jwtSecret, options);
 }
 
 export function verify(token: string) {
