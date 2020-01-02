@@ -93,8 +93,9 @@ export default class extends wepy.app {
     });
   }
 
-  async onLaunch() {
+  onLaunch() {
     this.registerLocales();
+    this.getUserInfo();
     this.globalData.token = wepy.getStorageSync(TOKEN_KEY);
     setTimeout(() => {
       this.checkForUpdates();
@@ -102,9 +103,6 @@ export default class extends wepy.app {
     const { model } = wepy.getSystemInfoSync();
     if (model.search('iPhone X') !== -1) {
       this.globalData.isIpx = true;
-    }
-    if (!this.globalData.token) {
-      await this.login();
     }
   }
 
@@ -116,11 +114,12 @@ export default class extends wepy.app {
     const data = {};
     const { code } = await wepy.login();
     data.code = code;
-    const { authSettings } = await wepy.getSetting();
-    if (authSettings && authSettings['scope.userInfo']) {
-      const { iv, encryptedData } = await wepy.getUserInfo();
+    const { authSetting } = await wepy.getSetting();
+    if (authSetting && authSetting['scope.userInfo']) {
+      const { iv, encryptedData, userInfo } = await wepy.getUserInfo();
       data.iv = iv;
       data.encryptedData = encryptedData;
+      this.globalData.userInfo = userInfo;
     }
 
     const token = await wepy.request({
@@ -130,6 +129,14 @@ export default class extends wepy.app {
     });
     wepy.setStorageSync(TOKEN_KEY, token);
     this.globalData.token = token;
+  }
+
+  async getUserInfo() {
+    const { authSetting } = await wepy.getSetting();
+    if (authSetting && authSetting['scope.userInfo']) {
+      const { userInfo } = await wepy.getUserInfo();
+      this.globalData.userInfo = userInfo;
+    }
   }
 
   registerLocales() {

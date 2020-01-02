@@ -1,11 +1,10 @@
 import axios from 'axios';
-import * as jwt from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { Repository, EntityRepository } from 'typeorm';
 import { config } from '../config';
 import { User } from '../entity';
 import { WxLogin } from '../model';
-import { decryptData } from '../util';
+import { decryptData, sign } from '../util';
 
 @Service()
 @EntityRepository(User)
@@ -47,25 +46,8 @@ export class UserRepository extends Repository<User> {
     user.openId = openId;
     user.sessionKey = sessionKey;
     await this.save(user);
-    const token = this.sign(user);
+    const token = sign(user);
     return Promise.resolve(token);
-  }
-
-  async login(token: string): Promise<User> {
-    const id = this.verify(token);
-    return await this.findOne(id);
-  }
-
-  verify(token: string): number {
-    try {
-      return Number(jwt.verify(token.slice(7), config.jwtSecret));
-    } catch {
-      return null;
-    }
-  }
-
-  sign(user: User): string {
-    return jwt.sign(user.id.toString(), config.jwtSecret);
   }
 
 }

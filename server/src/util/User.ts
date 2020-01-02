@@ -1,5 +1,7 @@
+import * as jwt from 'jsonwebtoken';
 import { cipher, util } from 'node-forge';
 import { config } from '../config';
+import { User } from '../entity';
 
 export function decryptData(encryptedData: string, iv: string, sessionKey: string) {
   // base64 decode
@@ -28,4 +30,18 @@ export function decryptData(encryptedData: string, iv: string, sessionKey: strin
 
   // 返回解密后的用户数据
   return decoded;
+}
+
+export function sign({ id, nickName }: User): string {
+  return jwt.sign({ id }, config.jwtSecret, {
+    expiresIn: nickName ? null : '1d',
+  });
+}
+
+export function verify(token: string) {
+  const data = jwt.verify(token.slice(7), config.jwtSecret);
+  if (typeof data === 'string') {
+    return Number(data);
+  }
+  return data['id'];
 }

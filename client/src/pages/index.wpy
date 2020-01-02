@@ -34,7 +34,7 @@
 <template>
 <view class="page">
   <view class="top-stick">
-    <button open-type="getUserInfo" @getuserinfo="onCreateTap">{{t.create_button}}</button>
+    <button @tap="onCreateTap">{{t.create_button}}</button>
   </view>
   <view class="container">
     <view class="page-body">
@@ -86,9 +86,6 @@ export default class Index extends wepy.page {
 
   methods = {
     async onCreateTap() {
-      if (!this.$parent.globalData.token) {
-        await this.$parent.login();
-      }
       this.$navigate('create-room');
     }
   };

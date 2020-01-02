@@ -53,6 +53,7 @@
       </view>
       <view class="welcome-btn-area btn-area" style="bottom: {{btnBottom}}">
         <button type="primary" open-type="getUserInfo" loading="{{loading}}" @getuserinfo="onGotUserInfo">{{t.button}}</button>
+        <button loading="{{loading}}" @tap="onGotUserInfo">暂不登录</button>
       </view>
     </view>
     <feedback></feedback>
@@ -84,15 +85,10 @@ export default class Welcome extends wepy.page {
   };
 
   methods = {
-    async onGotUserInfo(e) {
-      const { encryptedData, iv } = e.detail;
-      if (encryptedData && iv) {
-        this.loading = true;
-        await this.$parent.login();
-        this.redirect();
-      } else {
-        await this.openSetting();
-      }
+    async onGotUserInfo() {
+      this.loading = true;
+      await this.$parent.login(true);
+      this.redirect();
     }
   };
 

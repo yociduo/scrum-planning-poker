@@ -16,6 +16,7 @@ import { RoomRepository } from '../../repository';
 import { formatRoomId, Socket, Poker } from '../../util';
 
 const logger = getLogger('poker');
+const _logger = getLogger('logger');
 
 @SocketController()
 export class PokerController {
@@ -128,7 +129,7 @@ export class PokerController {
 
   @OnMessage('join room')
   async _join(@ConnectedSocket() socket: Socket, @MessageBody() id: number) {
-    logger.info(`User ${socket.user.id} join room ${id}`);
+    _logger.info(`User ${socket.user.id} join room ${id}`);
     await this.roomRepository.joinOrLeave(id, socket.user);
     const room = await this.roomRepository.getRoomDetail(id, socket.user);
     socket.emit('init', room);
@@ -140,7 +141,7 @@ export class PokerController {
 
   @OnMessage('leave room')
   async _leave(@ConnectedSocket() socket: Socket, @MessageBody() id: number) {
-    logger.info(`User ${socket.user.id} leave room ${id}`);
+    _logger.info(`User ${socket.user.id} leave room ${id}`);
     await this.roomRepository.joinOrLeave(id, socket.user, true);
     const room = await this.roomRepository.getRoomDetail(id, socket.user);
     socket.leave(formatRoomId(id), () => {
@@ -151,7 +152,7 @@ export class PokerController {
 
   @OnMessage('select card')
   async _selectCard(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() { id, card }: { id: number, card: number }) {
-    logger.info(`User ${socket.user.id} selected card ${card}`);
+    _logger.info(`User ${socket.user.id} selected card ${card}`);
     const room = await this.roomRepository.selectCard(id, socket.user, card);
     if (room) {
       const { currentScore, currentStory } = room;
@@ -161,7 +162,7 @@ export class PokerController {
 
   @OnMessage('calc method')
   async _calcMethod(@ConnectedSocket() socket: Socket, @MessageBody() { id, calcMethod }: { id: number, calcMethod: number }) {
-    logger.info(`User ${socket.user.id} changed calc method ${JSON.stringify(calcMethod)}`);
+    _logger.info(`User ${socket.user.id} changed calc method ${JSON.stringify(calcMethod)}`);
     const room = await this.roomRepository.calcMethod(id, calcMethod);
     if (room) {
       const { id, options, currentScore } = room;
@@ -171,7 +172,7 @@ export class PokerController {
 
   @OnMessage('current score')
   async _changeCurrentScore(@ConnectedSocket() socket: Socket, @MessageBody() { id, currentScore }: { id: number, currentScore: number }) {
-    logger.info(`User ${socket.user.id} change current score to ${currentScore}`);
+    _logger.info(`User ${socket.user.id} change current score to ${currentScore}`);
     const room = await this.roomRepository.changeCurrentScore(id, currentScore);
     if (room) {
       const { id, currentStory, currentScore, options } = room;
@@ -181,7 +182,7 @@ export class PokerController {
 
   @OnMessage('next story')
   async _nextStory(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() id: number) {
-    logger.info(`User ${socket.user.id} next story for room ${id}`);
+    _logger.info(`User ${socket.user.id} next story for room ${id}`);
     const room = await this.roomRepository.nextStory(id);
     if (room) {
       const {
@@ -212,7 +213,7 @@ export class PokerController {
 
   @OnMessage('add story')
   async _addStory(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() { id, stories }: { id: number, stories: Story[] }) {
-    logger.info(`User ${socket.user.id} add story ${stories} for room ${id}`);
+    _logger.info(`User ${socket.user.id} add story ${stories} for room ${id}`);
     const room = await this.roomRepository.addStory(id, stories, socket.user);
     if (room) {
       const {
