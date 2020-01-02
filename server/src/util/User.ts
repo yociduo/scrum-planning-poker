@@ -34,12 +34,12 @@ export function decryptData(encryptedData: string, iv: string, sessionKey: strin
 
 export function sign({ id, nickName }: User): string {
   return jwt.sign({ id }, config.jwtSecret, {
-    expiresIn: nickName ? null : '1d',
+    expiresIn: nickName ? 10 : '1d',
   });
 }
 
 export function verify(token: string) {
-  const data = jwt.verify(token.slice(7), config.jwtSecret);
+  const data = jwt.verify(token.startsWith('Bearer ') ? token.slice(7) : token, config.jwtSecret);
   if (typeof data === 'string') {
     return Number(data);
   }

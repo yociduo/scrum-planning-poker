@@ -68,6 +68,7 @@ export default class extends wepy.app {
             return data;
           case 401:
             wepy.redirectTo({ url: 'welcome' });
+            wepy.removeStorageSync(TOKEN_KEY);
             return null;
           default:
             return null;
