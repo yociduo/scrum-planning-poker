@@ -40,6 +40,14 @@
 
 .welcome-btn-area {
   position: absolute;
+
+  &-link {
+    color: #0678c1;
+    background: none;
+    &:after {
+      border: none;
+    }
+  }
 }
 </style>
 <template>
@@ -53,7 +61,7 @@
       </view>
       <view class="welcome-btn-area btn-area" style="bottom: {{btnBottom}}">
         <button type="primary" open-type="getUserInfo" loading="{{loading}}" @getuserinfo="onGotUserInfo">{{t.button}}</button>
-        <button loading="{{loading}}" @tap="onGotUserInfo">暂不登录</button>
+        <button class="welcome-btn-area-link" @tap="onGotUserInfo">{{t.skip_login}}</button>
       </view>
     </view>
     <feedback></feedback>
@@ -86,8 +94,10 @@ export default class Welcome extends wepy.page {
 
   methods = {
     async onGotUserInfo() {
+      if (this.loading) return;
       this.loading = true;
       await this.$parent.login(true);
+      this.loading = false;
       this.redirect();
     }
   };

@@ -27,7 +27,8 @@ export default {
     'welcome': {
       'title': 'Scrum Planning',
       'text': 'Scrum Planning Poker makes agile project planning and estimation more accurate, simple, and fun.',
-      'button': 'Let\'s Go!'
+      'button': 'Let\'s Go!',
+      'skip_login': 'Skip Login'
     },
     'create-room': {
       'title': 'Create Room',
@@ -94,7 +95,8 @@ export default {
     'welcome': {
       'title': 'Scrum敏捷估算',
       'text': 'Scrum扑克让敏捷项目估算更加精确简单并充满乐趣',
-      'button': '开始'
+      'button': '开始并登录',
+      'skip_login': '暂不登录'
     },
     'create-room': {
       'title': '创建房间',
