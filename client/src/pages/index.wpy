@@ -99,7 +99,8 @@ export default class Index extends wepy.page {
   async onShow() {
     if (!this.$parent.globalData.token) return;
     this.loading = true;
-    await wepy.showLoading();
+    // TODO: wechat 7.0.10 block loading list, temp hide
+    // await wepy.showLoading();
     const rooms = await wepy.request({
       url: `/rooms`,
       method: 'GET'
@@ -109,6 +110,7 @@ export default class Index extends wepy.page {
       this.loading = false;
       this.$apply();
     }
+    // TODO: wechat 7.0.10 block loading list, temp hide
     await wepy.hideLoading();
   }
 }
