@@ -47,6 +47,16 @@
     &:after {
       border: none;
     }
+
+    &.button-hover,
+    &:not([disabled]):active {
+      color: #075E96;
+    }
+
+    &[loading],
+    &[disabled] {
+      color: #7cb5da;
+    }
   }
 }
 </style>
@@ -61,7 +71,7 @@
       </view>
       <view class="welcome-btn-area btn-area" style="bottom: {{btnBottom}}">
         <button type="primary" open-type="getUserInfo" loading="{{loading}}" @getuserinfo="onGotUserInfo">{{t.button}}</button>
-        <button class="welcome-btn-area-link" @tap="onGotUserInfo">{{t.skip_login}}</button>
+        <button class="welcome-btn-area-link" loading="{{loading}}" @tap="onGotUserInfo">{{t.skip_login}}</button>
       </view>
     </view>
     <feedback></feedback>
