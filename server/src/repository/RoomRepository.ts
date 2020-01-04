@@ -1,7 +1,6 @@
-// tslint:disable
 import { Service } from 'typedi';
 import { Repository, EntityRepository, getManager } from 'typeorm';
-import { Room, User, Story, UserRoom, Score } from '../entity';
+import { Room, User, Story } from '../entity';
 import { formatTimer, convertScore } from '../util';
 
 @Service()
@@ -9,60 +8,57 @@ import { formatTimer, convertScore } from '../util';
 export class RoomRepository extends Repository<Room> {
 
   async getListByUser(user: User): Promise<Room[]> {
-    return await getManager().query(`
-      SELECT
-        room.id AS id,
-        room.name AS name,
-        room.createdAt AS createdAt,
-        room.updatedAt AS updatedAt,
-        userRoom.isHost AS isHost,
-        (room.creatorId = ?) AS isCreator,
-        SUM(!story.isCompleted) = 0 AS isCompleted,
-        COUNT(story.id) AS storyCount,
-        IFNULL(SUM(story.score), 0) AS scoreSum,
-        SUM(story.timer) AS timerSum
-      FROM UserRooms userRoom
-      INNER JOIN Rooms room ON room.id = userRoom.roomId
-      LEFT JOIN Stories story ON story.roomId = room.id
-      WHERE userRoom.userId = ?
-      AND room.isDeleted = false
-      AND story.isDeleted = false
-      GROUP BY userRoom.roomId, userRoom.isHost
-      ORDER BY room.createdAt DESC
-    `, [user.id, user.id]);
+    const { raw, entities } = await this.createQueryBuilder('room')
+      .leftJoin('room.stories', 'story')
+      .leftJoin('room.userRooms', 'userRoom')
+      .where('userRoom.userId = :id', { id: user.id })
+      .andWhere('room.isDeleted = false')
+      .andWhere('story.isDeleted = false')
+      .andWhere('userRoom.isDeleted = false')
+      .addSelect('userRoom.isHost', 'isHost')
+      .addSelect(`room.creatorId = ${user.id}`, 'isCreator')
+      .addSelect('SUM(!story.isCompleted) = 0', 'isCompleted')
+      .addSelect('COUNT(story.id)', 'storyCount')
+      .addSelect('IFNULL(SUM(story.score), 0)', 'scoreSum')
+      .addSelect('SUM(story.timer)', 'timerSum')
+      .groupBy('room.id')
+      .addGroupBy('userRoom.id')
+      .orderBy('room.createdAt', 'DESC')
+      .getRawAndEntities();
 
-    // return (await getManager()
-    //   .createQueryBuilder(UserRoom, 'userRoom')
-    //   .leftJoinAndSelect('userRoom.room', 'room')
-    //   .leftJoin('room.stories', 'story')
-    //   .where('userRoom.userId = :id', { id: user.id })
-    //   .andWhere('room.isDeleted = false')
-    //   .andWhere('story.isDeleted = false')
-    //   .orderBy('room.createdAt', 'DESC')
-    //   .addSelect('COUNT(story.score)', 'storyCount')
-    //   .groupBy('room.id')
-    //   .getMany())
-    //   .map(ur => ur.room);
+    entities.forEach((entity, index) => {
+      entity.isHost = !!raw[index].isHost;
+      entity.isCreator = !!raw[index].isCreator;
+      entity.isCompleted = !!raw[index].isCompleted;
+      entity.storyCount = raw[index].storyCount;
+      entity.scoreSum = raw[index].scoreSum;
+      entity.timerSum = raw[index].timerSum;
+      delete entity.userRooms;
+      entity.displayTimerSum = formatTimer(entity.timerSum);
+    });
+
+    return entities;
   }
 
   async getByUser(id: number, user: User): Promise<Room> {
-    const room = await getManager().findOneOrFail(Room, {
-      relations: [
-        'stories',
-        'stories.scores',
-        'stories.scores.user',
-      ],
-      where: {
-        id,
-      },
-    });
+    const room = await this.createQueryBuilder('room')
+      .leftJoinAndSelect('room.stories', 'story')
+      .leftJoinAndSelect('story.scores', 'score')
+      .leftJoinAndSelect('score.user', 'scuserore')
+      .leftJoin('room.userRooms', 'userRoom')
+      .where('userRoom.userId = :id', { id: user.id })
+      .where('userRoom.roomId = :id', { id })
+      .andWhere('room.isDeleted = false')
+      .andWhere('story.isDeleted = false')
+      .andWhere('userRoom.isDeleted = false')
+      .getOne();
 
     room.storyCount = 0;
     room.timerSum = 0;
-    room.scoreSum = 0
-    room.stories.forEach(story => {
+    room.scoreSum = 0;
+    room.stories.forEach((story) => {
       story.displayTimer = formatTimer(story.timer);
-      room.storyCount++;
+      room.storyCount = room.storyCount + 1;
       room.timerSum += story.timer;
       room.scoreSum += story.score;
     });

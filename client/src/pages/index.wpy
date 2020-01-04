@@ -43,7 +43,7 @@
         <view class="page-section">
           <view class="page-section-spacing">
             <view class="room-list">
-              <repeat for="{{rooms}}" index="id" item="room" key="id">
+              <repeat for="{{rooms}}" key="id" item="room">
                 <roomListItem :room="room"></roomListItem>
               </repeat>
             </view>
@@ -72,6 +72,10 @@ import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';
 
 export default class Index extends wepy.page {
+  config = {
+    enablePullDownRefresh: true
+  };
+
   data = {
     rooms: [],
     loading: false
@@ -97,6 +101,15 @@ export default class Index extends wepy.page {
   };
 
   async onShow() {
+    await this.getRooms();
+  }
+
+  async onPullDownRefresh() {
+    await this.getRooms();
+    await wepy.stopPullDownRefresh();
+  }
+
+  async getRooms() {
     if (!this.$parent.globalData.token) return;
     this.loading = true;
     // TODO: wechat 7.0.10 block loading list, temp hide
@@ -111,7 +124,7 @@ export default class Index extends wepy.page {
       this.$apply();
     }
     // TODO: wechat 7.0.10 block loading list, temp hide
-    await wepy.hideLoading();
+    // await wepy.hideLoading();
   }
 }
 </script>
