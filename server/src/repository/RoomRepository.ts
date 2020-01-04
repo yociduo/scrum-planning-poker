@@ -2,7 +2,7 @@
 import { Service } from 'typedi';
 import { Repository, EntityRepository, getManager } from 'typeorm';
 import { Room, User, Story, UserRoom, Score } from '../entity';
-import { formatTimer, convertScore } from '../util';
+import { formatTimer, convertScore, Poker } from '../util';
 
 const initResults = new Array(31).fill(null).map((v, i) => i).concat([0.5, 40, 55, 89, 100]).sort((i, j) => i - j);
 
@@ -17,25 +17,26 @@ export class RoomRepository extends Repository<Room> {
 
   public static runningRooms: { [key: number]: ICachedRoom } = {};
 
-  async getByUser(user: User): Promise<Room[]> {
+  async getListByUser(user: User): Promise<Room[]> {
     return await getManager().query(`
       SELECT
         room.id AS id,
         room.name AS name,
         room.createdAt AS createdAt,
         room.updatedAt AS updatedAt,
+        userRoom.isHost AS isHost,
         (room.creatorId = ?) AS isCreator,
+        SUM(!story.isCompleted) = 0 AS isCompleted,
         COUNT(story.id) AS storyCount,
         IFNULL(SUM(story.score), 0) AS scoreSum,
-        SUM(story.timer) AS timerSum,
-        SUM(!story.isCompleted) = 0 AS isCompleted
+        SUM(story.timer) AS timerSum
       FROM UserRooms userRoom
-      LEFT JOIN Rooms room ON room.id = userRoom.roomId
+      INNER JOIN Rooms room ON room.id = userRoom.roomId
       LEFT JOIN Stories story ON story.roomId = room.id
       WHERE userRoom.userId = ?
       AND room.isDeleted = false
       AND story.isDeleted = false
-      GROUP BY userRoom.roomId
+      GROUP BY userRoom.roomId, userRoom.isHost
       ORDER BY room.createdAt DESC
     `, [user.id, user.id]);
 
@@ -53,13 +54,40 @@ export class RoomRepository extends Repository<Room> {
     //   .map(ur => ur.room);
   }
 
+  async getByUser(id: number, user: User): Promise<Room> {
+    const room = await getManager().findOneOrFail(Room, {
+      relations: [
+        'stories',
+        'stories.scores',
+        'stories.scores.user',
+      ],
+      where: {
+        id,
+      },
+    });
+
+    room.storyCount = 0;
+    room.timerSum = 0;
+    room.scoreSum = 0
+    room.stories.forEach(story => {
+      story.displayTimer = formatTimer(story.timer);
+      room.storyCount++;
+      room.timerSum += story.timer;
+      room.scoreSum += story.score;
+    });
+    room.displayTimerSum = formatTimer(room.timerSum);
+
+    return room;
+  }
+
   async check(id: number): Promise<boolean> {
-    return (await getManager()
-      .createQueryBuilder(Story, 'story')
-      .where('story.roomId = :id', { id })
+    return (await this.createQueryBuilder('room')
+      .leftJoin('room.stories', 'story')
+      .where('room.id = :id', { id })
       .andWhere('story.isDeleted = false')
-      .andWhere('story.isCompleted = false')
-      .getCount()) === 0;
+      .groupBy('room.id')
+      .having('COUNT(story.id) = SUM(story.isCompleted)')
+      .getCount()) > 0;
   }
 
   async createWithStory(user: User, room: Room): Promise<Room> {

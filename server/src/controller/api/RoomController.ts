@@ -22,13 +22,13 @@ export class RoomController {
   @Authorized()
   @Get()
   getList(@CurrentUser({ required: true }) user: User): Promise<Room[]> {
-    return this.roomRepository.getByUser(user);
+    return this.roomRepository.getListByUser(user);
   }
 
   @Authorized()
   @Get('/:id')
   get(@CurrentUser({ required: true }) user: User, @Param('id') id: number): Promise<Room> {
-    return this.roomRepository.getRoomDetail(id, user);
+    return this.roomRepository.getByUser(id, user);
   }
 
   @Authorized()
@@ -39,9 +39,7 @@ export class RoomController {
 
   @Authorized()
   @Post()
-  // TODO: change the request model
-  // tslint:disable-next-line:max-line-length
-  create(@CurrentUser({ required: true }) user: User, @Body({ validate: false }) room: Room): Promise<Room> {
+  create(@CurrentUser({ required: true }) user: User, @Body() room: Room): Promise<Room> {
     return this.roomRepository.createWithStory(user, room);
   }
 
