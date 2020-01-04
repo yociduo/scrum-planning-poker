@@ -1,7 +1,6 @@
 import { getLogger } from 'log4js';
 import { JsonController, Get } from 'routing-controllers';
 import { Service } from 'typedi';
-import { RoomRepository } from '../../repository';
 import { Poker } from '../../util';
 
 const logger = getLogger('home');
@@ -20,14 +19,7 @@ export class HomeController {
   // TODO: temp room health check
   @Get('/room-health')
   roomHealth() {
-    return {
-      repository: Object.keys(RoomRepository.runningRooms).map((key) => {
-        return RoomRepository.runningRooms[key].room;
-      }),
-      poker: Object.keys(Poker.runningPokers).map((key) => {
-        return Poker.runningPokers[key].room;
-      }),
-    };
+    return Object.keys(Poker.runningPokers).map(key => Poker.runningPokers[key].room);
   }
 
 }
