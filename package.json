@@ -1,0 +1,34 @@
+{
+  "name": "scrum-planning-poker",
+  "version": "3.2.0",
+  "description": "Scrum敏捷估算 ===================== Scrum扑克让敏捷项目估算更加精确简单并充满乐趣！",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://yociduo@github.com/yociduo/scrum-planning-poker.git"
+  },
+  "author": "Eden Wang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yociduo/scrum-planning-poker/issues"
+  },
+  "homepage": "https://github.com/yociduo/scrum-planning-poker#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^8.3.4",
+    "@commitlint/config-conventional": "^8.3.4",
+    "husky": "^3.1.0"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
