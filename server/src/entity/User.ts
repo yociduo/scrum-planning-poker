@@ -1,6 +1,7 @@
 import {
   Length,
   IsInt,
+  IsBoolean,
 } from 'class-validator';
 import {
   Column,
@@ -30,31 +31,31 @@ export class User {
   avatarUrl: string;
 
   @IsInt()
-  @Column('smallint', { nullable: true })
+  @Column('smallint', { nullable: true, select: false })
   gender?: number;
 
   @Length(255)
-  @Column({ default: '' })
+  @Column({ default: '', select: false })
   language: string;
 
   @Length(255)
-  @Column({ default: '' })
+  @Column({ default: '', select: false })
   city: string;
 
   @Length(255)
-  @Column({ default: '' })
+  @Column({ default: '', select: false })
   country: string;
 
   @Length(255)
-  @Column({ default: '' })
+  @Column({ default: '', select: false })
   province: string;
 
   @Length(255)
-  @Column({ default: '' })
+  @Column({ default: '', select: false })
   openId: string;
 
   @Length(255)
-  @Column({ default: '' })
+  @Column({ default: '', select: false })
   sessionKey: string;
 
   @OneToMany(() => Score, score => score.user)
@@ -75,10 +76,14 @@ export class User {
   @OneToMany(() => Story, room => room.updater)
   updatedStories: Story[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updatedAt: Date;
+
+  @IsBoolean()
+  @Column({ default: false, select: false })
+  isDeleted: boolean;
 
 }

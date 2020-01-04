@@ -40,7 +40,7 @@ export class Story {
   scores: Score[];
 
   @IsHexadecimal()
-  @Column('decimal', { nullable: true, precision: 4, scale: 1  })
+  @Column('decimal', { nullable: true, precision: 4, scale: 1 })
   score?: number;
 
   @IsInt()
@@ -51,33 +51,32 @@ export class Story {
   @Column('smallint', { nullable: true })
   meanType?: number;
 
-  @Column({ nullable: false })
+  @IsBoolean()
+  @Column({ default: false })
+  isCompleted: boolean;
+
+  @Column({ nullable: false, select: false })
   creatorId: number;
 
   @ManyToOne(() => User, user => user.createdStories)
   creator: User;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   createdAt: Date;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, select: false })
   updaterId: number;
 
   @ManyToOne(() => User, user => user.updatedStories)
   updater: User;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updatedAt: Date;
 
   @IsBoolean()
-  @Column({ default: false })
+  @Column({ default: false, select: false })
   isDeleted: boolean;
 
-  @IsBoolean()
-  @Column({ default: false })
-  isCompleted: boolean;
-
-  // TODO: handle wepy repeat issue
   displayTimer?: string;
 
 }

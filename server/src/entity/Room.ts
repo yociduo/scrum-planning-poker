@@ -32,62 +32,43 @@ export class Room {
   @OneToMany(() => Story, story => story.room)
   stories: Story[];
 
-  @Column({ nullable: false })
+  @Column('simple-json', { nullable: true })
+  options?: RoomOptions;
+
+  @Column({ nullable: false, select: false })
   creatorId: number;
 
   @ManyToOne(() => User, user => user.createdRooms)
   creator: User;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   createdAt: Date;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, select: false })
   updaterId: number;
 
   @ManyToOne(() => User, user => user.updatedRooms)
   updater: User;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updatedAt: Date;
 
   @IsBoolean()
-  @Column({ default: false })
+  @Column({ default: false, select: false })
   isDeleted: boolean;
 
-  @Column('simple-json', { nullable: true })
-  options?: RoomOptions;
-
-  // TODO: remove in next release
-  currentStory?: Story;
-
-  // TODO: remove in next release
-  currentScore?: number;
-
-  // TODO: remove in next release
-  selectedCard?: number;
-
-  // TODO: remove in next release
-  loading?: boolean;
-
-  // TODO: remove in next release
   isHost?: boolean;
 
-  // TODO: remove in next release
   isCreator?: boolean;
 
-  // TODO: remove in next release
   isCompleted?: boolean;
 
-  // TODO: remove in next release
   storyCount?: number;
 
-  // TODO: remove in next release
   scoreSum?: number;
 
-  // TODO: remove in next release
   timerSum?: number;
 
-  // TODO: remove in next release
   displayTimerSum?: string;
 
 }

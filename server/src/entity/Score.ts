@@ -1,6 +1,7 @@
 import {
   IsHexadecimal,
   IsInt,
+  IsBoolean,
 } from 'class-validator';
 import {
   Column,
@@ -19,13 +20,13 @@ export class Score {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, select: false })
   userId: number;
 
   @ManyToOne(() => User, user => user.scores)
   user: User;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, select: false })
   storyId: number;
 
   @ManyToOne(() => Story, story => story.scores)
@@ -39,13 +40,16 @@ export class Score {
   @Column('smallint', { default: 0 })
   timer: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updatedAt: Date;
 
-  // TODO: handle wepy repeat issue
+  @IsBoolean()
+  @Column({ default: false, select: false })
+  isDeleted: boolean;
+
   displayCard?: string;
 
 }
