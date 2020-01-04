@@ -1,8 +1,6 @@
 import { getLogger } from 'log4js';
 import { JsonController, Get } from 'routing-controllers';
 import { Service } from 'typedi';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Room } from '../../entity';
 import { RoomRepository } from '../../repository';
 import { Poker } from '../../util';
 
@@ -12,14 +10,14 @@ const logger = getLogger('home');
 @JsonController()
 export class HomeController {
 
-  @InjectRepository(Room)
-  private roomRepository: RoomRepository;
-
   @Get()
   index() {
+    // api health check and log check
     logger.info('hello world');
+    return 'hello world';
   }
 
+  // TODO: temp room health check
   @Get('/room-health')
   roomHealth() {
     return {

@@ -13,7 +13,7 @@ export class UserController {
   private userRepository: UserRepository;
 
   @Post('/wxlogin')
-  login(@Body() data: WxLogin): Promise<string> {
+  wxLogin(@Body() data: WxLogin): Promise<string> {
     return this.userRepository.wxLogin(data);
   }
 
