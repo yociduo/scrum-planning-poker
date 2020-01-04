@@ -25,13 +25,13 @@ export class PokerController {
   private roomRepository: RoomRepository;
 
   @OnConnect()
-  connection() {
-    logger.info('client connected');
+  connection(@ConnectedSocket() socket: Socket) {
+    logger.info(`client ${socket.user.id} connected`);
   }
 
   @OnDisconnect()
-  disconnect() {
-    logger.info('client disconnected');
+  disconnect(@ConnectedSocket() socket: Socket) {
+    logger.info(`client ${socket.user.id} disconnected`);
   }
 
   @OnMessage('[Poker] join room')
