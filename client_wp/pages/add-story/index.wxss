@@ -1,0 +1,14 @@
+textarea {
+  width: 100%;
+  padding: 16rpx 0;
+  font-size: 34rpx;
+}
+
+.textarea-wrp {
+  background-color: #fff;
+  border: 2rpx solid #d8d8d8;
+}
+
+.textarea-wrp {
+  padding: 0 15rpx;
+}

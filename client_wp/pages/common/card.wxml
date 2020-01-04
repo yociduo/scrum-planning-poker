@@ -1,0 +1,13 @@
+<template name="card">
+  <view class="card {{selectedCard === card.value ? 'selected' : ''}}" data-card="{{card}}" bindtap="onCardTap">
+    <view class="card-left-corner">
+      <image src="{{card.corner}}"></image>
+    </view>
+    <view class="card-right-corner">
+      <image src="{{card.corner}}"></image>
+    </view>
+    <view class="card-center">
+      <image src="{{card.icon}}"></image>
+    </view>
+  </view>
+</template>

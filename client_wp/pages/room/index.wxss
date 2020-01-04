@@ -1,0 +1,180 @@
+@import "../common/lib/weui.wxss";
+@import "../common/card.wxss";
+
+.top-stick {
+  box-sizing: border-box;
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+  display: flex;
+  align-items: center;
+  font-size: 34rpx;
+}
+
+.top-stick-hd {
+  flex: 1;
+  margin-right: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-stick-bd {
+  margin-right: 20rpx;
+}
+
+.top-stick-ft button {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  width: 38rpx;
+  height: 38rpx;
+}
+
+.top-stick-ft button:after {
+  border: 0;
+}
+
+.top-stick-ft image {
+  width: 38rpx;
+  height: 38rpx;
+  display: block;
+}
+
+.top-stick-story .top-stick-hd {
+  color: #0678c1;
+  font-weight: 500;
+}
+
+.top-stick-story .top-stick-ft button {
+  width: 90rpx;
+  height: 78rpx;
+  padding: 20rpx;
+  margin-left: -20rpx;
+  margin-right: -20rpx;
+}
+
+.top-stick-story .top-stick-ft image {
+  width: 50rpx;
+}
+
+.top-stick + .container {
+  margin-top: 100rpx;
+}
+
+.player-box, .story-box, .result-box {
+  position: relative;
+  background-color: #fff;
+  border: 2rpx solid #d8d8d8;
+  margin-bottom: 40rpx;
+}
+
+.player, .story, .result {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.player {
+  padding: 20rpx 30rpx;
+}
+
+.player-hd {
+  position: relative;
+  margin-right: 20rpx;
+  height: 92rpx;
+}
+
+.player-bd {
+  flex: 1;
+  font-size: 34rpx;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 20rpx;
+}
+
+.player-ft {
+  position: relative;
+}
+
+.player-value {
+  font-size: 40rpx;
+  font-weight: 500;
+  color: #0678c1;
+}
+
+.player-avatar {
+  width: 93rpx;
+  height: 93rpx;
+  border-radius: 46.5rpx;
+}
+
+.story, .result {
+  height: 88rpx;
+  padding: 10rpx 30rpx;
+}
+
+.story-hd,
+.story-bd,
+.story-ft {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.story-hd {
+  font-weight: 500;
+}
+
+.story-bd {
+  text-align: center;
+}
+
+.story-ft,
+.result-ft {
+  text-align: right;
+  font-weight: 500;
+  color: #0678c1;
+}
+
+.story-box-ft,
+.result-box-ft {
+  height: 132rpx;
+  border-top: 2rpx solid #d8d8d8;
+}
+
+.story-box-ft .story-ft,
+.result-box-ft .result-ft {
+  font-size: 40rpx;
+}
+
+.result:active {
+  background-color: #EEEEEE;
+}
+
+.result-bd {
+  flex: 1;
+  font-weight: 500;
+}
+
+.result-ft {
+  margin-right: 40rpx;
+}
+
+.result-ft:after {
+  content: " ";
+  display: inline-block;
+  height: 12rpx;
+  width: 12rpx;
+  border-width: 6rpx 6rpx 0 0;
+  border-color: #9B9B9B;
+  border-style: solid;
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  position: absolute;
+  top: 50%;
+  margin-top: -8rpx;
+  right: 28rpx;
+}

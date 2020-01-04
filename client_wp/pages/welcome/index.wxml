@@ -1,0 +1,12 @@
+<view class="container">
+  <view class="page-body">
+    <view class="welcome-bg">
+      <view class="welcome-title">Ready to enter the game?</view>
+      <cover-image src="../../image/cover.png"></cover-image>
+      <view class="welcome-bg-circle"></view>
+    </view>
+    <view class="welcome-btn-area btn-area">
+      <button type="primary" open-type="getUserInfo" bindgetuserinfo="onGotUserInfo">Let's Go!</button>
+    </view>
+  </view>
+</view>

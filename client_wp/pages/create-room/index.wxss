@@ -1,0 +1,29 @@
+input, textarea {
+  width: 100%;
+  padding: 16rpx 0;
+  font-size: 34rpx;
+}
+
+.textarea-wrp, .input-wrp {
+  background-color: #fff;
+  border: 2rpx solid #d8d8d8;
+}
+
+.input-wrp {
+  padding: 0 25rpx;
+}
+
+.textarea-wrp {
+  padding: 0 15rpx;
+}
+
+.switch-wrp {
+  display: flex;
+  margin-bottom: 40rpx;
+  font-size: 34rpx;
+  line-height: 40rpx;
+}
+
+.switch-wrp__bd {
+  flex: 1;
+}
