@@ -100,7 +100,7 @@ describe('Poker', () => {
 
   it('select card', async () => {
     await poker.join(host);
-    const score = poker.currentStory.scores.find(s => s.userId === host.id);
+    const score = poker.currentStory.scores.find(s => s.user.id === host.id);
     expect(score).not.toBeNull();
 
     await poker.selectCard(host, 1);

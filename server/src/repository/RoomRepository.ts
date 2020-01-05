@@ -86,7 +86,7 @@ export class RoomRepository extends Repository<Room> {
       newRoom.updater = user;
       await transactionalEntityManager.insert(Room, newRoom);
 
-      for (let i = 0; i < room.stories.length; i++) {
+      for (let i = 0; i < room.stories.length; i = i + 1) {
         const newStory = new Story();
         newStory.name = room.stories[i].name;
         newStory.room = newRoom;

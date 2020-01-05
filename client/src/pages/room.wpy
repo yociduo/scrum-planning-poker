@@ -25,7 +25,7 @@
       <view class="page-section" wx:if="{{(!isHost || options.needScore) && !isCompleted}}">
         <view class="page-section-spacing">
           <view class="card-grids">
-            <repeat class="card-grid" for="{{cards}}" index="key" item="card" key="key">
+            <repeat class="card-grid" for="{{cards}}" item="card" key="key">
               <view class="card-grid">
                 <card :card="card" :selectedCard="selectedCard"></card>
               </view>
@@ -37,7 +37,7 @@
       <view class="page-section" wx:if="{{!isCompleted}}">
         <view class="page-section-spacing">
           <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
-            <repeat for="{{currentStory.scores}}" index="id" item="score" key="id">
+            <repeat for="{{currentStory.scores}}" item="score" key="id">
               <playerBoxItem :score.sync="score" :isHost.sync="isHost" :isNoymous.sync="options.isNoymous"></playerBoxItem>
             </repeat>
           </view>
@@ -70,7 +70,7 @@
       <view class="page-section" wx:if="{{stories && stories.length}}">
         <view class="page-section-spacing">
           <view class="story-box">
-            <repeat for="{{stories}}" index="id" item="story" key="index">
+            <repeat for="{{stories}}" item="story" key="id">
               <storyBoxItem :story.sync="story"></storyBoxItem>
             </repeat>
             <view class="story story-box-ft" wx:if="{{isCompleted}}">

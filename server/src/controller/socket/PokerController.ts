@@ -9,29 +9,22 @@ import {
   SocketController,
   EmitOnSuccess,
 } from 'socket-controllers';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Room, Story } from '../../entity';
 import { PokerMessageBody } from '../../model';
-import { RoomRepository } from '../../repository';
-import { formatRoomId, Socket, Poker } from '../../util';
+import { Socket, Poker } from '../../util';
 
 const logger = getLogger('poker');
-const _logger = getLogger('logger');
 
 @SocketController()
 export class PokerController {
 
-  @InjectRepository(Room)
-  private roomRepository: RoomRepository;
-
   @OnConnect()
   connection(@ConnectedSocket() socket: Socket) {
-    logger.info(`client ${socket.user.id} connected`);
+    logger.info(`User ${socket.user.id} connected`);
   }
 
   @OnDisconnect()
   disconnect(@ConnectedSocket() socket: Socket) {
-    logger.info(`client ${socket.user.id} disconnected`);
+    logger.info(`User ${socket.user.id} disconnected`);
   }
 
   @OnMessage('[Poker] join room')
@@ -45,7 +38,7 @@ export class PokerController {
       socket.join(roomId, () => socket.to(roomId).emit('[Poker] action', { id, currentStory }));
       return poker.getRoom(socket.user);
     } catch (error) {
-      logger.error('[Poker] join room', error);
+      logger.error(`User ${socket.user.id} join room ${id}`, error);
     }
   }
 
@@ -58,7 +51,7 @@ export class PokerController {
       const { roomId, currentStory } = poker;
       socket.leave(roomId, () => socket.to(roomId).emit('[Poker] action', { id, currentStory }));
     } catch (error) {
-      logger.error('[Poker] leave room', error);
+      logger.error(`User ${socket.user.id} leave room ${id}`, error);
     }
   }
 
@@ -71,7 +64,7 @@ export class PokerController {
       const { roomId, currentScore, currentStory } = poker;
       io.to(roomId).emit('[Poker] action', { id, currentScore, currentStory });
     } catch (error) {
-      logger.error('[Poker] select card', error);
+      logger.error(`User ${socket.user.id} selected card ${card}`, error);
     }
   }
 
@@ -84,7 +77,7 @@ export class PokerController {
       const { roomId, currentScore, room: { options } } = poker;
       io.to(roomId).emit('[Poker] action', { id, currentScore, options });
     } catch (error) {
-      logger.error('[Poker] calc method', error);
+      logger.error(`User ${socket.user.id} changed calc method ${calcMethod}`, error);
     }
   }
 
@@ -97,7 +90,7 @@ export class PokerController {
       const { roomId, room: { options } } = poker;
       io.to(roomId).emit('[Poker] action', { id, currentScore, options });
     } catch (error) {
-      logger.error('[Poker] current score', error);
+      logger.error(`User ${socket.user.id} change current score to ${currentScore}`, error);
     }
   }
 
@@ -107,10 +100,10 @@ export class PokerController {
       logger.info(`User ${socket.user.id} next story for room ${id}`);
       const poker = await Poker.getPoker(id);
       await poker.nextStory();
-      const { roomId, currentStory, currentScore, room: { stories } } = poker;
+      const { roomId, currentStory, currentScore, stories } = poker;
       io.to(roomId).emit('[Poker] action', { id, stories, currentScore, currentStory, selectedCard: null, loading: false });
     } catch (error) {
-      logger.error('[Poker] next story', error);
+      logger.error(`User ${socket.user.id} next story for room ${id}`, error);
     }
   }
 
@@ -120,10 +113,10 @@ export class PokerController {
       logger.info(`User ${socket.user.id} add story ${storyNames.join()} for room ${id}`);
       const poker = await Poker.getPoker(id);
       await poker.addStories(storyNames, socket.user);
-      const { roomId, currentStory, currentScore, room: { stories } } = poker;
-      io.to(roomId).emit('[Poker] action', { id, stories, currentScore, currentStory, selectedCard: null, loading: false });
+      const { roomId, currentStory, currentScore } = poker;
+      io.to(roomId).emit('[Poker] action', { id, currentScore, currentStory, selectedCard: null, loading: false });
     } catch (error) {
-      logger.error('[Poker] add story', error);
+      logger.info(`User ${socket.user.id} add story ${storyNames.join()} for room ${id}`, error);
     }
   }
 

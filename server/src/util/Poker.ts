@@ -1,9 +1,7 @@
 import { getManager } from 'typeorm';
 import { Room, Story, User, UserRoom, Score } from '../entity';
 import { CalcMethod } from '../model';
-import { formatRoomId, convertScore, formatTimer } from './Format';
-
-export type PokerOnDestory = (poker?: Poker) => void;
+import { formatRoomId, formatTimer, convertScore } from './Format';
 
 export class Poker {
 
@@ -15,31 +13,30 @@ export class Poker {
     .concat([0.5, 40, 55, 89, 100])
     .sort((i, j) => i - j);
 
-  public static async getPoker(id: number, force: boolean = false, onDestory?: PokerOnDestory): Promise<Poker> {
-    if (!Poker.runningPokers.hasOwnProperty(id) || force) {
-      const room = await getManager().findOneOrFail(Room, {
-        relations: [
-          'userRooms',
-          'userRooms.user',
-          'stories',
-          'stories.scores',
-          'stories.scores.user',
-        ],
-        where: {
-          id,
-        },
-      });
+  public static async getPoker(id: number): Promise<Poker> {
+    if (!Poker.runningPokers.hasOwnProperty(id)) {
+      const room = await getManager().createQueryBuilder(Room, 'room')
+        .leftJoinAndSelect('room.userRooms', 'userRoom')
+        .leftJoinAndSelect('userRoom.user', 'user')
+        .addSelect('room.creatorId')
+        .where('room.id = :id', { id })
+        .andWhere('room.isDeleted = false')
+        .getOne();
 
-      room.stories.forEach(story => story.displayTimer = formatTimer(story.timer));
-      Poker.runningPokers[id] = new Poker(room, onDestory);
+      const stories = await getManager().createQueryBuilder(Story, 'story')
+        .where('story.roomId = :id', { id })
+        .andWhere('story.isDeleted = false')
+        .andWhere('story.isCompleted = true')
+        .getMany();
+
+      stories.forEach(story => story.displayTimer = formatTimer(story.timer));
+      Poker.runningPokers[id] = new Poker(room, stories);
     }
 
     return Poker.runningPokers[id];
   }
 
   private timer?: NodeJS.Timer;
-
-  private onDestory?: PokerOnDestory;
 
   get id(): number {
     return this.room.id;
@@ -49,27 +46,23 @@ export class Poker {
     return formatRoomId(this.id);
   }
 
-  public room: Room;
-
   public currentStory: Story = null;
 
   public currentScore: number = null;
 
-  constructor(room: Room, onDestory?: PokerOnDestory) {
-    this.room = room;
-    this.onDestory = onDestory;
+  constructor(public room: Room, public stories: Story[]) {
   }
 
   public getRoom(user: User): any {
-    const score = this.currentStory && this.currentStory.scores.find(s => s.userId === user.id);
+    const score = this.currentStory && this.currentStory.scores.find(s => s.user.id === user.id);
     return {
       id: this.id,
       name: this.room.name,
       options: this.room.options,
-      stories: this.room.stories,
+      stories: this.stories,
       currentStory: this.currentStory,
       currentScore: this.currentScore,
-      isHost: this.room.userRooms.find(ur => ur.userId === user.id).isHost,
+      isHost: this.room.userRooms.find(ur => ur.user.id === user.id).isHost,
       isCreator: this.room.creatorId === user.id,
       selectedCard: score ? score.card : null,
     };
@@ -87,7 +80,7 @@ export class Poker {
 
   public async selectCard(user: User, card: number): Promise<void> {
     if (!this.currentStory) return;
-    const score = this.currentStory.scores.find(s => s.userId === user.id);
+    const score = this.currentStory.scores.find(s => s.user.id === user.id);
     score.card = card;
     score.timer = this.currentStory.timer;
     await getManager().save(Score, score);
@@ -113,6 +106,8 @@ export class Poker {
       this.currentStory.isCompleted = true;
       this.currentStory.displayTimer = formatTimer(this.currentStory.timer);
       await getManager().save(Story, this.currentStory);
+      const { scores, ...story } = this.currentStory;
+      this.stories.push(story as Story);
     }
 
     const users = this.room.userRooms
@@ -132,7 +127,6 @@ export class Poker {
         story.updaterId = user.id;
         await transactionalEntityManager.insert(Story, story);
         story.scores = [];
-        this.room.stories.push(story);
       }
     });
 
@@ -154,9 +148,6 @@ export class Poker {
 
       this.currentStory = null;
       this.currentScore = null;
-      if (this.onDestory) {
-        this.onDestory(this);
-      }
       delete Poker.runningPokers[this.id];
     } else {
       const needScore = this.room.options.needScore || !userRoom.isHost;
@@ -172,7 +163,14 @@ export class Poker {
 
   private async startNextStory(users: User[]): Promise<void> {
     this.currentScore = null;
-    this.currentStory = this.room.stories.find(s => !s.isDeleted && !s.isCompleted) || null;
+    this.currentStory = await getManager().createQueryBuilder(Story, 'story')
+      .leftJoinAndSelect('story.scores', 'score')
+      .leftJoinAndSelect('score.user', 'user')
+      .where('story.roomId = :id', { id: this.id })
+      .andWhere('story.isDeleted = false')
+      .andWhere('story.isCompleted = false')
+      .getOne() || null;
+
     if (this.currentStory) {
       if (!this.timer) {
         this.timer = setInterval(() => this.currentStory.timer += 1, 1000);
@@ -194,17 +192,17 @@ export class Poker {
   }
 
   private async createUserRoom(user: User, isLeft: boolean): Promise<UserRoom> {
-    let userRoom = this.room.userRooms.find(ur => ur.userId === user.id);
+    let userRoom = this.room.userRooms.find(ur => ur.user.id === user.id);
     const exist = !!userRoom;
     if (!exist) {
       userRoom = new UserRoom();
       userRoom.user = user;
-      userRoom.userId = user.id;
       userRoom.roomId = this.room.id;
       userRoom.isHost = this.room.creatorId === user.id;
     }
 
     userRoom.isLeft = isLeft;
+    userRoom.isDeleted = false;
     await getManager().save(UserRoom, userRoom);
     if (!exist) {
       this.room.userRooms.push(userRoom);
@@ -214,11 +212,11 @@ export class Poker {
   }
 
   private async createScore(user: User): Promise<Score> {
-    let score = this.currentStory.scores.find(s => s.userId === user.id);
+    let score = this.currentStory.scores.find(s => s.user.id === user.id);
     if (!score) {
       score = new Score();
       score.user = user;
-      score.user.id = user.id;
+      score.userId = user.id;
       score.storyId = this.currentStory.id;
       await getManager().save(Score, score);
       this.currentStory.scores.push(score);
