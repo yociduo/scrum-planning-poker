@@ -196,11 +196,11 @@ export class Poker {
     const exist = !!userRoom;
     if (!exist) {
       userRoom = new UserRoom();
-      userRoom.user = user;
       userRoom.roomId = this.room.id;
       userRoom.isHost = this.room.creatorId === user.id;
     }
 
+    userRoom.user = user;
     userRoom.isLeft = isLeft;
     userRoom.isDeleted = false;
     await getManager().save(UserRoom, userRoom);
@@ -215,13 +215,12 @@ export class Poker {
     let score = this.currentStory.scores.find(s => s.user.id === user.id);
     if (!score) {
       score = new Score();
-      score.user = user;
       score.userId = user.id;
       score.storyId = this.currentStory.id;
       await getManager().save(Score, score);
       this.currentStory.scores.push(score);
     }
-
+    score.user = user;
     return score;
   }
 
