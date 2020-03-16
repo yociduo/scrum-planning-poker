@@ -37,7 +37,7 @@ export class Score {
   card?: number;
 
   @IsInt()
-  @Column('smallint', { default: 0 })
+  @Column('int', { default: 0 })
   timer: number;
 
   @CreateDateColumn({ select: false })

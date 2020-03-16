@@ -44,7 +44,7 @@ export class Story {
   score?: number;
 
   @IsInt()
-  @Column('smallint', { default: 0 })
+  @Column('int', { default: 0 })
   timer: number;
 
   @IsInt()
