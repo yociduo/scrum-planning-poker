@@ -1,15 +1,14 @@
 import { createConnection, getManager, getConnectionOptions } from 'typeorm';
-import { config } from '../../config';
 import { Room, Score, Story, User, UserRoom } from '../../entity';
 import { CalcMethod } from '../../model';
 import { Poker } from '../Poker';
+import { formatTimer } from '../Format';
 
 describe('Poker', () => {
   let host: User;
   let players: User[];
   let room: Room;
   let poker: Poker;
-  const onDestory = jest.fn();
 
   beforeAll(async () => {
     const connectionOptions = await getConnectionOptions();
@@ -59,15 +58,18 @@ describe('Poker', () => {
       }
     });
 
-    poker = await Poker.getPoker(room.id, false, onDestory);
+    poker = await Poker.getPoker(room.id);
   });
 
   it('get poker', async () => {
     expect(poker.room.id).toBe(room.id);
     const pokerCached = await Poker.getPoker(room.id);
-    expect(pokerCached.id).toBe(poker.room.id);
-    const pokerForce = await Poker.getPoker(room.id, true);
-    expect(pokerForce.id).toBe(poker.room.id);
+    expect(pokerCached).toBe(poker);
+    expect(Poker.runningPokers[room.id]).toBeDefined();
+  });
+
+  it('get room id', async () => {
+    expect(poker.roomId).toBe(`Room ${room.id}`);
   });
 
   it('host join room', async () => {
@@ -75,27 +77,16 @@ describe('Poker', () => {
     const userRoom = poker.room.userRooms.find(us => us.userId === host.id);
     expect(userRoom).not.toBeNull();
     expect(userRoom.isLeft).toBeFalsy();
+    const roomForHost = await poker.getRoom(host);
+    expect(roomForHost.isHost).toBeTruthy();
   });
 
   it('host leave room', async () => {
     await poker.leave(host);
-    expect(onDestory).toBeCalled();
     const userRoom = poker.room.userRooms.find(us => us.userId === host.id);
     expect(userRoom).not.toBeNull();
     expect(userRoom.isLeft).toBeTruthy();
-  });
-
-  it('on destory', async () => {
-    await poker.join(host);
-    await poker.leave(host);
-    const times = onDestory.mock.calls.length;
-
-    await poker.join(host);
-    await poker.join(players[0]);
-    await poker.leave(host);
-    expect(onDestory).toBeCalledTimes(times);
-    await poker.leave(players[0]);
-    expect(onDestory).toBeCalledTimes(times + 1);
+    expect(Poker.runningPokers[room.id]).toBeUndefined();
   });
 
   it('select card', async () => {
@@ -175,6 +166,8 @@ describe('Poker', () => {
     await poker.selectCard(host, 1);
     await poker.nextStory();
     await poker.leave(host);
+    const newPoker = await Poker.getPoker(room.id);
+    newPoker.stories.forEach(story => expect(story.displayTimer).toBe(formatTimer(story.timer)));
   });
 
   it('add stories', async () => {
@@ -217,22 +210,7 @@ describe('Poker', () => {
       }
     });
 
-    room2 = await getManager().findOneOrFail(Room, {
-      relations: [
-        'userRooms',
-        'userRooms.user',
-        'stories',
-        'stories.scores',
-        'stories.scores.user',
-        'creator',
-        'updater',
-      ],
-      where: {
-        id: room2.id,
-      },
-    });
-
-    const poker2 = new Poker(room2);
+    const poker2 = await Poker.getPoker(room2.id);
     await poker2.join(players[0]);
     await poker2.join(host);
 
@@ -241,6 +219,9 @@ describe('Poker', () => {
 
     await poker2.join(host);
     await poker2.join(players[0]);
+
+    const roomForHost = poker2.getRoom(host);
+    expect(roomForHost.selectedCard).toBeNull();
 
     while (poker2.currentStory) {
       const { currentStory } = poker2;
