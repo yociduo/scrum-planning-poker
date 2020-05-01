@@ -50,6 +50,7 @@ export default {
       'continue_msg': 'Continue with this room & Add story!',
       'save_next_button': 'Save & Next',
       'finish_button': 'Finish',
+      'show_hide_score_content': 'All players will see story point result. Other players will not see story point result.',
       'instruction_line_1': 'The room has been created.',
       'instruction_line_2': 'Let\'s invite members to join in the room!'
     },
@@ -118,6 +119,7 @@ export default {
       'continue_msg': '在该房间继续添加故事！',
       'save_next_button': '保存并继续',
       'finish_button': '结束打分',
+      'show_hide_score_content': '睁开眼睛可使其他成员相互看到打分闭上眼睛后恢复',
       'instruction_line_1': '房间已创建。',
       'instruction_line_2': '快去邀请成员进房间估算吧！'
     },

@@ -33,7 +33,17 @@
           </view>
         </view>
       </view>
-      <view class="page-section-title" wx:if="{{!isCompleted}}">{{t.players}}</view>
+      <view class="page-section-title player-title" wx:if="{{!isCompleted}}">
+        <view class="player-title-hd">{{t.players}}</view>
+        <view class="player-title-ft" wx:if="{{isHost}}">
+          <button wx:if="{{options.isNoymous}}" @tap="onShowHideScore">
+            <image src="/images/eye-close.png"></image>
+          </button>
+          <button wx:if="{{!options.isNoymous}}" @tap="onShowHideScore">
+            <image src="/images/eye-open.png"></image>
+          </button>
+        </view>
+      </view>
       <view class="page-section" wx:if="{{!isCompleted}}">
         <view class="page-section-spacing">
           <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
@@ -177,6 +187,13 @@ export default class Room extends wepy.page {
   methods = {
     onAddTap() {
       this.$navigate(`add-story?id=${this.id}`);
+    },
+    async onShowHideScore() {
+      const isNoymous = !this.options.isNoymous;
+      const res = await wepy.showModal({ content: this.t['show_hide_score_content'] });
+      if (res.confirm) {
+        this.socket.emit('[Poker] show hide score', { id: this.id, isNoymous });
+      }
     },
     onSaveTap() {
       if (this.loading) return;

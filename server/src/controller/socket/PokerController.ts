@@ -120,4 +120,17 @@ export class PokerController {
     }
   }
 
+  @OnMessage('[Poker] show hide score')
+  async showHideScore(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() { id, isNoymous }: PokerMessageBody) {
+    try {
+      logger.info(`User ${socket.user.id} ${isNoymous ? 'show' : 'hide' } score for room ${id}`);
+      const poker = await Poker.getPoker(id);
+      await poker.showHideScore(isNoymous);
+      const { roomId, room: { options } } = poker;
+      io.to(roomId).emit('[Poker] action', { id, options });
+    } catch (error) {
+      logger.info(`User ${socket.user.id} ${isNoymous ? 'show' : 'hide' } score for room ${id}`, error);
+    }
+  }
+
 }

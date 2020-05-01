@@ -9,8 +9,8 @@
     {{score.user.nickName || ('user' + score.user.id)}}
   </view>
   <view class="player-ft">
-    <view class="player-value" wx:if="{{score.displayCard && (isHost || options.isNoymous)}}">{{score.displayCard}}</view>
-    <icon class="icon-small" wx:if="{{score.displayCard && !isHost && !options.isNoymous}}" type="success" size="23" color="#0678C1"></icon>
+    <view class="player-value" wx:if="{{score.displayCard && (isHost || isNoymous)}}">{{score.displayCard}}</view>
+    <icon class="icon-small" wx:if="{{score.displayCard && !isHost && !isNoymous}}" type="success" size="23" color="#0678C1"></icon>
   </view>
 </view>
 </template>

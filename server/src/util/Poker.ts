@@ -135,6 +135,11 @@ export class Poker {
     }
   }
 
+  public async showHideScore(isNoymous: boolean): Promise<void> {
+    this.room.options.isNoymous = isNoymous;
+    await getManager().save(Room, this.room);
+  }
+
   private async handleTimer(user: User, userRoom: UserRoom): Promise<void> {
     if (this.room.userRooms.every(r => r.isLeft)) {
       if (this.currentStory) {
