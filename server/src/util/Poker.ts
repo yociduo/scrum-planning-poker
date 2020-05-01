@@ -193,6 +193,13 @@ export class Poker {
 
   private async createUserRoom(user: User, isLeft: boolean): Promise<UserRoom> {
     let userRoom = this.room.userRooms.find(ur => ur.user.id === user.id);
+
+    if (!userRoom) {
+      // TODO: wait 300ms find again
+      await new Promise(resolve => setTimeout(resolve, 300));
+      userRoom = this.room.userRooms.find(ur => ur.user.id === user.id);
+    }
+
     const exist = !!userRoom;
     if (!exist) {
       userRoom = new UserRoom();
@@ -206,6 +213,15 @@ export class Poker {
     await getManager().save(UserRoom, userRoom);
     if (!exist) {
       this.room.userRooms.push(userRoom);
+    }
+
+    // TODO: Find those duplicate rows
+    if (isLeft) {
+      const urs = this.room.userRooms.filter(ur => ur.user.id === user.id && !ur.isLeft);
+      this.room.userRooms = this.room.userRooms.filter(ur => ur.user.id !== user.id || ur.isLeft);
+      for (let i = 0; i < urs.length; i = i + 1) {
+        await getManager().delete(UserRoom, urs[i]);
+      }
     }
 
     return userRoom;
