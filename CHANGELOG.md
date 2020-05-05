@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/yociduo/scrum-planning-poker/compare/v3.2.1...v3.3.0) (2020-05-05)
+
+
+### Features
+
+* show/hide score ([3907bd2](https://github.com/yociduo/scrum-planning-poker/commit/3907bd27c5ff0dc189f3c13979c10cbcb505cba9))
+* **toptip:** add toptip component to show messagge ([6113edd](https://github.com/yociduo/scrum-planning-poker/commit/6113eddb72890f8b73082c0d7ee578f3c953fc5f))
+
+
+### Bug Fixes
+
+* wait 300ms to find userRoom again ([1642be2](https://github.com/yociduo/scrum-planning-poker/commit/1642be281a4dad89983ec53694949e3c6324f116))
+
 ### [3.2.1](https://github.com/yociduo/scrum-planning-poker/compare/v3.2.0...v3.2.1) (2020-03-16)
 
 
