@@ -115,6 +115,7 @@
       </view>
     </view>
   </view>
+  <toptip></toptip>
 </view>
 </template>
 <script>
@@ -124,10 +125,11 @@ import Card from '@/components/card';
 import Feedback from '@/components/feedback';
 import PlayerBoxItem from '@/components/player-box-item';
 import StoryBoxItem from '@/components/story-box-item';
+import Toptip from '@/components/toptip';
 import LocalesMixin from '@/mixins/locales-mixin';
 import LoginMixin from '@/mixins/login-mixin';
 import T from '@/utils/i18n';
-import { calcMethods, cards, formatTimer, initResults, INSTRUCTION_KEY } from '@/utils/utils';
+import { calcMethods, cards, formatTimer, initResults, INSTRUCTION_KEY, SHOW_HIDE_SCORE_KEY } from '@/utils/utils';
 
 export default class Room extends wepy.page {
   data = {
@@ -179,7 +181,8 @@ export default class Room extends wepy.page {
     card: Card,
     feedback: Feedback,
     playerBoxItem: PlayerBoxItem,
-    storyBoxItem: StoryBoxItem
+    storyBoxItem: StoryBoxItem,
+    toptip: Toptip
   };
 
   mixins = [LocalesMixin, LoginMixin];
@@ -190,10 +193,23 @@ export default class Room extends wepy.page {
     },
     async onShowHideScore() {
       const isNoymous = !this.options.isNoymous;
-      const res = await wepy.showModal({ content: this.t['show_hide_score_content'] });
-      if (res.confirm) {
-        this.socket.emit('[Poker] show hide score', { id: this.id, isNoymous });
+      if (isNoymous) {
+        if (wepy.getStorageSync(SHOW_HIDE_SCORE_KEY)) {
+          this.$invoke('toptip', 'show', {
+            duration: 3000,  // 可选
+            type: 'success', // 可选. 或者 'error'
+            text: this.t['show_hide_score_toptip']
+          });
+        } else {
+          const res = await wepy.showModal({ content: this.t['show_hide_score_content'] });
+          if (!res.confirm) {
+            return;
+          }
+          wepy.setStorageSync(SHOW_HIDE_SCORE_KEY, true);
+        }
       }
+
+      this.socket.emit('[Poker] show hide score', { id: this.id, isNoymous });
     },
     onSaveTap() {
       if (this.loading) return;

@@ -173,3 +173,5 @@ export const LANG_KEY = 'lang';
 export const TOKEN_KEY = 'token';
 
 export const INSTRUCTION_KEY = 'Instruction';
+
+export const SHOW_HIDE_SCORE_KEY = 'Show_Hide_Score';

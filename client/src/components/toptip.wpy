@@ -1,0 +1,113 @@
+// https://github.com/ochukai/wepy-com-toptip/blob/master/toptip.wpy
+
+<style lang="less">
+  .toptip {
+    top: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    z-index: 1000;
+    padding: 16rpx 40rpx;
+    font-size: 24rpx;
+    font-weight: 500;
+    color: #fff;
+    line-height: 32rpx;
+    background-color: rgba(40, 134, 194, .9);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .toptip-close {
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    width: 40rpx;
+    height: 40rpx;
+  }
+
+  .toptip-close:after {
+    display: none;;
+  }
+
+  .toptip-close image {
+    width: 40rpx;
+    height: 40rpx;
+    display: block;
+  }
+</style>
+<template>
+<view wx:if="{{show}}" animation="{{animationData}}" class="toptip toptip-{{type}}">
+  {{text}}
+  <button class="toptip-close" @tap="hide">
+    <image src="/images/close.png"></image>
+  </button>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+
+export default class Toptip extends wepy.component {
+  data = {
+    type: 'error',
+    duration: 2000,
+    animateDuration: 300,
+    animationData: '',
+    text: '',
+    show: false
+  };
+
+  methods = {
+    /**
+     * @param data: type, duration, text(required)
+     */
+    show(data = {}) {
+      // show
+      Object.assign(this, data, { show: true });
+      this.$apply();
+
+      // slide down toptip
+      let animation = wx.createAnimation({
+        duration: this.animateDuration,
+        timingFunction: 'ease-in'
+      });
+
+      animation.translateY(0).step();
+      this.animationData = animation.export();
+      this.$apply();
+
+      // duration 之后消失
+      setTimeout(() => {
+        this.hide();
+      }, this.duration);
+    },
+
+    hide() {
+      this.hide();
+    }
+  };
+
+  hide() {
+    let animation = wx.createAnimation({
+      duration: this.animateDuration,
+      timingFunction: 'ease-out'
+    });
+
+    animation.translateY('-100%').step();
+    this.animationData = animation.export();
+    this.$apply();
+
+    // animate end, remove element
+    setTimeout(() => {
+      this.show = false;
+      this.$apply();
+    }, this.animateDuration + 50);
+  }
+
+  props = {
+    text: {
+      type: String
+    }
+  };
+}
+</script>
