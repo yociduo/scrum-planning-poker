@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -13,6 +14,7 @@ import { Room } from './Room';
 import { User } from './User';
 
 @Entity({ name: 'UserRooms' })
+@Index(['userId', 'roomId'], { unique: true }) // Should run ./mysql/init/remove_duplicated_userRoom.sql
 export class UserRoom {
 
   @PrimaryGeneratedColumn()

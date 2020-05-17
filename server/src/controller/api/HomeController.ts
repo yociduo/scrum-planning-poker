@@ -1,3 +1,4 @@
+import { mapValues } from 'lodash';
 import { getLogger } from 'log4js';
 import { JsonController, Get } from 'routing-controllers';
 import { Service } from 'typedi';
@@ -19,7 +20,7 @@ export class HomeController {
   // TODO: temp room health check
   @Get('/room-health')
   roomHealth() {
-    return Object.keys(Poker.runningPokers).map(key => Poker.runningPokers[key].room);
+    return mapValues(Poker.runningPokers, p => p.room);
   }
 
 }

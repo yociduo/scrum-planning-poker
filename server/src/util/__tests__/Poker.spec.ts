@@ -28,14 +28,15 @@ describe('Poker', () => {
     await createConnection(connectionOptions);
 
     await getManager().transaction(async (transactionalEntityManager) => {
-      for (let i = 3; i >= 0; i -= 1) {
+      const playerCount = 4;
+      for (let i = playerCount; i >= 0; i -= 1) {
         const user = new User();
         user.nickName = i === 0 ? '[Jest] Test Host' : `[Jest] Test Player ${i}`;
         await transactionalEntityManager.insert(User, user);
       }
 
       // tslint:disable-next-line: max-line-length
-      [host, ...players] = await transactionalEntityManager.find(User, { take: 4, order: { id: 'DESC' } });
+      [host, ...players] = await transactionalEntityManager.find(User, { take: playerCount + 1, order: { id: 'DESC' } });
 
       room = new Room();
       room.name = '[Jest] Test Room';
@@ -235,6 +236,17 @@ describe('Poker', () => {
 
     room2.isDeleted = true;
     await getManager().save(Room, room2);
+  });
+
+  it('join and leave very soon', async () => {
+    await Promise.all([
+      poker.join(players[3]),
+      poker.leave(players[3]),
+    ]);
+
+    const userRooms = poker.room.userRooms.filter(us => us.userId === players[3].id);
+    expect(userRooms.length).toBe(1);
+    expect(userRooms[0].isLeft).toBeTruthy();
   });
 
   afterAll(async () => {
