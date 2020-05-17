@@ -58,22 +58,22 @@ export class User {
   @Column({ default: '', select: false })
   sessionKey: string;
 
-  @OneToMany(() => Score, score => score.user)
+  @OneToMany(() => Score, score => score.user, { onDelete: 'CASCADE' })
   scores: Score[];
 
-  @OneToMany(() => Room, room => room.creator)
+  @OneToMany(() => Room, room => room.creator, { onDelete: 'CASCADE' })
   createdRooms: Room[];
 
-  @OneToMany(() => Room, room => room.updater)
+  @OneToMany(() => Room, room => room.updater, { onDelete: 'CASCADE' })
   updatedRooms: Room[];
 
-  @OneToMany(() => UserRoom, userRoom => userRoom.user)
+  @OneToMany(() => UserRoom, userRoom => userRoom.user, { onDelete: 'CASCADE' })
   visitedRooms: UserRoom[];
 
-  @OneToMany(() => Story, room => room.creator)
+  @OneToMany(() => Story, room => room.creator, { onDelete: 'CASCADE' })
   createdStories: Story[];
 
-  @OneToMany(() => Story, room => room.updater)
+  @OneToMany(() => Story, room => room.updater, { onDelete: 'CASCADE' })
   updatedStories: Story[];
 
   @CreateDateColumn({ select: false })

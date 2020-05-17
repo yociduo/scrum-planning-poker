@@ -36,6 +36,15 @@ export class Poker {
     return Poker.runningPokers[id];
   }
 
+  public static async disconnect(user: User): Promise<void> {
+    for (const key in Poker.runningPokers) {
+      const poker = Poker.runningPokers[key];
+      if (poker.room.userRooms.some(ur => ur.user.id === user.id)) {
+        await poker.leave(user);
+      }
+    }
+  }
+
   private timer?: NodeJS.Timer;
 
   get id(): number {

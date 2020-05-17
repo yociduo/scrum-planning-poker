@@ -8,7 +8,9 @@ describe('Poker', () => {
   let host: User;
   let players: User[];
   let room: Room;
+  let room2: Room;
   let poker: Poker;
+  let poker2: Poker;
 
   beforeAll(async () => {
     const connectionOptions = await getConnectionOptions();
@@ -35,7 +37,6 @@ describe('Poker', () => {
         await transactionalEntityManager.insert(User, user);
       }
 
-      // tslint:disable-next-line: max-line-length
       [host, ...players] = await transactionalEntityManager.find(User, { take: playerCount + 1, order: { id: 'DESC' } });
 
       room = new Room();
@@ -53,6 +54,26 @@ describe('Poker', () => {
         const story = new Story();
         story.name = `[Jest] Test Story ${i + 1}`;
         story.roomId = room.id;
+        story.creatorId = host.id;
+        story.updaterId = host.id;
+        await transactionalEntityManager.insert(Story, story);
+      }
+
+      room2 = new Room();
+      room2.name = '[Jest] Test Room 2';
+      room2.options = {
+        needScore: false,
+        isNoymous: false,
+        calcMethod: CalcMethod.ArithmeticMean,
+      };
+      room2.creator = host;
+      room2.updater = host;
+      await transactionalEntityManager.insert(Room, room2);
+
+      for (let i = 0; i < 2; i += 1) {
+        const story = new Story();
+        story.name = `[Jest] Test Story ${i + 1}`;
+        story.roomId = room2.id;
         story.creatorId = host.id;
         story.updaterId = host.id;
         await transactionalEntityManager.insert(Story, story);
@@ -187,31 +208,7 @@ describe('Poker', () => {
   });
 
   it('host not score', async () => {
-    let room2: Room;
-
-    await getManager().transaction(async (transactionalEntityManager) => {
-      room2 = new Room();
-      room2.name = '[Jest] Test Room 2';
-      room2.options = {
-        needScore: false,
-        isNoymous: false,
-        calcMethod: CalcMethod.ArithmeticMean,
-      };
-      room2.creator = host;
-      room2.updater = host;
-      await transactionalEntityManager.insert(Room, room2);
-
-      for (let i = 0; i < 2; i += 1) {
-        const story = new Story();
-        story.name = `[Jest] Test Story ${i + 1}`;
-        story.room = room2;
-        story.creator = host;
-        story.updater = host;
-        await transactionalEntityManager.insert(Story, story);
-      }
-    });
-
-    const poker2 = await Poker.getPoker(room2.id);
+    poker2 = await Poker.getPoker(room2.id);
     await poker2.join(players[0]);
     await poker2.join(host);
 
@@ -233,9 +230,6 @@ describe('Poker', () => {
 
     await poker2.leave(players[0]);
     await poker2.leave(host);
-
-    room2.isDeleted = true;
-    await getManager().save(Room, room2);
   });
 
   it('join and leave very soon', async () => {
@@ -249,11 +243,37 @@ describe('Poker', () => {
     expect(userRooms[0].isLeft).toBeTruthy();
   });
 
+  it('disconnect', async () => {
+    poker = await Poker.getPoker(room.id);
+    poker2 = await Poker.getPoker(room2.id);
+
+    await poker.join(host);
+    const hostUR = poker.room.userRooms.find(us => us.userId === host.id);
+    expect(hostUR.isLeft).toBeFalsy();
+    expect(hostUR).not.toBeNull();
+
+    await poker.join(players[0]);
+    await poker2.join(players[0]);
+    const playerUR = poker.room.userRooms.find(us => us.userId === players[0].id);
+    expect(playerUR).not.toBeNull();
+    expect(playerUR.isLeft).toBeFalsy();
+    const playerUR2 = poker2.room.userRooms.find(us => us.userId === players[0].id);
+    expect(playerUR2).not.toBeNull();
+    expect(playerUR2.isLeft).toBeFalsy();
+
+    await Poker.disconnect(players[0]);
+    expect(playerUR.isLeft).toBeTruthy();
+    expect(playerUR2.isLeft).toBeTruthy();
+    expect(Poker.runningPokers[room.id]).toBeDefined();
+    expect(Poker.runningPokers[room2.id]).toBeUndefined();
+
+    await Poker.disconnect(host);
+    expect(hostUR.isLeft).toBeTruthy();
+    expect(Poker.runningPokers[room.id]).toBeUndefined();
+  });
+
   afterAll(async () => {
-    if (room) {
-      room.isDeleted = true;
-      await getManager().save(Room, room);
-    }
+    await getManager().delete(User, [host, ...players]);
   });
 
 });

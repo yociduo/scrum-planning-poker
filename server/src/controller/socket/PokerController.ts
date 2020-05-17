@@ -23,8 +23,13 @@ export class PokerController {
   }
 
   @OnDisconnect()
-  disconnect(@ConnectedSocket() socket: Socket) {
-    logger.info(`User ${socket.user.id} disconnected`);
+  async disconnect(@ConnectedSocket() socket: Socket) {
+    try {
+      logger.info(`User ${socket.user.id} disconnected`);
+      await Poker.disconnect(socket.user);
+    } catch (error) {
+      logger.error(`User ${socket.user.id} disconnected`, error);
+    }
   }
 
   @OnMessage('[Poker] join room')
