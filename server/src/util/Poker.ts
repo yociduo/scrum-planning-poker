@@ -39,7 +39,7 @@ export class Poker {
   public static async disconnect(user: User): Promise<void> {
     for (const key in Poker.runningPokers) {
       const poker = Poker.runningPokers[key];
-      if (poker.room.userRooms.some(ur => ur.user.id === user.id)) {
+      if (poker.room.userRooms.some(ur => ur.user.id === user.id && !ur.isLeft)) {
         await poker.leave(user);
       }
     }
@@ -144,8 +144,8 @@ export class Poker {
     }
   }
 
-  public async showHideScore(isNoymous: boolean): Promise<void> {
-    this.room.options.isNoymous = isNoymous;
+  public async toggleShowHideScore(isNoymous?: boolean): Promise<void> {
+    this.room.options.isNoymous = typeof isNoymous === 'boolean' ? isNoymous : !this.room.options.isNoymous;
     await getManager().save(Room, this.room);
   }
 

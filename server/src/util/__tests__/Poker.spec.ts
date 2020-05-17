@@ -207,6 +207,17 @@ describe('Poker', () => {
     await poker.leave(host);
   });
 
+  it('toggle show/hide stories', async () => {
+    await poker.toggleShowHideScore(true);
+    expect(poker.room.options.isNoymous).toBe(true);
+
+    await poker.toggleShowHideScore(false);
+    expect(poker.room.options.isNoymous).toBe(false);
+
+    await poker.toggleShowHideScore();
+    expect(poker.room.options.isNoymous).toBe(true);
+  });
+
   it('host not score', async () => {
     poker2 = await Poker.getPoker(room2.id);
     await poker2.join(players[0]);
@@ -248,28 +259,40 @@ describe('Poker', () => {
     poker2 = await Poker.getPoker(room2.id);
 
     await poker.join(host);
-    const hostUR = poker.room.userRooms.find(us => us.userId === host.id);
-    expect(hostUR.isLeft).toBeFalsy();
-    expect(hostUR).not.toBeNull();
+    const ur1 = poker.room.userRooms.find(us => us.userId === host.id);
+    expect(ur1.isLeft).toBeFalsy();
+    expect(ur1).not.toBeNull();
 
     await poker.join(players[0]);
+    const ur2 = poker.room.userRooms.find(us => us.userId === players[0].id);
+    expect(ur2).not.toBeNull();
+    expect(ur2.isLeft).toBeFalsy();
+
     await poker2.join(players[0]);
-    const playerUR = poker.room.userRooms.find(us => us.userId === players[0].id);
-    expect(playerUR).not.toBeNull();
-    expect(playerUR.isLeft).toBeFalsy();
-    const playerUR2 = poker2.room.userRooms.find(us => us.userId === players[0].id);
-    expect(playerUR2).not.toBeNull();
-    expect(playerUR2.isLeft).toBeFalsy();
+    const ur3 = poker2.room.userRooms.find(us => us.userId === players[0].id);
+    expect(ur3).not.toBeNull();
+    expect(ur3.isLeft).toBeFalsy();
+
+    await poker2.join(players[1]);
+    const ur4 = poker2.room.userRooms.find(us => us.userId === players[1].id);
+    expect(ur4).not.toBeNull();
+    expect(ur4.isLeft).toBeFalsy();
 
     await Poker.disconnect(players[0]);
-    expect(playerUR.isLeft).toBeTruthy();
-    expect(playerUR2.isLeft).toBeTruthy();
+    expect(ur2.isLeft).toBeTruthy();
+    expect(ur3.isLeft).toBeTruthy();
+    expect(Poker.runningPokers[room.id]).toBeDefined();
+    expect(Poker.runningPokers[room2.id]).toBeDefined();
+
+    await Poker.disconnect(players[1]);
+    expect(ur4.isLeft).toBeTruthy();
     expect(Poker.runningPokers[room.id]).toBeDefined();
     expect(Poker.runningPokers[room2.id]).toBeUndefined();
 
     await Poker.disconnect(host);
-    expect(hostUR.isLeft).toBeTruthy();
+    expect(ur1.isLeft).toBeTruthy();
     expect(Poker.runningPokers[room.id]).toBeUndefined();
+    expect(Poker.runningPokers[room2.id]).toBeUndefined();
   });
 
   afterAll(async () => {

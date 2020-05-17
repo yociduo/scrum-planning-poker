@@ -130,7 +130,7 @@ export class PokerController {
     try {
       logger.info(`User ${socket.user.id} ${isNoymous ? 'show' : 'hide' } score for room ${id}`);
       const poker = await Poker.getPoker(id);
-      await poker.showHideScore(isNoymous);
+      await poker.toggleShowHideScore(isNoymous);
       const { roomId, room: { options } } = poker;
       io.to(roomId).emit('[Poker] action', { id, options });
     } catch (error) {
