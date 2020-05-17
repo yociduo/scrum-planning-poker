@@ -225,11 +225,7 @@ export default class Room extends wepy.page {
       this.socket.emit('[Poker] current score', { id: this.id, currentScore });
     },
     onBackTap() {
-      if (getCurrentPages().length > 1) { // eslint-disable-line
-        wepy.navigateBack({ delta: 1 });
-      } else {
-        this.$redirect('index');
-      }
+      this.goBack();
     },
     onShowInstruction() {
       this.showInstruction = false;
@@ -267,12 +263,13 @@ export default class Room extends wepy.page {
 
   onLoad(options) {
     this.id = Number(options.id);
-
     this.showInstruction = !wepy.getStorageSync(INSTRUCTION_KEY);
+  }
 
+  onShow() {
     const { socketUrl } = wepy.$appConfig;
 
-    if (!this.$parent.globalData.socket && this.$parent.globalData.token) {
+    if ((!this.$parent.globalData.socket || this.$parent.globalData.socket.disconnected) && this.$parent.globalData.token) {
       this.$parent.globalData.socket = io(socketUrl, {
         transparent: ['websocket'],
         query: 'token=' + this.$parent.globalData.token
@@ -344,15 +341,22 @@ export default class Room extends wepy.page {
       }
     });
 
-    this.socket.on('error', (content = '') => wepy.showModal({
-      title: 'Error',
-      content,
-      showCancel: false,
-      success: () => this.onBackTap()
-    }));
-  }
+    this.socket.on('error', async (content = '') => {
+      switch (content) {
+        case 'jwt expired':
+          this.socket.disconnect();
+          break;
+        default:
+          await wepy.showModal({
+            title: 'Error',
+            content,
+            showCancel: false
+          });
+          break;
+      }
+      this.goBack();
+    });
 
-  onShow() {
     this.joinRoom();
   }
 
@@ -373,6 +377,14 @@ export default class Room extends wepy.page {
     if (this.interval) {
       clearInterval(this.interval);
       this.interval = null;
+    }
+  }
+
+  goBack() {
+    if (getCurrentPages().length > 1) { // eslint-disable-line
+      wepy.navigateBack({ delta: 1 });
+    } else {
+      this.$redirect('index');
     }
   }
 }

@@ -16,7 +16,15 @@ export class AuthenitificationMiddleware implements MiddlewareInterface {
       socket.user = await getManager().getRepository(User).findOne(userId);
       next();
     } catch (error) {
-      logger.error('', error);
+      if (error) {
+        switch (error.message) {
+          case 'jwt expired':
+            break;
+          default:
+            logger.error('Authenitification Middleware Error', error);
+            break;
+        }
+      }
       next(error);
     }
   }

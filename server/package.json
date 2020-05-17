@@ -11,7 +11,8 @@
     "serve": "cross-env NODE_ENV=production node dist/app.js",
     "build": "npm run tslint && npm run build-ts",
     "watch": "npm run dev",
-    "test": "jest --env=node --colors --coverage --detectOpenHandles tests"
+    "test": "jest --env=node --colors --coverage=false --detectOpenHandles tests",
+    "test:coverageg": "jest --env=node --colors --coverage tests"
   },
   "engines": {
     "node": "8.x.x",
