@@ -33,9 +33,7 @@ export function decryptData(encryptedData: string, iv: string, sessionKey: strin
 
 export function sign(id: number, isGuest: boolean = true): string {
   const options: jwt.SignOptions = {};
-  if (isGuest) {
-    options.expiresIn = '1d';
-  }
+  options.expiresIn = isGuest ? '1d' : config.expiresIn;
   return jwt.sign({ id }, config.jwtSecret, options);
 }
 

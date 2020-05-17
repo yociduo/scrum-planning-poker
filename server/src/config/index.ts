@@ -11,6 +11,7 @@ export interface IConfig {
   apiPort: number;
   socketPort: number;
   jwtSecret: string;
+  expiresIn: string;
   wxSecret: string;
   wxAppid: string;
 }
@@ -22,6 +23,7 @@ export const config: IConfig = {
   apiPort: Number(process.env.API_PORT || 3000),
   socketPort: Number(process.env.SOCKET_PORT || 3001),
   jwtSecret: process.env.JWT_SECRET,
+  expiresIn: process.env.EXPIRES_IN || '15d',
   wxSecret: process.env.WX_SECRET,
   wxAppid: process.env.WX_APPID,
 };
