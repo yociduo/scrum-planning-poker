@@ -3,9 +3,10 @@ import { getLogger } from 'log4js';
 import { createKoaServer, useContainer as routingUseContainer } from 'routing-controllers';
 import { createSocketServer, useContainer as socketUseContainer } from 'socket-controllers';
 import { Container } from 'typedi';
-import { useContainer as ormUseContainer, createConnection, getConnectionOptions } from 'typeorm';
+import { useContainer as ormUseContainer, createConnection, getConnectionOptions, getManager, getConnection } from 'typeorm';
 import { config } from './config';
 import { decorators } from './decorator';
+import { UserRoom } from './entity';
 import './middleware/socket/AuthenitificationMiddleware';
 
 const logger = getLogger('startup');
@@ -47,6 +48,15 @@ async function createServer() {
     // create a connection using modified connection options
     await createConnection(connectionOptions);
     logger.info('TypeORM connection success');
+
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(UserRoom)
+      .set({ isLeft: true })
+      .where('isLeft is false')
+      .execute();
+
+    logger.info('Set `UserRoom`.`isLeft` to true: ', result.raw.affectedRows);
 
     /**
      * We create a new koa server instance.
