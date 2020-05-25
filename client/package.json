@@ -1,6 +1,6 @@
 {
   "name": "scrum-planning-poker",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "A WePY project",
   "main": "dist/app.js",
   "scripts": {

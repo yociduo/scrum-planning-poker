@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.3.1](https://github.com/yociduo/scrum-planning-poker/compare/v3.3.0...v3.3.1) (2020-05-25)
+
+
+### Features
+
+* add expires in to the config ([1cf1d41](https://github.com/yociduo/scrum-planning-poker/commit/1cf1d410dbc53d037793ea16e7dd252a8cb6fb5f))
+
+
+### Bug Fixes
+
+* add union unique index to prevent user join twice ([2b3e77c](https://github.com/yociduo/scrum-planning-poker/commit/2b3e77c5e318fd064dced4ee7d72c076f9fe7aed))
+* **disconnect:** call leave when disconnect ([30a46be](https://github.com/yociduo/scrum-planning-poker/commit/30a46be085cee30100447f182a07e247062c109c))
+* **jwt-expired:** handle jwt expired case ([451898a](https://github.com/yociduo/scrum-planning-poker/commit/451898aeeee65ff683359727afef13061ae704bc))
+* set all user leave the room when start ([b47c9e9](https://github.com/yociduo/scrum-planning-poker/commit/b47c9e9ca701d08644d035b7f5372a987a263971))
+
 ## [3.3.0](https://github.com/yociduo/scrum-planning-poker/compare/v3.2.1...v3.3.0) (2020-05-05)
 
 

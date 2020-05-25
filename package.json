@@ -1,6 +1,6 @@
 {
   "name": "scrum-planning-poker",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Scrum敏捷估算 ===================== Scrum扑克让敏捷项目估算更加精确简单并充满乐趣！",
   "main": "index.js",
   "scripts": {
@@ -36,5 +36,33 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "standard-version": {
+    "bumpFiles": [
+      {
+        "filename": "./package.json",
+        "type": "json"
+      },
+      {
+        "filename": "./package-lock.json",
+        "type": "json"
+      },
+      {
+        "filename": "./client/package.json",
+        "type": "json"
+      },
+      {
+        "filename": "./client/package-lock.json",
+        "type": "json"
+      },
+      {
+        "filename": "./server/package.json",
+        "type": "json"
+      },
+      {
+        "filename": "./server/package-lock.json",
+        "type": "json"
+      }
+    ]
   }
 }

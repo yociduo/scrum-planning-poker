@@ -1,6 +1,6 @@
 {
   "name": "scrum-planning-poker",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "scrum-planning-poker server",
   "main": "dist/app.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "build": "npm run tslint && npm run build-ts",
     "watch": "npm run dev",
     "test": "jest --env=node --colors --coverage=false --detectOpenHandles tests",
-    "test:coverageg": "jest --env=node --colors --coverage tests"
+    "test:coverage": "jest --env=node --colors --coverage tests"
   },
   "engines": {
     "node": "8.x.x",
