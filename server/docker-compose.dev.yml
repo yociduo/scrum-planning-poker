@@ -1,0 +1,12 @@
+version: "3.6"
+services:
+  db:
+    image: mysql:5.7
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+    volumes:
+      - ../mysql/data:/var/lib/mysql
+      - ../mysql/my.cnf:/etc/mysql/my.cnf:ro
+      - ../mysql/init:/docker-entrypoint-initdb.d/:ro

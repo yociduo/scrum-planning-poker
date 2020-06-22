@@ -5,4 +5,5 @@ export interface PokerMessageBody {
   isNoymous?: boolean;
   currentScore?: number;
   storyNames?: string[];
+  name?: string;
 }
