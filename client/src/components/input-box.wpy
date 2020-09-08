@@ -151,8 +151,8 @@
   <view class="shadow" style="opacity:{{ shadowOpacity }};animation:{{ shadowAnimation }} 0.35s;" />
   <view class="modal" style="bottom:{{ modalBottom }}rpx;height:{{ modalHeight }}rpx;opacity:{{ modalOpacity }};animation:{{ modalAnimation }} 0.35s;">
     <text class="title">{{ title }}</text>
-    <input class="singleline-input" value="{{text}}" @blur="onBlur" placeholder="{{ placeholder }}" cursor-spacing="150" maxlength="{{ maxlength }}" wx:if="{{ !multiline }}" />
-    <textarea class="multiline-input" value="{{text}}" @blur="onBlur" placeholder="{{ placeholder }}" maxlength="{{ maxlength }}" cursor-spacing="175" wx:if="{{ multiline }}" />
+    <input class="singleline-input" value="{{text}}" @input="onInput" placeholder="{{ placeholder }}" cursor-spacing="150" maxlength="{{ maxlength }}" wx:if="{{ !multiline }}" />
+    <textarea class="multiline-input" value="{{text}}" @input="onInput" placeholder="{{ placeholder }}" maxlength="{{ maxlength }}" cursor-spacing="175" wx:if="{{ multiline }}" />
     <view class="cancel-container" @tap="onCancelTap">
       <view class="cancel">{{ cancelText }}</view>
     </view>
@@ -205,12 +205,8 @@ export default class InputBox extends wepy.component {
       this.$apply();
     },
 
-    // // 监听用户输入
-    // onInput(e) {
-    //   this.text = e.detail.value;
-    // },
-
-    onBlur(e) {
+    // 监听用户输入
+    onInput(e) {
       this.text = e.detail.value;
     },
 
