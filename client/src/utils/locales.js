@@ -62,7 +62,9 @@ export default {
       'all_stories': 'All stories',
       'story': 'story',
       'stories': 'stories',
-      'back_button': 'Back'
+      'back_button': 'Back',
+      'delete_button': 'Delete',
+      'delete_confirm_title': 'Do you want to delete this room permanently?'
     },
     'add-story': {
       'title': 'Add Story',
@@ -133,7 +135,10 @@ export default {
       'all_stories': '所有故事',
       'story': '个故事',
       'stories': '个故事',
-      'back_button': '返回'
+      'back_button': '返回',
+      'delete_button': '删除',
+      'delete_confirm_title': '确定是永久删除房间吗？',
+      'delete_confirm_content': '删除后将不可复原'
     },
     'add-story': {
       'title': '添加故事',

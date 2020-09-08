@@ -6,6 +6,7 @@ import {
   CurrentUser,
   Authorized,
   Param,
+  Delete,
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
@@ -35,6 +36,12 @@ export class RoomController {
   @Get('/:id/check')
   check(@Param('id') id: number): Promise<boolean> {
     return this.roomRepository.check(id);
+  }
+
+  @Authorized()
+  @Delete('/:id')
+  delete(@CurrentUser({ required: true }) user: User, @Param('id') id: number): Promise<boolean> {
+    return this.roomRepository.deleteByUser(id, user);
   }
 
   @Authorized()

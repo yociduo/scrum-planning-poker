@@ -172,6 +172,7 @@ input {
       </view>
       <view class="btn-area">
         <button type="primary" @tap="onBackTap">{{t.back_button}}</button>
+        <button @tap="onDeleteTap">{{t.delete_button}}</button>
       </view>
     </view>
     <feedback></feedback>
@@ -208,6 +209,25 @@ export default class RoomDetail extends wepy.page {
         wepy.navigateBack({ delta: 1 });
       } else {
         this.$redirect('index');
+      }
+    },
+    async onDeleteTap() {
+      const { confirm } = await wepy.showModal({
+        title: this.t['delete_confirm_title'],
+        content: this.t['delete_confirm_content'],
+        confirmText: this.t['delete_button'],
+        cancelText: this.t['back_button']
+      });
+
+      if (!confirm) return;
+
+      const result = await wepy.request({
+        url: `/rooms/${this.room.id}`,
+        method: 'DELETE'
+      });
+
+      if (result) {
+        this.onBackTap();
       }
     }
   };

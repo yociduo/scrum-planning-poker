@@ -44,10 +44,10 @@ export class RoomRepository extends Repository<Room> {
     const room = await this.createQueryBuilder('room')
       .leftJoinAndSelect('room.stories', 'story')
       .leftJoinAndSelect('story.scores', 'score')
-      .leftJoinAndSelect('score.user', 'scuserore')
-      .leftJoin('room.userRooms', 'userRoom')
-      .where('userRoom.userId = :id', { id: user.id })
-      .where('userRoom.roomId = :id', { id })
+      .leftJoinAndSelect('score.user', 'user')
+      .leftJoinAndSelect('room.userRooms', 'userRoom')
+      .where('userRoom.userId = :userId', { userId: user.id })
+      .andWhere('room.id = :id', { id })
       .andWhere('room.isDeleted = false')
       .andWhere('story.isDeleted = false')
       .andWhere('userRoom.isDeleted = false')
@@ -63,6 +63,7 @@ export class RoomRepository extends Repository<Room> {
       room.scoreSum += story.score;
     });
     room.displayTimerSum = formatTimer(room.timerSum);
+    room.isHost = room.userRooms[0].isHost;
 
     return room;
   }
@@ -96,6 +97,15 @@ export class RoomRepository extends Repository<Room> {
       }
     });
     return newRoom;
+  }
+
+  async deleteByUser(id: number, user: User): Promise<boolean> {
+    const room = await this.getByUser(id, user);
+    if (!room || !room.isHost) {
+      throw new Error('Room Not Found');
+    }
+    const result = await this.update(id, { isDeleted: true });
+    return !!result;
   }
 
 }
