@@ -12,7 +12,12 @@
     </view>
   </view>
   <view class="top-stick top-stick-story" wx:if="{{init && !isCompleted}}">
-    <view class="top-stick-hd">{{currentStory.name}}</view>
+    <view class="top-stick-hd" @tap="onUpdateStoryName">
+      <text>{{currentStory.name}}</text>
+      <button wx:if="{{isHost}}">
+        <image src="/images/pencil.png"></image>
+      </button>
+    </view>
     <view class="top-stick-bd">{{displayTimer}}</view>
     <view class="top-stick-ft">
       <button open-type="share">
@@ -116,6 +121,7 @@
     </view>
   </view>
   <toptip></toptip>
+  <inputBox></inputBox>
 </view>
 </template>
 <script>
@@ -123,6 +129,7 @@ import wepy from 'wepy';
 import io from '@/vendors/socket.io-mp-client/socket.io-mp';
 import Card from '@/components/card';
 import Feedback from '@/components/feedback';
+import InputBox from '@/components/input-box';
 import PlayerBoxItem from '@/components/player-box-item';
 import StoryBoxItem from '@/components/story-box-item';
 import Toptip from '@/components/toptip';
@@ -180,6 +187,7 @@ export default class Room extends wepy.page {
   components = {
     card: Card,
     feedback: Feedback,
+    inputBox: InputBox,
     playerBoxItem: PlayerBoxItem,
     storyBoxItem: StoryBoxItem,
     toptip: Toptip
@@ -224,6 +232,15 @@ export default class Room extends wepy.page {
       const currentScore = parseInt(e.detail.value);
       this.socket.emit('[Poker] current score', { id: this.id, currentScore });
     },
+    onUpdateStoryName() {
+      if (!this.isHost) return;
+      this.$invoke('inputBox', 'show', {
+        multiline: false,
+        title: this.t['update_story_name'],
+        text: this.currentStory.name,
+        placeholder: this.currentStory.name
+      });
+    },
     onBackTap() {
       this.goBack();
     },
@@ -246,6 +263,9 @@ export default class Room extends wepy.page {
     'card-tap': (card) => {
       this.selectedCard = card.value === this.selectedCard ? null : card.value;
       this.socket.emit('[Poker] select card', { id: this.id, card: this.selectedCard });
+    },
+    'inputConfirm': (text) => {
+      this.socket.emit('[Poker] update story name', { id: this.id, name: text });
     }
   };
 

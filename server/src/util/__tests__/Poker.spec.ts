@@ -15,7 +15,7 @@ describe('Poker', () => {
   beforeAll(async () => {
     const connectionOptions = await getConnectionOptions();
     Object.assign(connectionOptions, {
-      synchronize: true,
+      synchronize: false,
       logging: false,
       bigNumberStrings: false,
       entities: [
@@ -252,6 +252,12 @@ describe('Poker', () => {
     const userRooms = poker.room.userRooms.filter(us => us.userId === players[3].id);
     expect(userRooms.length).toBe(1);
     expect(userRooms[0].isLeft).toBeTruthy();
+  });
+
+  it('update story name', async () => {
+    await poker.join(host);
+    await poker.updateStoryName('new story name');
+    expect(poker.currentStory.name).toBe('new story name');
   });
 
   it('disconnect', async () => {

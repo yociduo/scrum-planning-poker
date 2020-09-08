@@ -151,8 +151,8 @@
   <view class="shadow" style="opacity:{{ shadowOpacity }};animation:{{ shadowAnimation }} 0.35s;" />
   <view class="modal" style="bottom:{{ modalBottom }}rpx;height:{{ modalHeight }}rpx;opacity:{{ modalOpacity }};animation:{{ modalAnimation }} 0.35s;">
     <text class="title">{{ title }}</text>
-    <input class="singleline-input" placeholder="{{ placeholder }}" cursor-spacing="150" maxlength="{{ maxlength }}" @input="onInput" wx:if="{{ !multiline }}" />
-    <textarea class="multiline-input" placeholder="{{ placeholder }}" maxlength="{{ maxlength }}" cursor-spacing="175" @input="onInput" wx:if="{{ multiline }}" />
+    <input class="singleline-input" value="{{text}}" @blur="onBlur" placeholder="{{ placeholder }}" cursor-spacing="150" maxlength="{{ maxlength }}" wx:if="{{ !multiline }}" />
+    <textarea class="multiline-input" value="{{text}}" @blur="onBlur" placeholder="{{ placeholder }}" maxlength="{{ maxlength }}" cursor-spacing="175" wx:if="{{ multiline }}" />
     <view class="cancel-container" @tap="onCancelTap">
       <view class="cancel">{{ cancelText }}</view>
     </view>
@@ -165,17 +165,19 @@
 
 <script>
 import wepy from 'wepy';
+import T from '@/utils/i18n';
 
 export default class InputBox extends wepy.component {
   data = {
     multiline: false,
     title: '',
     placeholder: '',
-    maxlength: 10,
+    maxlength: 140,
     modalBottom: '',
     modalHeight: '',
     text: '',
     show: false,
+    confirmColor: '#0678c1',
     confirmText: '确认',
     cancelText: '取消',
     shadowAnimation: 'shadowDisplay',
@@ -189,7 +191,10 @@ export default class InputBox extends wepy.component {
       const { screenHeight } = await wepy.getSystemInfo();
       Object.assign(this, data, {
         show: true,
-        text: '',
+        text: data.text || '',
+        confirmColor: data.confirmColor || '#0678c1',
+        confirmText: data.confirmText || T._('common.button.confirm'),
+        cancelText: data.cancelText || T._('common.button.cancel'),
         modalBottom: data.multiline ? (screenHeight - 234).toString() : (screenHeight - 178).toString(),
         modalHeight: data.multiline ? '468' : '355',
         shadowAnimation: 'shadowDisplay',
@@ -200,8 +205,12 @@ export default class InputBox extends wepy.component {
       this.$apply();
     },
 
-    // 监听用户输入
-    onInput(e) {
+    // // 监听用户输入
+    // onInput(e) {
+    //   this.text = e.detail.value;
+    // },
+
+    onBlur(e) {
       this.text = e.detail.value;
     },
 

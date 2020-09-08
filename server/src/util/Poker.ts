@@ -149,7 +149,7 @@ export class Poker {
     await getManager().save(Room, this.room);
   }
 
-  public async changeStoryName(name: string): Promise<void> {
+  public async updateStoryName(name: string): Promise<void> {
     this.currentStory.name = name;
     await getManager().save(Story, this.currentStory);
   }
