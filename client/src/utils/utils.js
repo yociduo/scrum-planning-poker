@@ -168,6 +168,8 @@ export const convertScore = card => {
 
 export const defaultLang = 'zh_CN';
 
+export const USER_ID_KEY = 'user_id';
+
 export const LANG_KEY = 'lang';
 
 export const TOKEN_KEY = 'token';

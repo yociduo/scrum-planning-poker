@@ -154,6 +154,14 @@ export class Poker {
     await getManager().save(Story, this.currentStory);
   }
 
+  public async updateUserName(user: User, name: string): Promise<void> {
+    await getManager().update(User, user.id, { name });
+    const userRoom = this.room.userRooms.find(ur => ur.user.id === user.id);
+    if (userRoom) {
+      userRoom.user.name = name;
+    }
+  }
+
   private async handleTimer(user: User, userRoom: UserRoom): Promise<void> {
     if (this.room.userRooms.every(r => r.isLeft)) {
       if (this.currentStory) {

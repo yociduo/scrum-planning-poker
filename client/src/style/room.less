@@ -41,10 +41,6 @@
   height: 28rpx;
 }
 
-.top-stick-hd button:after{
-  border: 0;
-}
-
 .top-stick-hd image {
   width: 28rpx;
   height: 28rpx;
@@ -106,6 +102,20 @@
   padding: 20rpx 30rpx;
 }
 
+.player button {
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+}
+
+.player button:after {
+  border: 0;
+}
+
+.player image {
+  display: block;
+}
+
 .player-hd {
   position: relative;
   margin-right: 20rpx;
@@ -116,10 +126,27 @@
   flex: 1;
   font-size: 34rpx;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-right: 20rpx;
+}
+
+.player-bd text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-right: 20rpx;
+}
+
+.player-bd button {
+  margin-left: 20rpx;
+  width: 78rpx;
+  height: 28rpx;
+}
+
+.player-bd image {
+  width: 28rpx;
+  height: 28rpx;
 }
 
 .player-ft {

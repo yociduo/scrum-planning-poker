@@ -149,7 +149,7 @@ input {
                     <repeat for="{{story.scores}}" key="id" item="score">
                       <view class="navigator">
                         <view class="kind-list-text" style="flex: 2; font-weight: 400;">
-                          {{score.user.nickName || ('user' + score.user.id)}}
+                          {{score.user.name || score.user.nickName || ('user' + score.user.id)}}
                         </view>
                         <view class="kind-list-value" style="color: #4a4a4a;">
                           {{score.card || score.card === 0 ? (score.card === -1 ? '?' : score.card ) : ''}}

@@ -180,6 +180,8 @@ export default class InputBox extends wepy.component {
     confirmColor: '#0678c1',
     confirmText: '确认',
     cancelText: '取消',
+    confirmEvent: 'inputConfirm',
+    cancelEvent: 'inputCancel',
     shadowAnimation: 'shadowDisplay',
     modalAnimation: 'modalDisplay',
     shadowOpacity: '0.65',
@@ -194,7 +196,9 @@ export default class InputBox extends wepy.component {
         text: data.text || '',
         confirmColor: data.confirmColor || '#0678c1',
         confirmText: data.confirmText || T._('common.button.confirm'),
+        confirmEvent: data.confirmEvent || 'inputConfirm',
         cancelText: data.cancelText || T._('common.button.cancel'),
+        cancelEvent: data.cancelEvent || 'inputCancel',
         modalBottom: data.multiline ? (screenHeight - 234).toString() : (screenHeight - 178).toString(),
         modalHeight: data.multiline ? '468' : '355',
         shadowAnimation: 'shadowDisplay',
@@ -213,7 +217,7 @@ export default class InputBox extends wepy.component {
     // 单击取消事件
     onCancelTap() {
       this.hideInputBox();
-      this.$emit('inputCancel');
+      this.$emit(this.cancelEvent);
       setTimeout(() => {
         this.show = false;
         this.$apply();
@@ -223,7 +227,7 @@ export default class InputBox extends wepy.component {
     // 单击确定事件
     onConfirmTap() {
       this.hideInputBox();
-      this.$emit('inputConfirm', this.text);
+      this.$emit(this.confirmEvent, this.text);
       setTimeout(() => {
         this.show = false;
         this.$apply();

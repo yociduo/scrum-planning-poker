@@ -119,6 +119,16 @@ export class PokerController {
     });
   }
 
+  @OnMessage('[Poker] update user name')
+  async updateUserName(@ConnectedSocket() socket: Socket, @SocketIO() io: Socket, @MessageBody() { id, name }: PokerMessageBody) {
+    return this.base(`User ${socket.user.id} update user name to ${name}`, async () => {
+      const poker = await Poker.getPoker(id);
+      await poker.updateUserName(socket.user, name);
+      const { roomId, currentStory } = poker;
+      io.to(roomId).emit('[Poker] action', { id, currentStory });
+    });
+  }
+
   private async base<T>(message: string, exec: () => Promise<T>): Promise<T> {
     try {
       logger.info(message);

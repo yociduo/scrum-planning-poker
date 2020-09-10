@@ -54,7 +54,8 @@ export default {
       'show_hide_score_content': 'All players will see story point result. Other players will not see story point result.',
       'instruction_line_1': 'The room has been created.',
       'instruction_line_2': 'Let\'s invite members to join in the room!',
-      'update_story_name': 'Story name update'
+      'update_story_name': 'Story name update',
+      'update_user_name': 'Fill in perferred name'
     },
     'room-detail': {
       'title': 'Room Detail',
@@ -127,7 +128,8 @@ export default {
       'show_hide_score_content': '睁开眼睛可使其他成员相互看到打分闭上眼睛后恢复',
       'instruction_line_1': '房间已创建。',
       'instruction_line_2': '快去邀请成员进房间估算吧！',
-      'update_story_name': '更新故事名'
+      'update_story_name': '更新故事名',
+      'update_user_name': '填写显示的昵称'
     },
     'room-detail': {
       'title': '房间详情',

@@ -24,6 +24,10 @@ export class User {
 
   @Length(255)
   @Column({ default: '' })
+  name: string;
+
+  @Length(255)
+  @Column({ default: '' })
   nickName: string;
 
   @Length(255)

@@ -8,7 +8,7 @@ import wepy from 'wepy';
 import 'wepy-async-function';
 import { setStore } from 'wepy-redux';
 import configStore from './store';
-import { defaultLang, LANG_KEY, TOKEN_KEY } from '@/utils/utils';
+import { defaultLang, USER_ID_KEY, LANG_KEY, TOKEN_KEY } from '@/utils/utils';
 import T from '@/utils/i18n';
 import locales from '@/utils/locales';
 
@@ -44,6 +44,7 @@ export default class extends wepy.app {
 
   globalData = {
     userInfo: null,
+    userId: null,
     token: null,
     lang: defaultLang,
     isIpx: false
@@ -98,6 +99,7 @@ export default class extends wepy.app {
     this.registerLocales();
     this.getUserInfo();
     this.globalData.token = wepy.getStorageSync(TOKEN_KEY);
+    this.globalData.userId = wepy.getStorageSync(USER_ID_KEY);
     setTimeout(() => {
       this.checkForUpdates();
     }, 1000);
@@ -124,12 +126,19 @@ export default class extends wepy.app {
     }
 
     const token = await wepy.request({
-      url: '/users/wxLogin',
+      url: '/users/wxlogin',
       method: 'POST',
       data
     });
     wepy.setStorageSync(TOKEN_KEY, token);
     this.globalData.token = token;
+
+    const user = await wepy.request({
+      url: '/users/whoami',
+      method: 'POST'
+    });
+    wepy.setStorageSync(USER_ID_KEY, user.id);
+    this.globalData.userId = user.id;
   }
 
   async getUserInfo() {

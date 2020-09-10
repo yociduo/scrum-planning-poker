@@ -53,7 +53,7 @@
         <view class="page-section-spacing">
           <view class="player-box" wx:if="{{currentStory.scores && currentStory.scores.length}}">
             <repeat for="{{currentStory.scores}}" item="score" key="id">
-              <playerBoxItem :score.sync="score" :isHost.sync="isHost" :isNoymous.sync="options.isNoymous"></playerBoxItem>
+              <playerBoxItem :score.sync="score" :isHost.sync="isHost" :isNoymous.sync="options.isNoymous" :isSelf.sync="userId === score.user.id"></playerBoxItem>
             </repeat>
           </view>
         </view>
@@ -151,7 +151,8 @@ export default class Room extends wepy.page {
     currentStory: null,
     selectedCard: null,
     options: null,
-    isHost: false
+    isHost: false,
+    userId: null
   };
 
   computed = {
@@ -238,7 +239,8 @@ export default class Room extends wepy.page {
         multiline: false,
         title: this.t['update_story_name'],
         text: this.currentStory.name,
-        placeholder: this.currentStory.name
+        placeholder: this.currentStory.name,
+        confirmEvent: 'updateStoryName'
       });
     },
     onBackTap() {
@@ -264,8 +266,18 @@ export default class Room extends wepy.page {
       this.selectedCard = card.value === this.selectedCard ? null : card.value;
       this.socket.emit('[Poker] select card', { id: this.id, card: this.selectedCard });
     },
-    'inputConfirm': (text) => {
+    'updateStoryName': (text) => {
       this.socket.emit('[Poker] update story name', { id: this.id, name: text });
+    },
+    'showUserNameInputBox': () => {
+      this.$invoke('inputBox', 'show', {
+        multiline: false,
+        title: this.t['update_user_name'],
+        confirmEvent: 'updateUserName'
+      });
+    },
+    'updateUserName': (text) => {
+      this.socket.emit('[Poker] update user name', { id: this.id, name: text });
     }
   };
 
@@ -284,6 +296,7 @@ export default class Room extends wepy.page {
   onLoad(options) {
     this.id = Number(options.id);
     this.showInstruction = !wepy.getStorageSync(INSTRUCTION_KEY);
+    this.userId = this.$parent.globalData.userId;
   }
 
   onShow() {
