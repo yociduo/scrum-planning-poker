@@ -1,8 +1,8 @@
 {
-  "name": "client-taro",
+  "name": "scrum-planning-poker",
   "version": "1.0.0",
   "private": true,
-  "description": "Scrum敏捷估算 ===================== Scrum扑克让敏捷项目估算更加精确简单并充满乐趣！",
+  "description": "A Taro project",
   "templateInfo": {
     "name": "default",
     "typescript": true,
@@ -33,15 +33,21 @@
     "Android >= 4.1",
     "ios >= 8"
   ],
-  "author": "",
+  "author": "Eden Wang <yociduo@vip.qq.com>",
+  "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
     "@tarojs/components": "3.0.10",
+    "@tarojs/react": "3.0.10",
     "@tarojs/runtime": "3.0.10",
     "@tarojs/taro": "3.0.10",
-    "@tarojs/react": "3.0.10",
+    "react": "^16.10.0",
     "react-dom": "^16.10.0",
-    "react": "^16.10.0"
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "taro-ui": "^3.0.0-alpha.3"
   },
   "devDependencies": {
     "@types/webpack-env": "^1.13.6",

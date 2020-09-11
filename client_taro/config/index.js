@@ -1,5 +1,5 @@
 const config = {
-  projectName: 'client-taro',
+  projectName: 'scrum-planning-poker',
   date: '2020-9-11',
   designWidth: 750,
   deviceRatio: {
