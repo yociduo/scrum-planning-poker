@@ -5,7 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "start": "npm run dev",
-    "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
+    "dev": "nodemon --watch /src/**/* -e ts,tsx --exec ts-node src/app.ts",
     "build-ts": "tsc -p tsconfig.build.json",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "serve": "cross-env NODE_ENV=production node dist/app.js",
@@ -38,7 +38,7 @@
     "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "log4js": "^6.1.0",
     "multer": "^1.4.0",
     "mysql": "^2.16.0",
@@ -48,7 +48,7 @@
     "routing-controllers": "^0.7.7",
     "socket-controllers": "^0.0.5",
     "typedi": "^0.8.0",
-    "typeorm": "^0.2.22",
+    "typeorm": "^0.2.26",
     "typeorm-routing-controllers-extensions": "^0.2.0",
     "typeorm-typedi-extensions": "^0.2.3"
   },
