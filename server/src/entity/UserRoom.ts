@@ -13,7 +13,7 @@ import {
 import { Room } from './Room';
 import { User } from './User';
 
-@Entity({ name: 'UserRooms' })
+@Entity()
 @Index(['userId', 'roomId'], { unique: true }) // Should run ./mysql/init/remove_duplicated_userRoom.sql
 export class UserRoom {
 

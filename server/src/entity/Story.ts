@@ -17,7 +17,7 @@ import { Room } from './Room';
 import { Score } from './Score';
 import { User } from './User';
 
-@Entity({ name: 'Stories' })
+@Entity()
 export class Story {
 
   @PrimaryGeneratedColumn()

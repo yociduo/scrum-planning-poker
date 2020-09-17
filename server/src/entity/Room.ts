@@ -16,7 +16,7 @@ import { User } from './User';
 import { UserRoom } from './UserRoom';
 import { RoomOptions } from '../model';
 
-@Entity({ name: 'Rooms' })
+@Entity()
 export class Room {
 
   @PrimaryGeneratedColumn()
