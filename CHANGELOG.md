@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.3.2](https://github.com/yociduo/scrum-planning-poker/compare/v3.3.1...v3.3.2) (2020-09-20)
+
+
+### Features
+
+* add change story name ([91bb2f9](https://github.com/yociduo/scrum-planning-poker/commit/91bb2f9af2c9aba843cb1fc03e56a7ce8726faf3))
+* add input box dialog component ([092e20b](https://github.com/yociduo/scrum-planning-poker/commit/092e20b053df4a48141b839b96560a8699911d73))
+* delete room for host ([1851cd9](https://github.com/yociduo/scrum-planning-poker/commit/1851cd9e7eac53abf154cfb79891bdfb75f650aa))
+* implement change user name ([312a8bb](https://github.com/yociduo/scrum-planning-poker/commit/312a8bbc621917ee7b9e8ecbb70c3b12e870e8c7))
+* update story name ([e8c0ab0](https://github.com/yociduo/scrum-planning-poker/commit/e8c0ab0527a0b0e5e6335884c97099c0471839e7))
+
+
+### Bug Fixes
+
+* update back and on input error ([af9537b](https://github.com/yociduo/scrum-planning-poker/commit/af9537b91cb10fa0df772feba53a7d76bc367d7e))
+
 ### [3.3.1](https://github.com/yociduo/scrum-planning-poker/compare/v3.3.0...v3.3.1) (2020-05-25)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "scrum-planning-poker",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Scrum敏捷估算 ===================== Scrum扑克让敏捷项目估算更加精确简单并充满乐趣！",
   "main": "index.js",
   "scripts": {
